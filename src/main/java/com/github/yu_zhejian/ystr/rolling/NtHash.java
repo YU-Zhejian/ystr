@@ -7,7 +7,11 @@ import java.util.Iterator;
 /**
  * The ntHash rolling hash algorithm designed for genomic sequences.
  *
- * <p>In this implementation, all bases except {@code AGCTUagctu} would be considered {@code N}.
+ * <ol>
+ *   <li>All bases except {@code AGCTUagctu} would be considered {@code N}.
+ *   <li>{@code T} and {@code U} will not be distinguished.
+ *   <li>Upper- and lower-cased bases will bot be distinguished.
+ * </ol>
  *
  * <p>Re implemented from <a href="https://github.com/luizirber/nthash">Rust Implementation of
  * ntHash</a> at commit {@code ee653d33c485e95565d0b082082e885f6d397062}, which is based on <a

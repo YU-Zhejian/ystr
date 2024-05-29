@@ -72,32 +72,18 @@ public final class StrHash {
         return new NtHash(string, string.length).next();
     }
 
-    private static int simpleKmerHashing(byte nt) {
-        switch (nt) {
-            case 'A', 'a' -> {
-                return 1;
-            }
-            case 'C', 'c' -> {
-                return 2;
-            }
-            case 'G', 'g' -> {
-                return 3;
-            }
-            case 'T', 't', 'U', 'u' -> {
-                return 4;
-            }
-            default -> {
-                return 5;
-            }
-        }
-    }
-
+    /**
+     * See {@link StrEncoder#simpleNucleotideEncoder(byte)}
+     *
+     * @param string As described.
+     * @return As described.
+     */
     @Contract(pure = true)
     public static long simpleKmerHashing(byte @NotNull [] string) {
         long retv = 0;
         for (var nt : string) {
-            retv *= 8;
-            retv += simpleKmerHashing(nt);
+            retv = retv << 4;
+            retv += StrEncoder.simpleNucleotideEncoder(nt);
         }
         return retv;
     }

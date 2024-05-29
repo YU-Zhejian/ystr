@@ -66,6 +66,11 @@ dependencies {
 	testImplementation platform("org.junit:junit-bom:${JUNIT_VER}")
 	testImplementation "org.junit.jupiter:junit-jupiter:${JUNIT_VER}"
 
+	// https://mvnrepository.com/artifact/io.vavr/vavr
+	implementation 'io.vavr:vavr:0.10.4'
+
+	implementation "org.slf4j:slf4j-api:${SLF4J_VER}"
+
 	// https://mvnrepository.com/artifact/org.jetbrains/annotations
 	implementation "org.jetbrains:annotations:24.1.0"
 }

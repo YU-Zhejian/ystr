@@ -23,8 +23,11 @@ class StrHashTest {
 
     @Test
     void simpleKmerHashing() {
-        assertEquals(0_111, StrHash.simpleKmerHashing("AAA".getBytes(StandardCharsets.UTF_8)));
-        assertEquals(0_1234, StrHash.simpleKmerHashing("ACGT".getBytes(StandardCharsets.UTF_8)));
-        assertEquals(0_12345, StrHash.simpleKmerHashing("ACGTN".getBytes(StandardCharsets.UTF_8)));
+        assertEquals(
+                0b0001_0001_0001,
+                StrHash.simpleKmerHashing("AAA".getBytes(StandardCharsets.UTF_8)));
+        assertEquals(
+                0b0001_0010_0011_0100,
+                StrHash.simpleKmerHashing("ACGT".getBytes(StandardCharsets.UTF_8)));
     }
 }
