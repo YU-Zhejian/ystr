@@ -1,0 +1,141 @@
+import com.diffplug.spotless.LineEnding
+import java.nio.charset.StandardCharsets
+import java.text.DecimalFormat
+
+// ---------------------------- Plugins ----------------------------
+plugins {
+	id "java"
+	id "distribution"
+	// id "application"
+	id "jacoco"
+	id "jacoco-report-aggregation"
+	id "pmd"
+	// https://mvnrepository.com/artifact/com.github.johnrengelman.shadow/com.github.johnrengelman.shadow.gradle.plugin
+	// https://plugins.gradle.org/plugin/com.github.johnrengelman.shadow
+	id "com.github.johnrengelman.shadow" version "8.1.1"
+	// https://mvnrepository.com/artifact/com.portingle/classpath-hell
+	// https://plugins.gradle.org/plugin/com.portingle.classpath-hell
+	id "com.portingle.classpath-hell" version "1.10"
+	// https://mvnrepository.com/artifact/com.diffplug.spotless/spotless-plugin-gradle
+	// https://plugins.gradle.org/plugin/com.diffplug.spotless
+	id "com.diffplug.spotless" version "6.25.0"
+	// https://mvnrepository.com/artifact/com.github.spotbugs/spotbugs-gradle-plugin
+	// https://plugins.gradle.org/plugin/com.github.spotbugs
+	id "com.github.spotbugs" version "6.0.15"
+}
+
+group = 'com.github.yu_zhejian'
+version = '1.0-SNAPSHOT'
+
+// ---------------------------- Constants ----------------------------
+
+// https://mvnrepository.com/artifact/org.junit/junit-bom
+final def JUNIT_VER = "5.10.2"
+// https://mvnrepository.com/artifact/org.slf4j/slf4j-api
+final def SLF4J_VER = "2.0.13"
+// https://mvnrepository.com/artifact/net.sourceforge.pmd/pmd
+final def PMD_VER = "7.1.0"
+// https://mvnrepository.com/artifact/com.palantir.javaformat/palantir-java-format
+final def PALANTIR_JAVA_FMT_VER = "2.46.0"
+// See: https://download.eclipse.org/justj/?file=eclipse/updates/
+// See: https://groovy.jfrog.io/ui/native/plugins-release/org/codehaus/groovy/groovy-eclipse-integration/
+final def ECLIPSE_JDT_VER = "4.29"
+// https://mvnrepository.com/artifact/com.github.spotbugs/spotbugs
+final def SPOTBUGS_VER = "4.8.5"
+
+def CLASS_PATH_HELL_RESOURCE_EXCLUSIONS = new ArrayList<String>(classpathHell.CommonResourceExclusions())
+CLASS_PATH_HELL_RESOURCE_EXCLUSIONS.addAll(List.of("^license/.*", "^module-info\\.class\$"))
+
+// ---------------------------- Dependencies ----------------------------
+repositories {
+	//	maven { url 'https://maven.aliyun.com/repository/central/' }
+	//	maven { url 'https://maven.aliyun.com/repository/public/' }
+	//	maven { url 'https://maven.aliyun.com/repository/spring/' }
+	mavenCentral()
+}
+configurations {
+	implementation {
+		exclude group: "commons-logging"
+		exclude group: "com.google.code.findbugs", module: "annotations"
+		exclude group: "com.google.code.findbugs", module: "jsr305"
+		exclude group: "org.apache.groovy", module: "groovy-console"
+	}
+}
+dependencies {
+	// ---------------------------- UNIT TEST ----------------------------
+	testImplementation platform("org.junit:junit-bom:${JUNIT_VER}")
+	testImplementation "org.junit.jupiter:junit-jupiter:${JUNIT_VER}"
+
+	// https://mvnrepository.com/artifact/org.jetbrains/annotations
+	implementation "org.jetbrains:annotations:24.1.0"
+}
+
+
+// ---------------------------- Compiling Java Sources ----------------------------
+java {
+	toolchain {
+		languageVersion.set(JavaLanguageVersion.of(17))
+	}
+}
+//application {
+//    mainClass = "org.labw.fi2is4j.Main"
+//}
+tasks.javadoc {
+	options.encoding = StandardCharsets.UTF_8
+	options.locale = 'en_US'
+}
+tasks.withType(JavaCompile).configureEach {
+	options.encoding = StandardCharsets.UTF_8
+}
+
+
+// ---------------------------- Testings ----------------------------
+test {
+	useJUnitPlatform()
+	finalizedBy jacocoTestReport // report is always generated after tests run
+}
+jacocoTestReport {
+	reports {
+		xml.required = true
+	}
+}
+
+// ---------------------------- Code QC ----------------------------
+tasks.named("check") {
+	dependsOn("checkClasspath")
+}
+classpathHell {
+	configurationsToScan = [
+		configurations.runtimeClasspath
+	]
+	// suppressExactDupes = true
+	resourceExclusions = CLASS_PATH_HELL_RESOURCE_EXCLUSIONS
+}
+pmd {
+	consoleOutput = true
+	toolVersion = PMD_VER
+}
+spotbugs {
+	toolVersion = SPOTBUGS_VER
+}
+spotless {
+	encoding StandardCharsets.UTF_8
+	lineEndings LineEnding.UNIX
+	java {
+		target fileTree("src") {
+			include '**/*.java'
+			exclude '**/third_party/**/*.java'
+		}
+		importOrder()
+		removeUnusedImports()
+		palantirJavaFormat(PALANTIR_JAVA_FMT_VER).style("AOSP").formatJavadoc(true)
+	}
+	groovyGradle {
+		target fileTree(".") {
+			include '*.gradle'
+		}
+		importOrder()
+		removeSemicolons()
+		greclipse(ECLIPSE_JDT_VER)
+	}
+}
