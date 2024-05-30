@@ -35,7 +35,7 @@ public final class NtHash implements Iterator<Long> {
     private long revHash;
     private int curPos;
 
-    public NtHash(byte @NotNull [] string, int k) {
+    public NtHash(final byte @NotNull [] string, int k) {
         if (k > string.length) {
             throw new IllegalArgumentException(
                     "k cannot be larger than string length (current: %d vs. %d)"

@@ -229,6 +229,6 @@ public final class StrEncoder {
                 last4len -= 1;
             }
         }
-        return retb; // TODO
+        return retb;
     }
 }
