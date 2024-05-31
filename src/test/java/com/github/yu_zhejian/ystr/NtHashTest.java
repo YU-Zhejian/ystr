@@ -2,7 +2,7 @@ package com.github.yu_zhejian.ystr;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.github.yu_zhejian.ystr.rolling.NtHash;
+import com.github.yu_zhejian.ystr.rolling_hash.NtHash;
 
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
@@ -12,6 +12,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 class NtHashTest {
+    long getNthNtHash1(@NotNull String input, int n, int k) {
+        return new NtHash(input.getBytes(StandardCharsets.UTF_8), k, n).next();
+    }
+
+    long getNthNtHash2(@NotNull String input, int n, int k) {
+        var nth = new NtHash(input.getBytes(StandardCharsets.UTF_8), k);
+        while (n > 0) {
+            nth.next();
+            n--;
+        }
+        return nth.next();
+    }
+
     void testNtHash(List<Long> expected, @NotNull String bases) {
         var nth = new NtHash(bases.getBytes(StandardCharsets.UTF_8), 5);
         var actual = new ArrayList<Long>();
@@ -19,6 +32,29 @@ class NtHashTest {
             actual.add(nth.next());
         }
         assertIterableEquals(expected, actual);
+    }
+
+    @Test
+    void testEqualHashAtDifferentPosition() {
+        var str1 = "NNNAGCTNNN";
+        var str2 = "AGCTNN";
+
+        assertEquals(getNthNtHash2(str1, 3, 4), getNthNtHash2(str2, 0, 4));
+        assertEquals(getNthNtHash2(str1, 4, 4), getNthNtHash2(str2, 1, 4));
+        assertEquals(getNthNtHash2(str1, 4, 3), getNthNtHash2(str2, 1, 3));
+
+        // Simple ntHash
+        assertEquals(
+                StrHash.ntHash("AGCT".getBytes(StandardCharsets.UTF_8)), getNthNtHash2(str2, 0, 4));
+        assertEquals(
+                StrHash.ntHash("GCTN".getBytes(StandardCharsets.UTF_8)), getNthNtHash2(str2, 1, 4));
+        assertEquals(
+                StrHash.ntHash("GCT".getBytes(StandardCharsets.UTF_8)), getNthNtHash2(str2, 1, 3));
+
+        // Different skipping strategy
+        assertEquals(getNthNtHash1(str1, 3, 4), getNthNtHash2(str2, 0, 4));
+        assertEquals(getNthNtHash1(str1, 4, 4), getNthNtHash2(str2, 1, 4));
+        assertEquals(getNthNtHash1(str1, 4, 3), getNthNtHash2(str2, 1, 3));
     }
 
     @Test

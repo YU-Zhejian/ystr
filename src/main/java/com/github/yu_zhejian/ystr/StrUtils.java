@@ -18,4 +18,23 @@ public final class StrUtils {
         }
         return retv;
     }
+
+    public static void ensureStartEndValid(int start, int end) {
+        if (start > end) {
+            throw new IllegalArgumentException(
+                    "start must be less than end. Actual: %d vs %d".formatted(start, end));
+        }
+        if (start < 0) {
+            throw new IllegalArgumentException(
+                    "start must be greater than or equal to zero. Actual: %d".formatted(start));
+        }
+    }
+
+    public static void ensureStartEndValid(int start, int end, int strLen) {
+        ensureStartEndValid(start, end);
+        if (end > strLen) {
+            throw new IllegalArgumentException(
+                    "end must be less than strLen. Actual: %d vs %d".formatted(end, strLen));
+        }
+    }
 }

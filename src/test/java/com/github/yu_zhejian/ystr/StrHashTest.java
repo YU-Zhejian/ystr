@@ -30,4 +30,11 @@ class StrHashTest {
                 0b0001_0010_0011_0100,
                 StrHash.simpleKmerHashing("ACGT".getBytes(StandardCharsets.UTF_8)));
     }
+
+    @Test
+    void crc32() {
+        assertEquals(0x00000000, StrHash.crc32("".getBytes(StandardCharsets.UTF_8)));
+        assertEquals(0x66a031a7, StrHash.crc32("AAA".getBytes(StandardCharsets.UTF_8)));
+        assertEquals(0x5AB5AEDD, StrHash.crc32("ATCG".getBytes(StandardCharsets.UTF_8)));
+    }
 }
