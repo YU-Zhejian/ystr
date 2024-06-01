@@ -1,10 +1,11 @@
-package com.github.yu_zhejian.ystr;
+package com.github.yu_zhejian.ystr.rolling_hash;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.github.yu_zhejian.ystr.rolling_hash.NtHash;
+import com.github.yu_zhejian.ystr.StrHash;
 
 import org.jetbrains.annotations.NotNull;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.nio.charset.StandardCharsets;
@@ -44,7 +45,7 @@ class NtHashTest {
         assertEquals(getNthNtHash2(str1, 4, 3), getNthNtHash2(str2, 1, 3));
 
         // Simple ntHash
-        assertEquals(
+        Assertions.assertEquals(
                 StrHash.ntHash("AGCT".getBytes(StandardCharsets.UTF_8)), getNthNtHash2(str2, 0, 4));
         assertEquals(
                 StrHash.ntHash("GCTN".getBytes(StandardCharsets.UTF_8)), getNthNtHash2(str2, 1, 4));

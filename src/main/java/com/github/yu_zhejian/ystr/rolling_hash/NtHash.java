@@ -54,6 +54,7 @@ public final class NtHash extends RollingHashBase<Long> {
 
     public NtHash(final byte @NotNull [] string, int k, int start) {
         super(string, k, start);
+        initCurrentHash();
     }
 
     public NtHash(final byte @NotNull [] string, int k) {

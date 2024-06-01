@@ -1,10 +1,11 @@
-package com.github.yu_zhejian.ystr;
+package com.github.yu_zhejian.ystr.rolling_hash;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.github.yu_zhejian.ystr.rolling_hash.PolynomialRollingHash;
+import com.github.yu_zhejian.ystr.StrHash;
 
 import org.jetbrains.annotations.NotNull;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.nio.charset.StandardCharsets;
@@ -27,6 +28,13 @@ class PolynomialRollingHashTest {
     void testEqualHashAtDifferentPosition() {
         var str1 = "NNNAGCTNNN";
         var str2 = "AGCTNN";
+        var str3 = "AGCTAGCT";
+        assertEquals(
+                getPolynomialRollinghPolynomialRollingHash2(str3, 0, 4),
+                getPolynomialRollinghPolynomialRollingHash2(str3, 4, 4));
+        assertEquals(
+                getPolynomialRollinghPolynomialRollingHash1(str3, 0, 4),
+                getPolynomialRollinghPolynomialRollingHash2(str3, 4, 4));
 
         assertEquals(
                 getPolynomialRollinghPolynomialRollingHash2(str1, 3, 4),
@@ -38,7 +46,7 @@ class PolynomialRollingHashTest {
                 getPolynomialRollinghPolynomialRollingHash2(str1, 4, 3),
                 getPolynomialRollinghPolynomialRollingHash2(str2, 1, 3));
 
-        assertEquals(
+        Assertions.assertEquals(
                 StrHash.polynomialRollingHash("AGCT".getBytes(StandardCharsets.UTF_8)),
                 getPolynomialRollinghPolynomialRollingHash2(str2, 0, 4));
         assertEquals(
@@ -59,4 +67,6 @@ class PolynomialRollingHashTest {
                 getPolynomialRollinghPolynomialRollingHash1(str1, 4, 3),
                 getPolynomialRollinghPolynomialRollingHash2(str2, 1, 3));
     }
+
+
 }

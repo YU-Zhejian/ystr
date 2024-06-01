@@ -71,7 +71,6 @@ public abstract class RollingHashBase<T extends Number> implements RollingHashIn
         this.k = k;
         this.start = start;
         curPos = start;
-        initCurrentHash();
     }
 
     @Override
