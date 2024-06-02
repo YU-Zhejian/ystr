@@ -29,7 +29,7 @@ import org.jetbrains.annotations.NotNull;
  * <p>The {@link #next()} would by default get canonical ntHash, which is the smaller one between
  * {@link #getFwdHash()} and {@link #getRevHash()}.
  */
-public final class NtHash extends RollingHashBase<Long> {
+public final class NtHash extends RollingHashBase {
     private static final long SEED_A = 0x3c8bfbb395c60474L;
     private static final long SEED_C = 0x3193c18562a02b4cL;
     private static final long SEED_G = 0x20323ed082572324L;

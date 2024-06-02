@@ -129,7 +129,7 @@ public final class StrMatch {
         return retl;
     }
 
-    public static <T extends RollingHashInterface<?>> @NotNull List<Integer> rabinKarpMatch(
+    public static <T extends RollingHashInterface> @NotNull List<Integer> rabinKarpMatch(
             byte @NotNull [] haystack,
             byte @NotNull [] needle,
             int start,

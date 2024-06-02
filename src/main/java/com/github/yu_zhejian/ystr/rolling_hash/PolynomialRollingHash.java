@@ -33,7 +33,7 @@ import java.util.Random;
  *       Implementation</a>
  * </ol>
  */
-public final class PolynomialRollingHash extends RollingHashBase<Long> {
+public final class PolynomialRollingHash extends RollingHashBase {
     /**
      * Default {@link #p}. Since we do not use negative part of {@link Byte}, the alphabet size is
      * 128.

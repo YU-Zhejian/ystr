@@ -8,13 +8,12 @@ import java.util.Arrays;
 public final class RollingHashFactory {
 
     @Contract("_, _, _, _, _ -> new")
-    public static <T extends RollingHashInterface<?>> @NotNull
-            RollingHashInterface<?> newRollingHash(
-                    @NotNull Class<T> claz,
-                    final byte @NotNull [] string,
-                    int k,
-                    int start,
-                    Object... params) {
+    public static <T extends RollingHashInterface> @NotNull RollingHashInterface newRollingHash(
+            @NotNull Class<T> claz,
+            final byte @NotNull [] string,
+            int k,
+            int start,
+            Object... params) {
         if (claz == NtHash.class) {
             return new NtHash(string, k, start);
         } else if (claz.equals(PolynomialRollingHash.class)) {

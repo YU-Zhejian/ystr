@@ -4,12 +4,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.NoSuchElementException;
 
-/**
- * A base implementation for all rolling hash algorithms.
- *
- * @param <T> As described.
- */
-public abstract class RollingHashBase<T extends Number> implements RollingHashInterface<T> {
+/** A base implementation for all rolling hash algorithms. */
+public abstract class RollingHashBase implements RollingHashInterface {
     /** The string you're hashing. */
     protected final byte[] string;
 
@@ -30,7 +26,7 @@ public abstract class RollingHashBase<T extends Number> implements RollingHashIn
     protected abstract void updateCurrentHashToNextState();
 
     /** The current hash value. */
-    protected T currentHash;
+    protected Long currentHash;
 
     /**
      * As described.
@@ -74,7 +70,7 @@ public abstract class RollingHashBase<T extends Number> implements RollingHashIn
     }
 
     @Override
-    public T next() {
+    public Long next() {
         if (!this.hasNext()) {
             throw new NoSuchElementException();
         }
@@ -83,16 +79,6 @@ public abstract class RollingHashBase<T extends Number> implements RollingHashIn
         }
         curPos++;
         return currentHash;
-    }
-
-    /**
-     * As described.
-     *
-     * @param string As described.
-     * @param k As described.
-     */
-    public RollingHashBase(final byte @NotNull [] string, int k) {
-        this(string, k, 0);
     }
 
     @Override
