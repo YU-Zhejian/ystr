@@ -18,11 +18,9 @@ public final class RollingHashFactory {
         if (claz == NtHash.class) {
             return new NtHash(string, k, start);
         } else if (claz.equals(PolynomialRollingHash.class)) {
-            if (params.length == 2
-                    && params[0] instanceof Integer
-                    && params[1] instanceof Integer) {
+            if (params.length == 2 && params[0] instanceof Long && params[1] instanceof Long) {
                 return new PolynomialRollingHash(
-                        string, k, start, (Integer) params[0], (Integer) params[1]);
+                        string, k, start, (Long) params[0], (Long) params[1]);
             } else if (params.length == 0) {
                 return new PolynomialRollingHash(string, k, start);
             } else {

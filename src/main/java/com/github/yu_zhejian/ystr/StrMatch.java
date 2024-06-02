@@ -145,17 +145,12 @@ public final class StrMatch {
         var rhHaystack = RollingHashFactory.newRollingHash(
                 rollingHashClaz, haystack, needle.length, start, rollingHashParams);
         var needleHash = RollingHashFactory.newRollingHash(
-                rollingHashClaz, needle, needle.length, 0, rollingHashParams).next();
+                        rollingHashClaz, needle, needle.length, 0, rollingHashParams)
+                .next();
 
         var retl = new ArrayList<Integer>();
-        System.out.printf("%s%n", new String(haystack));
         while (pos + needle.length <= end) {
             var nextHash = rhHaystack.next();
-            System.out.printf(
-                    "%s %s %n".formatted(
-                            Long.toHexString(nextHash.longValue()),
-                            Long.toHexString(needleHash.longValue()))
-            );
             if (Objects.equals(nextHash, needleHash)) {
                 if (isMatch(haystack, needle, pos)) {
                     retl.add(pos);

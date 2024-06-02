@@ -85,9 +85,6 @@ public interface AlignerInterface {
                 var posOnGaplessDna = 0;
                 var isInUtr = true;
                 var curGapLen = diffGap.getOrDefault(0, 0);
-                //                if (Objects.equals(alnResult.dnaName, "PEM12C1.0.1008")){
-                //                    System.out.println(individualGaps);
-                //                }
                 while (posOnGaplessDna < gaplessDnaSeq.length() || posOnCurDna < curDna.length()) {
                     while (curGapLen > 0) {
                         sb.append(isInUtr ? AlnConf.ALN_BLANK : AlnConf.ALN_GAP);
