@@ -5,8 +5,20 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 
+/** TODO */
 public final class RollingHashFactory {
 
+    /**
+     * TODO
+     *
+     * @param claz TODO
+     * @param string TODO
+     * @param k TODO
+     * @param start TODO
+     * @param params TODO
+     * @param <T> TODO
+     * @return TODO
+     */
     @Contract("_, _, _, _, _ -> new")
     public static <T extends RollingHashInterface> @NotNull RollingHashInterface newRollingHash(
             @NotNull Class<T> claz,

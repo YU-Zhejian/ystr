@@ -13,13 +13,20 @@ import java.util.Objects;
 
 /**
  * String matching problem in the form of "finding {@code needle} inside a substring of a
- * {@code haystack}".
+ * {@code haystack}". Will return a list of all identified substrings.
  */
 public final class StrMatch {
 
     /**
      * Test whether a substring on {@code haystack} from {@code start} with length
-     * {@code needle.length} matehes {@code needle}.
+     * {@code needle.length} matches {@code needle}.
+     *
+     * <p>This algorithm is brute-force.
+     *
+     * <ul>
+     *   <li>Time complexity: {@code O(n^2)}.
+     *   <li>Space complexity: {@code O(1)}.
+     * </ul>
      *
      * @param haystack As described.
      * @param needle As described.
@@ -27,8 +34,8 @@ public final class StrMatch {
      * @return As described.
      */
     public static boolean isMatch(byte @NotNull [] haystack, byte @NotNull [] needle, int start) {
-        for (int i = 0; i < needle.length; i++) {
-            if (haystack[i + start] != needle[i]) {
+        for (int needlePos = 0; needlePos < needle.length; needlePos++) {
+            if (haystack[needlePos + start] != needle[needlePos]) {
                 return false;
             }
         }
@@ -68,13 +75,13 @@ public final class StrMatch {
         if (haystack.length == 0 || needle.length == 0) {
             return new ArrayList<>();
         }
-        var pos = start;
+        var haystackPos = start;
         var retl = new ArrayList<Integer>();
-        while (pos + needle.length <= end) {
-            if (isMatch(haystack, needle, pos)) {
-                retl.add(pos);
+        while (haystackPos + needle.length <= end) {
+            if (isMatch(haystack, needle, haystackPos)) {
+                retl.add(haystackPos);
             }
-            pos++;
+            haystackPos++;
         }
         return retl;
     }
@@ -102,34 +109,43 @@ public final class StrMatch {
         if (haystack.length == 0 || needle.length == 0) {
             return new ArrayList<>();
         }
-        var pos = start;
-        var posEnd = start + needle.length;
+        var needleLen = needle.length;
+        var haystackPos = start;
         var retl = new ArrayList<Integer>();
-        while (posEnd <= end) {
+        while (haystackPos + needleLen <= end) {
             // Find first match
-            while (haystack[pos] != needle[0] && posEnd <= end) {
-                pos += 1;
-                posEnd += 1;
+            while (haystack[haystackPos] != needle[0] && haystackPos + needleLen <= end) {
+                haystackPos += 1;
             }
-            int i;
+            int needlePos;
             // Start from 2nd position since 1st position is of course match.
-            for (i = 1; i < needle.length; i++) {
-                if (haystack[pos + i] != needle[i]) {
+            for (needlePos = 1; needlePos < needleLen; needlePos++) {
+                if (haystack[haystackPos + needlePos] != needle[needlePos]) {
                     break;
                 }
             }
-            if (i == needle.length) {
-                retl.add(pos);
-                pos++;
-                posEnd++;
+            if (needlePos == needleLen) {
+                retl.add(haystackPos);
+                haystackPos++;
             } else {
-                pos += i;
-                posEnd += i;
+                haystackPos += needlePos;
             }
         }
         return retl;
     }
 
+    /**
+     * A full-born working Rabin-Karp matcher.
+     *
+     * @param haystack As described.
+     * @param needle As described.
+     * @param start As described.
+     * @param end As described.
+     * @param rollingHashClaz Class that is passed to {@link RollingHashFactory}.
+     * @param rollingHashParams Other parameters used to initialize {@code T}.
+     * @return As described.
+     * @param <T> Some Rabin-Karp-compatible rolling hash calculator.
+     */
     public static <T extends RollingHashInterface> @NotNull List<Integer> rabinKarpMatch(
             byte @NotNull [] haystack,
             byte @NotNull [] needle,
@@ -142,22 +158,23 @@ public final class StrMatch {
             return new ArrayList<>();
         }
         // Create initial hash
-        var pos = start;
+        var haystackPos = start;
+        var needleLen = needle.length;
         var rhHaystack = RollingHashFactory.newRollingHash(
-                rollingHashClaz, haystack, needle.length, start, rollingHashParams);
+                rollingHashClaz, haystack, needleLen, start, rollingHashParams);
         var needleHash = RollingHashFactory.newRollingHash(
-                        rollingHashClaz, needle, needle.length, 0, rollingHashParams)
+                        rollingHashClaz, needle, needleLen, 0, rollingHashParams)
                 .next();
 
         var retl = new ArrayList<Integer>();
-        while (pos + needle.length <= end) {
+        while (haystackPos + needleLen <= end) {
             var nextHash = rhHaystack.next();
             if (Objects.equals(nextHash, needleHash)) {
-                if (isMatch(haystack, needle, pos)) {
-                    retl.add(pos);
+                if (isMatch(haystack, needle, haystackPos)) {
+                    retl.add(haystackPos);
                 }
             }
-            pos++;
+            haystackPos++;
         }
         return retl;
     }
@@ -178,29 +195,79 @@ public final class StrMatch {
     }
 
     /**
-     * An array of integers, each meaning the length of the longest proper prefix, which is also a
-     * suffix, at {@code string[0, i]}.
+     * LPS -- Longest proper Prefix which is also the Suffix.
      *
-     * <p><b>Example</b></p>
+     * <p>An array of integers, each meaning the length of the longest proper prefix, which is also
+     * a proper suffix, at {@code s[0: k]}.
+     *
+     * <p>That is, for any {@code k} in range {@code [0, l)}, {@code s[0: ips[k]] == s[k - ips[k] +
+     * 1: k + 1]}.
+     *
+     * <p><b>Implementation</b> All notations below are 0-based. All intervals are cose-open
+     * intervals.
+     *
+     * <p>Given {@code ips[i]}. The following properties can be assured:
+     *
+     * <ol>
+     *   <li>We say {@code ips[i + 1] = ips[i] + 1} if {@code s[ips[i]] == s[i + 1]}.
+     *       <p>Proof:
+     *       <ol>
+     *         <li>From {@code ips[i]}, we can by definition know that {@code s[0: ips[i]] == s[i -
+     *             ips[i] + 1: i + 1]}.
+     *         <li>If {@code s[ips[i]] == s[i + 1]}, we will have {@code s[0: ips[i] + 1] == s[i -
+     *             ips[i] + 1: i + 2]}.
+     *         <li>Replacing {@code ips[i] + 1} as {@code ips[i + 1]}, we get {@code s[0: ips[i + 1]
+     *             == s[i - ips[i + 1] + 2: i + 2]}.
+     *         <li>Which by definition proves {@code ips[i + 1] = ips[i] + 1}.
+     *       </ol>
+     *   <li>If {@code s[ips[i]] != s[i]}, we would found the second largest number {@code j} in
+     *       range {@code [0, i + 1)} that allows {@code s[0: j] == s[i + 1 - j: i + 1]}.
+     *       <p>Then we only need to compare {@code s[j]} and {@code s[i + 1]}.
+     *       <ul>
+     *         <li>If equal, we would have {@code s[0: j + 1] == s[i + 1 - j: i + 2}.
+     *         <li>Otherwise, we need to find another smaller {@code j}.
+     *       </ul>
+     *       <p>Since {@code s[i - lps[i] + 1: i + 1] == s[0: lps[i]] == s[i - lps[i] + 1: i + 1] +
+     *       lps[i] - i - 1}, for {@code j < i},
+     *       <pre>
+     *  s[0: j]
+     * = s[i - j + 1: i + 1] // By definition of {@code lps[j]}
+     * = s[i - j + 1: i + 1] + lps[i] - i - 1 // By definition of {@code lps[i]}
+     * = s[lps[i] - j: lps[j]]
+     *         </pre>
+     *       So, {@code j} would be the {@code lps} of {@code s[0: lps[i]]}. So, next valid
+     *       {@code j} is {@code lps[lps[i] - 1]}.
+     *       <p>If we need to further search for smaller {@code j}, this rule applies until
+     *       {@code j} reaches 0.
+     * </ol>
+     *
+     * <p><b>Example</b>
      *
      * <pre>
+     *     l = 10
      * s   A A A C A A A A A C
      * idx 0 1 2 3 4 5 6 7 8 9
      * ips 0 1 2 0 1 2 3 3 3 4
      * </pre>
      *
-     * <p><b>Implementation:</b>
-     * <p>
-     * Given that we've already know {@code lps[0: i]} and is about to calculate {@code lps[i]}.
-     * It is obvious that {@code s[0: lps[i - 1] + 1] == s[i - lps[i - 1]: i]} (by definition).
+     * <pre>
+     *     l = 10
+     * s   A B A B C A B A B C
+     * idx 0 1 2 3 4 5 6 7 8 9
+     * ips 0 0 1 2 0 1 2 3 4 5
+     * </pre>
      *
-     * <ul>
-     *     <li>If {@code s[i] == s[lps[i - 1] + 1]}, we would have </li>
-     * </ul>
+     * <pre>
+     *     l = 15
+     * s   T  C  C  C  G  A  G  T  C  C  A  A  T  C  C
+     * idx 00 01 02 03 04 05 06 07 08 09 10 11 12 13 14
+     * ips 0  0  0  0  0  0  0  1  2  3  0  0  1  2  3
+     * </pre>
      *
      * @param string As described. Assumed to be no-empty.
      * @return As described.
-     * @see <a href="https://oi-wiki.org/string/kmp/">OIWiki</a>
+     * @see <a href="https://oi-wiki.org/string/kmp/">OIWiki</a>. Note that they do not use the same
+     *     notation as ours.
      */
     @Contract(value = "_ -> new", pure = true)
     public static int @NotNull [] lps(byte @NotNull [] string) {
@@ -215,6 +282,56 @@ public final class StrMatch {
                 j++;
             }
             retl[i] = j;
+        }
+        return retl;
+    }
+
+    /**
+     * The standard KMP algorithm.
+     *
+     * <p><b>References</b>
+     *
+     * <ul>
+     *   <li>D. E. Knuth, J. H. Morris, Jr., and V. R. Pratt, “Fast Pattern Matching in Strings,”
+     *       SIAM J. Comput., vol. 6, no. 2, pp. 323–350, Jun. 1977, <a
+     *       href="https://doi.org/10.1137/0206024">DOI</a>
+     *   <li>Introduction in <a href="https://en.oi-wiki.org/string/kmp/#_6">OIWiki</a>.
+     *   <li>Implementation at <a
+     *       href="https://www.scaler.com/topics/data-structures/kmp-algorithm/">Scaler Topics</a>
+     * </ul>
+     *
+     * @param haystack As described.
+     * @param needle As described.
+     * @param start As described.
+     * @param end As described.
+     * @return As described.
+     */
+    public static @NotNull List<Integer> knuthMorrisPrattMatch(
+            byte @NotNull [] haystack, byte @NotNull [] needle, int start, int end) {
+        ensureParametersValid(haystack, needle, start, end);
+        if (haystack.length == 0 || needle.length == 0) {
+            return new ArrayList<>();
+        }
+        var retl = new ArrayList<Integer>();
+        var lpsNeedle = lps(needle);
+        var needlePos = 0;
+        var haystackPos = start;
+        var needleLen = needle.length;
+        while (haystackPos < end) {
+            if (needle[needlePos] == haystack[haystackPos]) {
+                needlePos++;
+                haystackPos++;
+            }
+            if (needlePos == needleLen) {
+                retl.add(haystackPos - needlePos);
+                needlePos = lpsNeedle[needlePos - 1];
+            } else if (haystackPos < end && needle[needlePos] != haystack[haystackPos]) {
+                if (needlePos != 0) {
+                    needlePos = lpsNeedle[needlePos - 1];
+                } else {
+                    haystackPos += 1;
+                }
+            }
         }
         return retl;
     }

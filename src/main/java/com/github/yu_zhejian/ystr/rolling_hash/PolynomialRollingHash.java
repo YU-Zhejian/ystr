@@ -23,8 +23,6 @@ import java.util.Random;
  *
  * <p><b>References</b>
  *
- * <p>
- *
  * <ol>
  *   <li>Karp, Richard M. and Michael O. Rabin. “Efficient Randomized Pattern-Matching Algorithms.”
  *       <i>IBM J. Res. Dev.</i> 31 (1987): 249-260. <a
@@ -48,10 +46,23 @@ public final class PolynomialRollingHash extends RollingHashBase {
     /** Is {@code Math.pow(p, k - 1)}. */
     private long pow;
 
+    /**
+     * Default constructor that is identical to Robert Sedgewick's implementation.
+     *
+     * @param start As described.
+     * @param string As described.
+     * @param k As described.
+     */
     public PolynomialRollingHash(byte @NotNull [] string, int k, int start) {
         this(string, k, start, POLYNOMIAL_ROLLING_HASH_M, POLYNOMIAL_ROLLING_HASH_RADIX_P);
     }
 
+    /**
+     * Default constructor with 0 for {@code start}.
+     *
+     * @param string As described.
+     * @param k As described.
+     */
     public PolynomialRollingHash(byte @NotNull [] string, int k) {
         this(string, k, 0, POLYNOMIAL_ROLLING_HASH_M, POLYNOMIAL_ROLLING_HASH_RADIX_P);
     }
@@ -66,7 +77,7 @@ public final class PolynomialRollingHash extends RollingHashBase {
     }
 
     /**
-     * As described.
+     * Default constructor.
      *
      * @param string As described.
      * @param k As described.

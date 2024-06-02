@@ -16,6 +16,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 
+/** TODO: Add test cases from <a href="https://github.com/smart-tool/smart/">...</a>. */
 class StrMatchTest {
     static Map<Tuple2<String, String>, List<Integer>> TEST_CASES_AGCT = Map.ofEntries(
             Map.entry(Tuple.of("ATTCCGTAAATTCCAAAATTCCGATTCTCC", "TTCC"), List.of(1, 10, 18)),
@@ -53,7 +54,10 @@ class StrMatchTest {
         TEST_CASES_AGCT.forEach((key, value) -> {
             var hayStack = key._1().getBytes(StandardCharsets.UTF_8);
             var needle = key._2().getBytes(StandardCharsets.UTF_8);
-            assertIterableEquals(value, function.apply(hayStack, needle, 0, hayStack.length));
+            assertIterableEquals(
+                    value,
+                    function.apply(hayStack, needle, 0, hayStack.length),
+                    "Error at case %s in %s".formatted(key._2(), key._1()));
         });
     }
 
@@ -88,5 +92,31 @@ class StrMatchTest {
     void rabinKarpMatchUsingNtHash() {
         testSS((haystack, needle, start, end) ->
                 StrMatch.rabinKarpMatch(haystack, needle, start, end, NtHash.class));
+    }
+
+    /**
+     * Test cases from <a
+     * href="https://www.geeksforgeeks.org/kmp-algorithm-for-pattern-searching/?ref=lbp">here</a>.
+     */
+    @Test
+    void lps() {
+        assertArrayEquals(
+                new int[] {0, 1, 2, 3}, StrMatch.lps("AAAA".getBytes(StandardCharsets.UTF_8)));
+        assertArrayEquals(
+                new int[] {0, 0, 0, 0, 0}, StrMatch.lps("ABCDE".getBytes(StandardCharsets.UTF_8)));
+        assertArrayEquals(
+                new int[] {0, 1, 0, 1, 2, 0, 1, 2, 3, 4, 5},
+                StrMatch.lps("AABAACAABAA".getBytes(StandardCharsets.UTF_8)));
+        assertArrayEquals(
+                new int[] {0, 1, 2, 0, 1, 2, 3, 3, 3, 4},
+                StrMatch.lps("AAACAAAAAC".getBytes(StandardCharsets.UTF_8)));
+        assertArrayEquals(
+                new int[] {0, 1, 2, 0, 1, 2, 3},
+                StrMatch.lps("AAABAAA".getBytes(StandardCharsets.UTF_8)));
+    }
+
+    @Test
+    void knuthMorrisPrattMatch() {
+        testSS(StrMatch::knuthMorrisPrattMatch);
     }
 }

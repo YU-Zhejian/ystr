@@ -52,11 +52,24 @@ public final class NtHash extends RollingHashBase {
         currentHash = Long.compareUnsigned(fwdHash, revHash) < 0 ? fwdHash : revHash;
     }
 
+    /**
+     * Default constructor.
+     *
+     * @param start As described.
+     * @param string As described.
+     * @param k As described.
+     */
     public NtHash(final byte @NotNull [] string, int k, int start) {
         super(string, k, start);
         initCurrentHash();
     }
 
+    /**
+     * Default constructor with 0 for {@code start}.
+     *
+     * @param string As described.
+     * @param k As described.
+     */
     public NtHash(final byte @NotNull [] string, int k) {
         this(string, k, 0);
     }
@@ -115,10 +128,20 @@ public final class NtHash extends RollingHashBase {
         currentHash = Long.compareUnsigned(fwdHash, revHash) < 0 ? fwdHash : revHash;
     }
 
+    /**
+     * As described.
+     *
+     * @return As described.
+     */
     public long getFwdHash() {
         return fwdHash;
     }
 
+    /**
+     * As described.
+     *
+     * @return As described.
+     */
     public long getRevHash() {
         return revHash;
     }
