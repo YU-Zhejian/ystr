@@ -4,6 +4,7 @@ import com.github.yu_zhejian.ystr.rolling_hash.PolynomialRollingHash;
 import com.github.yu_zhejian.ystr.rolling_hash.RollingHashFactory;
 import com.github.yu_zhejian.ystr.rolling_hash.RollingHashInterface;
 
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -161,9 +162,61 @@ public final class StrMatch {
         return retl;
     }
 
+    /**
+     * {@link #rabinKarpMatch(byte[], byte[], int, int, Class, Object...)} with
+     * {@link PolynomialRollingHash} using its default version for rolling hash.
+     *
+     * @param haystack As described.
+     * @param needle As described.
+     * @param start As described.
+     * @param end As described.
+     * @return As described.
+     */
     public static @NotNull List<Integer> rabinKarpMatch(
             byte @NotNull [] haystack, byte @NotNull [] needle, int start, int end) {
         return rabinKarpMatch(haystack, needle, start, end, PolynomialRollingHash.class);
+    }
+
+    /**
+     * An array of integers, each meaning the length of the longest proper prefix, which is also a
+     * suffix, at {@code string[0, i]}.
+     *
+     * <p><b>Example</b></p>
+     *
+     * <pre>
+     * s   A A A C A A A A A C
+     * idx 0 1 2 3 4 5 6 7 8 9
+     * ips 0 1 2 0 1 2 3 3 3 4
+     * </pre>
+     *
+     * <p><b>Implementation:</b>
+     * <p>
+     * Given that we've already know {@code lps[0: i]} and is about to calculate {@code lps[i]}.
+     * It is obvious that {@code s[0: lps[i - 1] + 1] == s[i - lps[i - 1]: i]} (by definition).
+     *
+     * <ul>
+     *     <li>If {@code s[i] == s[lps[i - 1] + 1]}, we would have </li>
+     * </ul>
+     *
+     * @param string As described. Assumed to be no-empty.
+     * @return As described.
+     * @see <a href="https://oi-wiki.org/string/kmp/">OIWiki</a>
+     */
+    @Contract(value = "_ -> new", pure = true)
+    public static int @NotNull [] lps(byte @NotNull [] string) {
+        var retl = new int[string.length];
+        retl[0] = 0; // By definition
+        for (int i = 1; i < string.length; i++) {
+            int j = retl[i - 1];
+            while (j > 0 && string[i] != string[j]) {
+                j = retl[j - 1];
+            }
+            if (string[i] == string[j]) {
+                j++;
+            }
+            retl[i] = j;
+        }
+        return retl;
     }
 
     private StrMatch() {}
