@@ -4,9 +4,27 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import org.junit.jupiter.api.Test;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 class StrUtilsTest {
+
+    @Test
+    void strcmp() {
+        assertEquals(
+                0,
+                StrUtils.strcmp(
+                        "AGCT".getBytes(StandardCharsets.UTF_8),
+                        "AGCT".getBytes(StandardCharsets.UTF_8)));
+        assertTrue(StrUtils.strcmp(
+                        "AGCTA".getBytes(StandardCharsets.UTF_8),
+                        "AGCT".getBytes(StandardCharsets.UTF_8))
+                > 0);
+        assertTrue(StrUtils.strcmp(
+                        "AGCTA".getBytes(StandardCharsets.UTF_8),
+                        "AGCTT".getBytes(StandardCharsets.UTF_8))
+                < 0);
+    }
 
     @Test
     void pow() {

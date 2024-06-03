@@ -159,6 +159,27 @@ public final class StrUtils {
             }
         };
     }
+
+    /**
+     * Similar function as is implemented in C standard libraries.
+     *
+     * <p>Implemented with the help of TONGYI Lingma.
+     *
+     * @return As described.
+     */
+    public static int strcmp(byte @NotNull [] array1, byte @NotNull [] array2) {
+        int minLength = Math.min(array1.length, array2.length);
+        for (int i = 0; i < minLength; i++) {
+            if (!Objects.equals(array1[i], array2[i])) {
+                // If bytes are not equal, return the difference (this mimics the behavior of
+                // strcmp)
+                return Byte.compare(array1[i], array2[i]);
+            }
+        }
+        // If we didn't find any differences in the common prefix, the shorter array is
+        // lexicographically less
+        return Integer.compare(array1.length, array2.length);
+    }
 }
 
 /**
