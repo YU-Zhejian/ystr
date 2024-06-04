@@ -5,39 +5,66 @@ import org.jetbrains.annotations.NotNull;
 /**
  * The ntHash rolling hash algorithm designed for genomic sequences.
  *
- * <p><b>Implementation</b>
- *
- * <p>Re implemented from <a href="https://github.com/luizirber/nthash">Rust Implementation of
- * ntHash</a> at commit {@code ee653d33c485e95565d0b082082e885f6d397062}, which is based on <a
- * href="https://github.com/bcgsc/ntHash/releases/tag/v1.0.4">Original C++ implementation at 1.0.4
- * branch</a>. This implementation has the following characteristics:
+ * <p>This {@link NtHash} implementation should yield similar results as version 1.0.0 of ntHash
+ * original C++ implementation (referred to as "original implementation" for short). It has the
+ * following characteristics:
  *
  * <ol>
  *   <li>All nucleotides except {@code AGCTUagctu} would be considered {@code N}.
- *   <li>The nucleotide {@code T} and {@code U} will <b>NOT</b> be distinguished.
+ *   <li>The nucleotide {@code T} and {@code U} will <b>NOT</b> be distinguished. The original
+ *       implementation will render {@code U} as {@code N}.
  *   <li>Upper- and lower-cased bases will <b>NOT</b> be distinguished.
+ *   <li>The {@link #next()} method will return the canonical ntHash, which is the smaller one
+ *       between {@link #getFwdHash()} and {@link #getRevHash()}. This is the default in ntHash1 and
+ *       ntHash2 {@code <= 2.3.0}, but is changed in ntHash2 2.3.0.
+ *   <li>This implementation do not rely on a pre-computed hash table, so it amy be slower than
+ *       those with one ({@link PrecomputedNtHash}).
+ *   <li>This implementation would only generate 1 hash value for one k-mer. Use
+ *       {@link NtHashBase#multiHash} to generate multiple hashes.
+ *   <li>This implementation will <b>NOT</b> skip k-mers with {@code N} inside. However, the
+ *       official {@code ntHashIterator} would skip them.
  * </ol>
  *
  * <p><b>References</b>
  *
- * <p>Original paper: Hamid Mohamadi, Justin Chu, Benjamin P. Vandervalk, Inanc Birol, ntHash:
- * recursive nucleotide hashing, <i>Bioinformatics</i>, Volume 32, Issue 22, November 2016, Pages
- * 3492–3494, <a href="https://doi.org/10.1093/bioinformatics/btw397">DOI</a>
+ * <ul>
+ *   <li>Hamid Mohamadi, Justin Chu, Benjamin P. Vandervalk, Inanc Birol, ntHash: recursive
+ *       nucleotide hashing, <i>Bioinformatics</i>, Volume 32, Issue 22, November 2016, Pages
+ *       3492–3494, <a href="https://doi.org/10.1093/bioinformatics/btw397">DOI</a>
+ *   <li><a href="https://github.com/luizirber/nthash">Rust implementation</a> at commit
+ *       {@code ee653d33}, which is based on <a
+ *       href="https://github.com/bcgsc/ntHash/releases/tag/v1.0.4">1.0.4</a> version of the
+ *       original C++ implementation.
+ *   <li>ntHash <a
+ *       href="https://github.com/bcgsc/ntHash/releases/download/1.0.0/ntHash-1.0.0.tar.gz">1.0.0</a>,
+ *       the reference implementation.
+ * </ul>
  *
- * <p><b>API Note</b>
+ * <p><b>Compatibility Note</b>
  *
- * <p>The {@link #next()} would by default get canonical ntHash, which is the smaller one between
- * {@link #getFwdHash()} and {@link #getRevHash()}.
+ * <p>The hash values produced by version 2 of ntHash differ from version 1.
  */
-public final class NtHash extends RollingHashBase {
-    private static final long SEED_A = 0x3c8bfbb395c60474L;
-    private static final long SEED_C = 0x3193c18562a02b4cL;
-    private static final long SEED_G = 0x20323ed082572324L;
-    private static final long SEED_T = 0x295549f54be24456L;
-    private static final long SEED_N = 0x0000000000000000L;
+public final class NtHash extends NtHashBase {
+    /**
+     * Default constructor with 0 for {@code start}.
+     *
+     * @param string As described.
+     * @param k As described.
+     */
+    public NtHash(final byte @NotNull [] string, int k) {
+        super(string, k, 0);
+    }
 
-    private long fwdHash;
-    private long revHash;
+    /**
+     * As described.
+     *
+     * @param string As described.
+     * @param k As described.
+     * @param start As described.
+     */
+    public NtHash(byte @NotNull [] string, int k, int start) {
+        super(string, k, start);
+    }
 
     @Override
     protected void initCurrentHash() {
@@ -52,28 +79,26 @@ public final class NtHash extends RollingHashBase {
         currentHash = Long.compareUnsigned(fwdHash, revHash) < 0 ? fwdHash : revHash;
     }
 
-    /**
-     * Default constructor.
-     *
-     * @param start As described.
-     * @param string As described.
-     * @param k As described.
-     */
-    public NtHash(final byte @NotNull [] string, int k, int start) {
-        super(string, k, start);
-        initCurrentHash();
+    @Override
+    protected void updateCurrentHashToNextState() {
+        var i = curPos - 1;
+        var seqi = string[i];
+        var seqk = string[i + k];
+        fwdHash = Long.rotateLeft(fwdHash, 1)
+                ^ Long.rotateLeft(seedTableGet(seqi), k)
+                ^ seedTableGet(seqk);
+        revHash = Long.rotateRight(revHash, 1)
+                ^ Long.rotateRight(complSeedTableGet(seqi), 1)
+                ^ Long.rotateLeft(complSeedTableGet(seqk), k - 1);
+        currentHash = Long.compareUnsigned(fwdHash, revHash) < 0 ? fwdHash : revHash;
     }
 
     /**
-     * Default constructor with 0 for {@code start}.
+     * {@link #seedTableGet(byte)} for reverse-complementary base.
      *
-     * @param string As described.
-     * @param k As described.
+     * @param b As described.
+     * @return As described.
      */
-    public NtHash(final byte @NotNull [] string, int k) {
-        this(string, k, 0);
-    }
-
     private long complSeedTableGet(byte b) {
         switch (b) {
             case 'A', 'a' -> {
@@ -94,6 +119,12 @@ public final class NtHash extends RollingHashBase {
         }
     }
 
+    /**
+     * Normalize the incoming base and return its seed.
+     *
+     * @param b As described.
+     * @return As described.
+     */
     private long seedTableGet(byte b) {
         switch (b) {
             case 'A', 'a' -> {
@@ -112,37 +143,5 @@ public final class NtHash extends RollingHashBase {
                 return SEED_N;
             }
         }
-    }
-
-    @Override
-    protected void updateCurrentHashToNextState() {
-        var i = curPos - 1;
-        var seqi = string[i];
-        var seqk = string[i + k];
-        fwdHash = Long.rotateLeft(fwdHash, 1)
-                ^ Long.rotateLeft(seedTableGet(seqi), k)
-                ^ seedTableGet(seqk);
-        revHash = Long.rotateRight(revHash, 1)
-                ^ Long.rotateRight(complSeedTableGet(seqi), 1)
-                ^ Long.rotateLeft(complSeedTableGet(seqk), k - 1);
-        currentHash = Long.compareUnsigned(fwdHash, revHash) < 0 ? fwdHash : revHash;
-    }
-
-    /**
-     * As described.
-     *
-     * @return As described.
-     */
-    public long getFwdHash() {
-        return fwdHash;
-    }
-
-    /**
-     * As described.
-     *
-     * @return As described.
-     */
-    public long getRevHash() {
-        return revHash;
     }
 }

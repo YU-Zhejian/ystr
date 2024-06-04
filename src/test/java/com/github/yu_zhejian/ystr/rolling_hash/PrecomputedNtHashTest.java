@@ -1,6 +1,7 @@
 package com.github.yu_zhejian.ystr.rolling_hash;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 
 import com.github.yu_zhejian.ystr.StrHash;
 
@@ -12,13 +13,13 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-class NtHashTest {
-    long getNthNtHash1(@NotNull String input, int n, int k) {
-        return new NtHash(input.getBytes(StandardCharsets.UTF_8), k, n).next();
+class PrecomputedNtHashTest {
+    long getNthPrecomputedNtHash1(@NotNull String input, int n, int k) {
+        return new PrecomputedNtHash(input.getBytes(StandardCharsets.UTF_8), k, n).next();
     }
 
-    long getNthNtHash2(@NotNull String input, int n, int k) {
-        var nth = new NtHash(input.getBytes(StandardCharsets.UTF_8), k);
+    long getNthPrecomputedNtHash2(@NotNull String input, int n, int k) {
+        var nth = new PrecomputedNtHash(input.getBytes(StandardCharsets.UTF_8), k);
         while (n > 0) {
             nth.next();
             n--;
@@ -26,8 +27,8 @@ class NtHashTest {
         return nth.next();
     }
 
-    void testNtHash(List<Long> expected, @NotNull String bases, int k) {
-        var nth = new NtHash(bases.getBytes(StandardCharsets.UTF_8), k);
+    void testPrecomputedNtHash(List<Long> expected, @NotNull String bases, int k) {
+        var nth = new PrecomputedNtHash(bases.getBytes(StandardCharsets.UTF_8), k);
         var actual = new ArrayList<Long>();
         while (nth.hasNext()) {
             actual.add(nth.next());
@@ -35,8 +36,8 @@ class NtHashTest {
         assertIterableEquals(expected, actual);
     }
 
-    void testNtHash(List<Long> expected, @NotNull String bases) {
-        testNtHash(expected, bases, 5);
+    void testPrecomputedNtHash(List<Long> expected, @NotNull String bases) {
+        testPrecomputedNtHash(expected, bases, 5);
     }
 
     @Test
@@ -44,29 +45,32 @@ class NtHashTest {
         var str1 = "NNNAGCUNNN";
         var str2 = "AGCTNN";
 
-        assertEquals(getNthNtHash2(str1, 3, 4), getNthNtHash2(str2, 0, 4));
-        assertEquals(getNthNtHash2(str1, 4, 4), getNthNtHash2(str2, 1, 4));
-        assertEquals(getNthNtHash2(str1, 4, 3), getNthNtHash2(str2, 1, 3));
+        assertEquals(getNthPrecomputedNtHash2(str1, 3, 4), getNthPrecomputedNtHash2(str2, 0, 4));
+        assertEquals(getNthPrecomputedNtHash2(str1, 4, 4), getNthPrecomputedNtHash2(str2, 1, 4));
+        assertEquals(getNthPrecomputedNtHash2(str1, 4, 3), getNthPrecomputedNtHash2(str2, 1, 3));
 
         // Simple ntHash
         Assertions.assertEquals(
-                StrHash.ntHash("AGCT".getBytes(StandardCharsets.UTF_8)), getNthNtHash2(str2, 0, 4));
+                StrHash.ntHash("AGCT".getBytes(StandardCharsets.UTF_8)),
+                getNthPrecomputedNtHash2(str2, 0, 4));
         assertEquals(
-                StrHash.ntHash("GCTN".getBytes(StandardCharsets.UTF_8)), getNthNtHash2(str2, 1, 4));
+                StrHash.ntHash("GCTN".getBytes(StandardCharsets.UTF_8)),
+                getNthPrecomputedNtHash2(str2, 1, 4));
         assertEquals(
-                StrHash.ntHash("GCT".getBytes(StandardCharsets.UTF_8)), getNthNtHash2(str2, 1, 3));
+                StrHash.ntHash("GCT".getBytes(StandardCharsets.UTF_8)),
+                getNthPrecomputedNtHash2(str2, 1, 3));
 
         // Different skipping strategy
-        assertEquals(getNthNtHash1(str1, 3, 4), getNthNtHash2(str2, 0, 4));
-        assertEquals(getNthNtHash1(str1, 4, 4), getNthNtHash2(str2, 1, 4));
-        assertEquals(getNthNtHash1(str1, 4, 3), getNthNtHash2(str2, 1, 3));
+        assertEquals(getNthPrecomputedNtHash1(str1, 3, 4), getNthPrecomputedNtHash2(str2, 0, 4));
+        assertEquals(getNthPrecomputedNtHash1(str1, 4, 4), getNthPrecomputedNtHash2(str2, 1, 4));
+        assertEquals(getNthPrecomputedNtHash1(str1, 4, 3), getNthPrecomputedNtHash2(str2, 1, 3));
     }
 
     @Test
     void canonicalTestFromRust() {
-        testNtHash(List.of(0x0baf_a672_8fc6_dabfL), "TGCAG");
-        testNtHash(List.of(0x4802_02d5_4e8e_becdL), "ACGTC");
-        testNtHash(
+        testPrecomputedNtHash(List.of(0x0baf_a672_8fc6_dabfL), "TGCAG");
+        testPrecomputedNtHash(List.of(0x4802_02d5_4e8e_becdL), "ACGTC");
+        testPrecomputedNtHash(
                 List.of(
                         0x4802_02d5_4e8e_becdL,
                         0xa997_bdc6_28b4_c98eL,
@@ -85,7 +89,7 @@ class NtHashTest {
                         0x0baf_a672_8fc6_dabfL,
                         0x14a3_3bb9_2827_7bedL),
                 "ACGTCGTCAGTCGATGCAGT");
-        testNtHash(
+        testPrecomputedNtHash(
                 List.of(
                         0x4802_02d5_4e8e_becdL,
                         0xa997_bdc6_28b4_c98eL,
@@ -96,7 +100,7 @@ class NtHashTest {
                         0x6d74_fee7_0283_5974L,
                         0xb744_44dd_9a94_cbf3L),
                 "ACGTCGANNGTA");
-        testNtHash(List.of(0x4802_02d5_4e8e_becdL), "ACGTC");
+        testPrecomputedNtHash(List.of(0x4802_02d5_4e8e_becdL), "ACGTC");
     }
 
     /**
@@ -107,7 +111,7 @@ class NtHashTest {
      */
     @Test
     void testFromCxxImpl() {
-        testNtHash(
+        testPrecomputedNtHash(
                 List.of(
                         0x152c66ec978d36fbL,
                         0x54a5e3c2e1c4d24L,
@@ -125,7 +129,7 @@ class NtHashTest {
                         0x970afba36d554cefL,
                         0x352f086ac4423856L),
                 "GAGTGTCAAACATTCAGAC");
-        testNtHash(
+        testPrecomputedNtHash(
                 List.of(
                         0xa576547a7fe40ed0L,
                         0x9b1eda9a185413ceL,

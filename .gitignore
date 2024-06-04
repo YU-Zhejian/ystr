@@ -112,3 +112,5 @@ runtime_wrapper.sh
 /tmp_*
 .idea/deployment.xml
 .idea/.name
+.idea/rGraphicsSettings.xml
+.idea/rSettings.xml
