@@ -27,7 +27,7 @@ public final class StrUtils {
      * @param q The exponent.
      * @return As described.
      */
-    public static int pow(int p, int q) {
+    public static int pow(final int p, final int q) {
         if (p < 0 || q < 0) {
             throw new IllegalArgumentException(
                     "p and q should be non-negative. Actual: %d, %d".formatted(p, q));
@@ -46,7 +46,7 @@ public final class StrUtils {
      * @param q As described.
      * @return As described.
      */
-    public static long pow(long p, int q) {
+    public static long pow(final long p, final int q) {
         if (p < 0 || q < 0) {
             throw new IllegalArgumentException(
                     "p and q should be non-negative. Actual: %d, %d".formatted(p, q));
@@ -64,7 +64,7 @@ public final class StrUtils {
      * @param start As described.
      * @param end As described.
      */
-    public static void ensureStartEndValid(int start, int end) {
+    public static void ensureStartEndValid(final int start, final int end) {
         if (start > end) {
             throw new IllegalArgumentException(
                     "start must be less than end. Actual: %d vs %d".formatted(start, end));
@@ -82,7 +82,7 @@ public final class StrUtils {
      * @param end As described.
      * @param strLen As described.
      */
-    public static void ensureStartEndValid(int start, int end, int strLen) {
+    public static void ensureStartEndValid(final int start, final int end, final int strLen) {
         ensureStartEndValid(start, end);
         if (end > strLen) {
             throw new IllegalArgumentException(
@@ -98,7 +98,7 @@ public final class StrUtils {
      * @param <T> As described.
      */
     @Contract(value = "_ -> new", pure = true)
-    public static <T> @NotNull Iterator<T> dedup(Iterator<T> sourceIterator) {
+    public static <T> @NotNull Iterator<T> dedup(final Iterator<T> sourceIterator) {
         return new UniqueAdjacentIterator<>(sourceIterator);
     }
 
@@ -108,9 +108,9 @@ public final class StrUtils {
      * @param array As described.
      * @return As described.
      */
-    public static @NotNull Iterator<Long> arrayToIterator(long @NotNull [] array) {
-        var retl = new ArrayList<Long>(array.length);
-        for (var i : array) {
+    public static @NotNull Iterator<Long> arrayToIterator(final long @NotNull [] array) {
+        final var retl = new ArrayList<Long>(array.length);
+        for (final var i : array) {
             retl.add(i);
         }
         return retl.iterator();
@@ -122,9 +122,9 @@ public final class StrUtils {
      * @param array As described.
      * @return As described.
      */
-    public static @NotNull Iterator<Integer> arrayToIterator(int @NotNull [] array) {
-        var retl = new ArrayList<Integer>(array.length);
-        for (var i : array) {
+    public static @NotNull Iterator<Integer> arrayToIterator(final int @NotNull [] array) {
+        final var retl = new ArrayList<Integer>(array.length);
+        for (final var i : array) {
             retl.add(i);
         }
         return retl.iterator();
@@ -137,8 +137,8 @@ public final class StrUtils {
      * @param <T> As described.
      * @return As described.
      */
-    public static <T> @NotNull Iterator<T> arrayToIterator(T @NotNull [] array) {
-        var retl = new ArrayList<T>(array.length);
+    public static <T> @NotNull Iterator<T> arrayToIterator(final T @NotNull [] array) {
+        final var retl = new ArrayList<T>(array.length);
         retl.addAll(Arrays.asList(array));
         return retl.iterator();
     }
@@ -150,7 +150,7 @@ public final class StrUtils {
      * @return As described.
      * @param <T> As described.
      */
-    public static <T> @NotNull Iterable<T> iterable(Iterator<T> iterator) {
+    public static <T> @NotNull Iterable<T> iterable(final @NotNull Iterator<T> iterator) {
         return new Iterable<>() {
             @NotNull
             @Override
@@ -167,8 +167,8 @@ public final class StrUtils {
      *
      * @return As described.
      */
-    public static int strcmp(byte @NotNull [] array1, byte @NotNull [] array2) {
-        int minLength = Math.min(array1.length, array2.length);
+    public static int strcmp(final byte @NotNull [] array1, final byte @NotNull [] array2) {
+        final int minLength = Math.min(array1.length, array2.length);
         for (int i = 0; i < minLength; i++) {
             if (!Objects.equals(array1[i], array2[i])) {
                 // If bytes are not equal, return the difference (this mimics the behavior of
@@ -190,6 +190,20 @@ public final class StrUtils {
 class UniqueAdjacentIterator<T> implements Iterator<T> {
     private final Iterator<T> sourceIterator;
 
+    /** Whether {@link #currentValue} is reliable. */
+    private boolean currentIsValid;
+
+    /** Whether {@link #nextValue} is reliable. */
+    private boolean nextIsValid;
+
+    /** What to return when {@link #next()} is called. */
+    private T currentValue;
+    /**
+     * Next value that is different from {@link #currentValue}. I.e., next value to return when
+     * {@link #next()} is called.
+     */
+    private T nextValue;
+
     public UniqueAdjacentIterator(@NotNull Iterator<T> sourceIterator) {
         this.sourceIterator = sourceIterator;
 
@@ -205,20 +219,6 @@ class UniqueAdjacentIterator<T> implements Iterator<T> {
             tryPopulateNext();
         }
     }
-
-    /** Whether {@link #currentValue} is reliable. */
-    private boolean currentIsValid;
-
-    /** Whether {@link #nextValue} is reliable. */
-    private boolean nextIsValid;
-
-    /** What to return when {@link #next()} is called. */
-    private T currentValue;
-    /**
-     * Next value that is different from {@link #currentValue}. I.e., next value to return when
-     * {@link #next()} is called.
-     */
-    private T nextValue;
 
     @Override
     public boolean hasNext() {
@@ -260,7 +260,7 @@ class UniqueAdjacentIterator<T> implements Iterator<T> {
     @Override
     public T next() {
         if (currentIsValid) {
-            var retv = currentValue;
+            final var retv = currentValue;
             if (nextIsValid) {
                 currentValue = nextValue;
                 nextIsValid = false;
@@ -272,4 +272,6 @@ class UniqueAdjacentIterator<T> implements Iterator<T> {
         }
         throw new NoSuchElementException();
     }
+
+    // TODO: A k-mer iterator.
 }

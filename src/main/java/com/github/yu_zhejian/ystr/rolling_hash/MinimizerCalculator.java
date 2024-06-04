@@ -38,7 +38,7 @@ final class MinimizerRingBuffer {
      * @param capacity As described.
      * @param start See {@link MinimizerCalculator}.
      */
-    public MinimizerRingBuffer(int capacity, int start) {
+    public MinimizerRingBuffer(final int capacity, final int start) {
         this.capacity = capacity;
         contents = new long[capacity];
         pos = new int[capacity];
@@ -52,7 +52,7 @@ final class MinimizerRingBuffer {
      *
      * @param hash As described.
      */
-    public void add(long hash) {
+    public void add(final long hash) {
         contents[curPos] = hash;
         pos[curPos] = pos[(curPos + capacity - 1) % capacity] + 1;
         curPos++;
@@ -70,7 +70,7 @@ final class MinimizerRingBuffer {
         long minimizer = MAX_ULONG;
         int minPos = Integer.MAX_VALUE;
         for (int i = 0; i < capacity; i++) {
-            var cmp = Long.compareUnsigned(contents[i], minimizer);
+            final var cmp = Long.compareUnsigned(contents[i], minimizer);
             if (cmp < 0 || (cmp == 0 && pos[i] < minPos)) {
                 minimizer = contents[i];
                 minPos = pos[i];
@@ -79,8 +79,9 @@ final class MinimizerRingBuffer {
         return Tuple.of(minimizer, minPos);
     }
 
+    @Override
     public @NotNull String toString() {
-        var sb = new StringBuilder();
+        final var sb = new StringBuilder();
         for (int i = 0; i < capacity; i++) {
             if (i == curPos) {
                 sb.append('(');
@@ -92,7 +93,7 @@ final class MinimizerRingBuffer {
             sb.append(", ");
         }
         sb.delete(sb.length() - 2, sb.length());
-        return "MinimizerRingBuffer[" + sb + "]";
+        return "MinimizerRingBuffer[%s]".formatted(sb);
     }
 }
 
@@ -149,7 +150,10 @@ public final class MinimizerCalculator implements Iterator<Tuple2<Long, Integer>
      * @param endHash As described.
      */
     public MinimizerCalculator(
-            Iterator<Long> hashIterable, int windowSize, int start, boolean endHash) {
+            final Iterator<Long> hashIterable,
+            final int windowSize,
+            final int start,
+            final boolean endHash) {
         this.hashIterable = hashIterable;
         this.windowSize = windowSize;
         this.endHash = endHash;
@@ -166,7 +170,7 @@ public final class MinimizerCalculator implements Iterator<Tuple2<Long, Integer>
         // System.out.println("---pre---");
         while (hashTo < windowSize && hashIterable.hasNext()) {
             // System.out.println(hashFrom + " " + hashTo);
-            var currentHash = hashIterable.next();
+            final var currentHash = hashIterable.next();
             minimizerRingBuffer.add(currentHash);
             if (endHash) {
                 leadingEndHash.add(minimizerRingBuffer.getCurrentMinimizer());
@@ -219,7 +223,7 @@ public final class MinimizerCalculator implements Iterator<Tuple2<Long, Integer>
         if (hashIterable.hasNext()) {
             // System.out.println(hashFrom + " " + hashTo);
             minimizerRingBuffer.add(hashIterable.next());
-            var retv = minimizerRingBuffer.getCurrentMinimizer();
+            final var retv = minimizerRingBuffer.getCurrentMinimizer();
             hashTo++;
             if (hashTo != windowSize) {
                 hashFrom++;

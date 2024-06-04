@@ -1,0 +1,42 @@
+= Readme for `yStr` -- Yu ZJ's Implementation of Commonly-Used Bioinformatics String Algorithms
+
+Here contains some Java 17 implementation over commonly-used bioinformatics string algorithms.
+
+== Getting `yStr` In Your Project
+
+Currently, we haven't published this module on https://central.sonatype.com/[Maven Central]. However, you may still use it inside your own project if you use Gradle as your build system.
+
+// TODO: Guide.
+
+== Programming with `yStr`
+
+=== Immutable Strings
+
+Since we hardly deal with unicode characters in biological texts, all strings are represented as `byte[]`. Using such could reduce time used on encoding and decoding, but would risk of loosing Java's optimization on strings (e.g., small string pool). To convert a Java `String` into `byte[]`, you may:
+
+[source,java]
+----
+import java.nio.charset.StandardCharsets;
+
+class Demo{
+    static byte[] demo(){
+        return "AGCT".getBytes(StandardCharsets.UTF_8);
+    }
+}
+----
+
+Although parameters of the majority of methods are marked `final`, it may still be mutable. For example, the following operation is valid in Java:
+
+[source,java]
+----
+class Demo{
+    static void demo(){
+        final int[] arr = {1, 2, 3};
+        arr[2] = 4;
+        System.out.println(arr[2]);
+        // Should give 4 as output.
+    }
+}
+----
+
+This makes the immutability of any passing `final byte[]` best-effort. If you're using `yStr` under a multi-threaded environment, you may protect your strings using mutex. On the contrary, `final String` completely immutable and considered safe.

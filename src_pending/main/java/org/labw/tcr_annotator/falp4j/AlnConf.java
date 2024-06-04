@@ -3,9 +3,9 @@ package org.labw.tcr_annotator.falp4j;
 import io.vavr.Tuple2;
 
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
@@ -139,12 +139,10 @@ public final class AlnConf {
      * @return As described.
      */
     public static @NotNull Map<Tuple2<Character, Character>, Integer> readSubstMtx(String mtxName) {
-        var lh = LoggerFactory.getLogger(AlnConf.class);
         var mtxFileName = "matrices/%s.txt".formatted(mtxName);
         var resourceInputStream = ClassLoader.getSystemResourceAsStream(mtxFileName);
         if (resourceInputStream == null) {
-            lh.error("File {} not found!", mtxFileName);
-            throw new RuntimeException();
+            throw new FileNotFoundException("File {} not found!", mtxFileName);
         }
         try (var resourceReader = new BufferedReader(
                 new InputStreamReader(resourceInputStream, StandardCharsets.UTF_8))) {

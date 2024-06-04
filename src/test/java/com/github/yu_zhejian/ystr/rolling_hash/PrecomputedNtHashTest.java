@@ -19,16 +19,17 @@ class PrecomputedNtHashTest {
     }
 
     long getNthPrecomputedNtHash2(@NotNull String input, int n, int k) {
-        var nth = new PrecomputedNtHash(input.getBytes(StandardCharsets.UTF_8), k);
-        while (n > 0) {
+        var nLeft = n;
+        var nth = new PrecomputedNtHash(input.getBytes(StandardCharsets.UTF_8), k, 0);
+        while (nLeft > 0) {
             nth.next();
-            n--;
+            nLeft--;
         }
         return nth.next();
     }
 
     void testPrecomputedNtHash(List<Long> expected, @NotNull String bases, int k) {
-        var nth = new PrecomputedNtHash(bases.getBytes(StandardCharsets.UTF_8), k);
+        var nth = new PrecomputedNtHash(bases.getBytes(StandardCharsets.UTF_8), k, 0);
         var actual = new ArrayList<Long>();
         while (nth.hasNext()) {
             actual.add(nth.next());

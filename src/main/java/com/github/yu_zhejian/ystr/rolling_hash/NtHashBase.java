@@ -4,7 +4,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 /** Constants for {@link NtHash} and {@link PrecomputedNtHash}. */
-public abstract class NtHashBase extends RollingHashBase {
+abstract class NtHashBase extends RollingHashBase {
     protected static final long SEED_A = 0x3c8bfbb395c60474L;
     protected static final long SEED_C = 0x3193c18562a02b4cL;
     protected static final long SEED_G = 0x20323ed082572324L;
@@ -22,7 +22,7 @@ public abstract class NtHashBase extends RollingHashBase {
      * @param k As described.
      * @param start As described.
      */
-    public NtHashBase(byte @NotNull [] string, int k, int start) {
+    protected NtHashBase(final byte @NotNull [] string, final int k, final int start) {
         super(string, k, start);
         initCurrentHash();
     }
@@ -55,9 +55,9 @@ public abstract class NtHashBase extends RollingHashBase {
      * @return As described.
      */
     @Contract(pure = true)
-    public static long @NotNull [] multiHash(int m, int k, long currentHash) {
-        var tVal = 0L;
-        var retl = new long[m];
+    public static long @NotNull [] multiHash(final int m, final int k, final long currentHash) {
+        long tVal;
+        final var retl = new long[m];
         retl[0] = currentHash;
         for (int i = 1; i < m; i++) {
             tVal = currentHash * (i ^ k * MULTI_SEED);
@@ -74,7 +74,7 @@ public abstract class NtHashBase extends RollingHashBase {
      * @return As described.
      */
     @Contract(pure = true)
-    public long @NotNull [] multiHash(int m) {
+    public long @NotNull [] multiHash(final int m) {
         return multiHash(m, k, currentHash);
     }
 }

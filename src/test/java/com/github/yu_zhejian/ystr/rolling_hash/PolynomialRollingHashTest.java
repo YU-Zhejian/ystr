@@ -15,10 +15,11 @@ class PolynomialRollingHashTest {
     }
 
     long getPolynomialRollinghPolynomialRollingHash2(@NotNull String input, int n, int k) {
-        var nth = new PolynomialRollingHash(input.getBytes(StandardCharsets.UTF_8), k);
-        while (n > 0) {
+        var nLeft = n;
+        var nth = new PolynomialRollingHash(input.getBytes(StandardCharsets.UTF_8), k, 0);
+        while (nLeft > 0) {
             nth.next();
-            n--;
+            nLeft--;
         }
         return nth.next();
     }

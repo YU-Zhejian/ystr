@@ -46,23 +46,13 @@ import org.jetbrains.annotations.NotNull;
  */
 public final class NtHash extends NtHashBase {
     /**
-     * Default constructor with 0 for {@code start}.
-     *
-     * @param string As described.
-     * @param k As described.
-     */
-    public NtHash(final byte @NotNull [] string, int k) {
-        super(string, k, 0);
-    }
-
-    /**
      * As described.
      *
      * @param string As described.
      * @param k As described.
      * @param start As described.
      */
-    public NtHash(byte @NotNull [] string, int k, int start) {
+    public NtHash(final byte @NotNull [] string, final int k, final int start) {
         super(string, k, start);
     }
 
@@ -81,9 +71,9 @@ public final class NtHash extends NtHashBase {
 
     @Override
     protected void updateCurrentHashToNextState() {
-        var i = curPos - 1;
-        var seqi = string[i];
-        var seqk = string[i + k];
+        final var i = curPos - 1;
+        final var seqi = string[i];
+        final var seqk = string[i + k];
         fwdHash = Long.rotateLeft(fwdHash, 1)
                 ^ Long.rotateLeft(seedTableGet(seqi), k)
                 ^ seedTableGet(seqk);
@@ -99,7 +89,7 @@ public final class NtHash extends NtHashBase {
      * @param b As described.
      * @return As described.
      */
-    private long complSeedTableGet(byte b) {
+    private long complSeedTableGet(final byte b) {
         switch (b) {
             case 'A', 'a' -> {
                 return SEED_T;
@@ -125,7 +115,7 @@ public final class NtHash extends NtHashBase {
      * @param b As described.
      * @return As described.
      */
-    private long seedTableGet(byte b) {
+    private long seedTableGet(final byte b) {
         switch (b) {
             case 'A', 'a' -> {
                 return SEED_A;

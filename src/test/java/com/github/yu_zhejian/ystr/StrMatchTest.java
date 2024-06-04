@@ -18,7 +18,7 @@ import java.util.Map;
 
 /** TODO: Add test cases from <a href="https://github.com/smart-tool/smart/">...</a>. */
 class StrMatchTest {
-    static Map<Tuple2<String, String>, List<Integer>> TEST_CASES_AGCT = Map.ofEntries(
+    static final Map<Tuple2<String, String>, List<Integer>> TEST_CASES_AGCT = Map.ofEntries(
             Map.entry(Tuple.of("ATTCCGTAAATTCCAAAATTCCGATTCTCC", "TTCC"), List.of(1, 10, 18)),
             Map.entry(
                     Tuple.of("AAAAAATTCCGTCCCCCAAAAACCCATTCCGTCCCAAAAAGGGTTT", "ATTCCGT"),

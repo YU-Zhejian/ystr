@@ -33,7 +33,8 @@ public final class StrMatch {
      * @param start As described.
      * @return As described.
      */
-    public static boolean isMatch(byte @NotNull [] haystack, byte @NotNull [] needle, int start) {
+    public static boolean isMatch(
+            final byte @NotNull [] haystack, final byte @NotNull [] needle, final int start) {
         for (int needlePos = 0; needlePos < needle.length; needlePos++) {
             if (haystack[needlePos + start] != needle[needlePos]) {
                 return false;
@@ -43,7 +44,10 @@ public final class StrMatch {
     }
 
     private static void ensureParametersValid(
-            byte @NotNull [] haystack, byte @NotNull [] needle, int start, int end) {
+            final byte @NotNull [] haystack,
+            final byte @NotNull [] needle,
+            final int start,
+            final int end) {
         StrUtils.ensureStartEndValid(start, end, haystack.length);
         if (needle.length > end - start) {
             throw new IllegalArgumentException(
@@ -70,13 +74,16 @@ public final class StrMatch {
      * @return As described.
      */
     public static @NotNull List<Integer> bruteForceMatch(
-            byte @NotNull [] haystack, byte @NotNull [] needle, int start, int end) {
+            final byte @NotNull [] haystack,
+            final byte @NotNull [] needle,
+            final int start,
+            final int end) {
         ensureParametersValid(haystack, needle, start, end);
         if (haystack.length == 0 || needle.length == 0) {
             return new ArrayList<>();
         }
         var haystackPos = start;
-        var retl = new ArrayList<Integer>();
+        final var retl = new ArrayList<Integer>();
         while (haystackPos + needle.length <= end) {
             if (isMatch(haystack, needle, haystackPos)) {
                 retl.add(haystackPos);
@@ -104,14 +111,17 @@ public final class StrMatch {
      * @return As described.
      */
     public static @NotNull List<Integer> naiveMatch(
-            byte @NotNull [] haystack, byte @NotNull [] needle, int start, int end) {
+            final byte @NotNull [] haystack,
+            final byte @NotNull [] needle,
+            final int start,
+            final int end) {
         ensureParametersValid(haystack, needle, start, end);
         if (haystack.length == 0 || needle.length == 0) {
             return new ArrayList<>();
         }
-        var needleLen = needle.length;
+        final var needleLen = needle.length;
         var haystackPos = start;
-        var retl = new ArrayList<Integer>();
+        final var retl = new ArrayList<Integer>();
         while (haystackPos + needleLen <= end) {
             // Find first match
             while (haystack[haystackPos] != needle[0] && haystackPos + needleLen <= end) {
@@ -147,32 +157,30 @@ public final class StrMatch {
      * @param <T> Some Rabin-Karp-compatible rolling hash calculator.
      */
     public static <T extends RollingHashInterface> @NotNull List<Integer> rabinKarpMatch(
-            byte @NotNull [] haystack,
-            byte @NotNull [] needle,
-            int start,
-            int end,
-            Class<T> rollingHashClaz,
-            Object... rollingHashParams) {
+            final byte @NotNull [] haystack,
+            final byte @NotNull [] needle,
+            final int start,
+            final int end,
+            final Class<T> rollingHashClaz,
+            final Object... rollingHashParams) {
         ensureParametersValid(haystack, needle, start, end);
         if (haystack.length == 0 || needle.length == 0) {
             return new ArrayList<>();
         }
         // Create initial hash
         var haystackPos = start;
-        var needleLen = needle.length;
-        var rhHaystack = RollingHashFactory.newRollingHash(
+        final var needleLen = needle.length;
+        final var rhHaystack = RollingHashFactory.newRollingHash(
                 rollingHashClaz, haystack, needleLen, start, rollingHashParams);
-        var needleHash = RollingHashFactory.newRollingHash(
+        final var needleHash = RollingHashFactory.newRollingHash(
                         rollingHashClaz, needle, needleLen, 0, rollingHashParams)
                 .next();
 
-        var retl = new ArrayList<Integer>();
+        final var retl = new ArrayList<Integer>();
         while (haystackPos + needleLen <= end) {
-            var nextHash = rhHaystack.next();
-            if (Objects.equals(nextHash, needleHash)) {
-                if (isMatch(haystack, needle, haystackPos)) {
-                    retl.add(haystackPos);
-                }
+            final var nextHash = rhHaystack.next();
+            if (Objects.equals(nextHash, needleHash) && isMatch(haystack, needle, haystackPos)) {
+                retl.add(haystackPos);
             }
             haystackPos++;
         }
@@ -190,7 +198,10 @@ public final class StrMatch {
      * @return As described.
      */
     public static @NotNull List<Integer> rabinKarpMatch(
-            byte @NotNull [] haystack, byte @NotNull [] needle, int start, int end) {
+            final byte @NotNull [] haystack,
+            final byte @NotNull [] needle,
+            final int start,
+            final int end) {
         return rabinKarpMatch(haystack, needle, start, end, PolynomialRollingHash.class);
     }
 
@@ -270,8 +281,8 @@ public final class StrMatch {
      *     notation as ours.
      */
     @Contract(value = "_ -> new", pure = true)
-    public static int @NotNull [] lps(byte @NotNull [] string) {
-        var retl = new int[string.length];
+    public static int @NotNull [] lps(final byte @NotNull [] string) {
+        final var retl = new int[string.length];
         retl[0] = 0; // By definition
         for (int i = 1; i < string.length; i++) {
             int j = retl[i - 1];
@@ -307,16 +318,19 @@ public final class StrMatch {
      * @return As described.
      */
     public static @NotNull List<Integer> knuthMorrisPrattMatch(
-            byte @NotNull [] haystack, byte @NotNull [] needle, int start, int end) {
+            final byte @NotNull [] haystack,
+            final byte @NotNull [] needle,
+            final int start,
+            final int end) {
         ensureParametersValid(haystack, needle, start, end);
         if (haystack.length == 0 || needle.length == 0) {
             return new ArrayList<>();
         }
-        var retl = new ArrayList<Integer>();
-        var lpsNeedle = lps(needle);
+        final var retl = new ArrayList<Integer>();
+        final var lpsNeedle = lps(needle);
         var needlePos = 0;
         var haystackPos = start;
-        var needleLen = needle.length;
+        final var needleLen = needle.length;
         while (haystackPos < end) {
             if (needle[needlePos] == haystack[haystackPos]) {
                 needlePos++;

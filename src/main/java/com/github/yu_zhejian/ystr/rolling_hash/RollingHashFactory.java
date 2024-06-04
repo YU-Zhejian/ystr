@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 
-/** TODO */
+/** TODO: This is sh*t. Have it refactored. */
 public final class RollingHashFactory {
 
     /**
@@ -21,17 +21,19 @@ public final class RollingHashFactory {
      */
     @Contract("_, _, _, _, _ -> new")
     public static <T extends RollingHashInterface> @NotNull RollingHashInterface newRollingHash(
-            @NotNull Class<T> claz,
+            final @NotNull Class<T> claz,
             final byte @NotNull [] string,
-            int k,
-            int start,
-            Object... params) {
+            final int k,
+            final int start,
+            final Object... params) {
+
         if (claz == NtHash.class) {
             return new NtHash(string, k, start);
         } else if (claz.equals(PolynomialRollingHash.class)) {
-            if (params.length == 2 && params[0] instanceof Long && params[1] instanceof Long) {
-                return new PolynomialRollingHash(
-                        string, k, start, (Long) params[0], (Long) params[1]);
+            if (params.length == 2
+                    && params[0] instanceof Long lp0
+                    && params[1] instanceof Long lp1) {
+                return new PolynomialRollingHash(string, k, start, lp0, lp1);
             } else if (params.length == 0) {
                 return new PolynomialRollingHash(string, k, start);
             } else {

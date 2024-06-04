@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.NoSuchElementException;
 
 /** A base implementation for all rolling hash algorithms. */
-public abstract class RollingHashBase implements RollingHashInterface {
+abstract class RollingHashBase implements RollingHashInterface {
     /** The string you're hashing. */
     protected final byte[] string;
 
@@ -19,14 +19,14 @@ public abstract class RollingHashBase implements RollingHashInterface {
     /** Arbitrary starting position. */
     protected final int start;
 
+    /** The current hash value. */
+    protected Long currentHash;
+
     /** Populate {@link #currentHash} with hash of the first window. */
     protected abstract void initCurrentHash();
 
     /** Slide the window and update {@link #currentHash} */
     protected abstract void updateCurrentHashToNextState();
-
-    /** The current hash value. */
-    protected Long currentHash;
 
     /**
      * As described.
@@ -35,7 +35,7 @@ public abstract class RollingHashBase implements RollingHashInterface {
      * @param k As described.
      * @param start As described.
      */
-    private void checkInput(final byte @NotNull [] string, int k, int start) {
+    private void checkInput(final byte @NotNull [] string, final int k, final int start) {
         if (k <= 0) {
             throw new IllegalArgumentException("k should be positive. Actual: %d".formatted(k));
         }
@@ -61,7 +61,7 @@ public abstract class RollingHashBase implements RollingHashInterface {
      * @param k As described.
      * @param start As described.
      */
-    public RollingHashBase(final byte @NotNull [] string, int k, int start) {
+    protected RollingHashBase(final byte @NotNull [] string, final int k, final int start) {
         checkInput(string, k, start);
         this.string = string;
         this.k = k;

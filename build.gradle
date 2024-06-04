@@ -1,6 +1,5 @@
 import com.diffplug.spotless.LineEnding
 import java.nio.charset.StandardCharsets
-import java.text.DecimalFormat
 
 // ---------------------------- Plugins ----------------------------
 plugins {
@@ -10,12 +9,6 @@ plugins {
 	id "jacoco"
 	id "jacoco-report-aggregation"
 	id "pmd"
-	// https://mvnrepository.com/artifact/com.github.johnrengelman.shadow/com.github.johnrengelman.shadow.gradle.plugin
-	// https://plugins.gradle.org/plugin/com.github.johnrengelman.shadow
-	id "com.github.johnrengelman.shadow" version "8.1.1"
-	// https://mvnrepository.com/artifact/com.portingle/classpath-hell
-	// https://plugins.gradle.org/plugin/com.portingle.classpath-hell
-	id "com.portingle.classpath-hell" version "1.10"
 	// https://mvnrepository.com/artifact/com.diffplug.spotless/spotless-plugin-gradle
 	// https://plugins.gradle.org/plugin/com.diffplug.spotless
 	id "com.diffplug.spotless" version "6.25.0"
@@ -43,9 +36,6 @@ final def ECLIPSE_JDT_VER = "4.29"
 // https://mvnrepository.com/artifact/com.github.spotbugs/spotbugs
 final def SPOTBUGS_VER = "4.8.5"
 
-def CLASS_PATH_HELL_RESOURCE_EXCLUSIONS = new ArrayList<String>(classpathHell.CommonResourceExclusions())
-CLASS_PATH_HELL_RESOURCE_EXCLUSIONS.addAll(List.of("^license/.*", "^module-info\\.class\$"))
-
 // ---------------------------- Dependencies ----------------------------
 repositories {
 	//	maven { url 'https://maven.aliyun.com/repository/central/' }
@@ -68,8 +58,6 @@ dependencies {
 
 	// https://mvnrepository.com/artifact/io.vavr/vavr
 	implementation 'io.vavr:vavr:0.10.4'
-
-	implementation "org.slf4j:slf4j-api:${SLF4J_VER}"
 
 	// https://mvnrepository.com/artifact/org.jetbrains/annotations
 	implementation "org.jetbrains:annotations:24.1.0"
@@ -106,16 +94,6 @@ jacocoTestReport {
 }
 
 // ---------------------------- Code QC ----------------------------
-tasks.named("check") {
-	dependsOn("checkClasspath")
-}
-classpathHell {
-	configurationsToScan = [
-		configurations.runtimeClasspath
-	]
-	// suppressExactDupes = true
-	resourceExclusions = CLASS_PATH_HELL_RESOURCE_EXCLUSIONS
-}
 pmd {
 	consoleOutput = true
 	toolVersion = PMD_VER

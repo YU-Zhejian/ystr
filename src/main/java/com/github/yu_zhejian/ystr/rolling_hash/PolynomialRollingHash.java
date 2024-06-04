@@ -36,9 +36,9 @@ public final class PolynomialRollingHash extends RollingHashBase {
      * Default {@link #p}. Since we do not use negative part of {@link Byte}, the alphabet size is
      * 128.
      */
-    public static final long POLYNOMIAL_ROLLING_HASH_RADIX_P = 128;
+    public static final long DEFAULT_POLYNOMIAL_ROLLING_HASH_RADIX_P = 128;
     /** Default {@link #m}. Same as Robert Sedgewick's Implementation. */
-    public static final long POLYNOMIAL_ROLLING_HASH_M = 997;
+    public static final long DEFAULT_POLYNOMIAL_ROLLING_HASH_M = 997;
 
     private final long m;
     private final long p;
@@ -53,18 +53,13 @@ public final class PolynomialRollingHash extends RollingHashBase {
      * @param string As described.
      * @param k As described.
      */
-    public PolynomialRollingHash(byte @NotNull [] string, int k, int start) {
-        this(string, k, start, POLYNOMIAL_ROLLING_HASH_M, POLYNOMIAL_ROLLING_HASH_RADIX_P);
-    }
-
-    /**
-     * Default constructor with 0 for {@code start}.
-     *
-     * @param string As described.
-     * @param k As described.
-     */
-    public PolynomialRollingHash(byte @NotNull [] string, int k) {
-        this(string, k, 0, POLYNOMIAL_ROLLING_HASH_M, POLYNOMIAL_ROLLING_HASH_RADIX_P);
+    public PolynomialRollingHash(final byte @NotNull [] string, final int k, final int start) {
+        this(
+                string,
+                k,
+                start,
+                DEFAULT_POLYNOMIAL_ROLLING_HASH_M,
+                DEFAULT_POLYNOMIAL_ROLLING_HASH_RADIX_P);
     }
 
     /**
@@ -85,7 +80,12 @@ public final class PolynomialRollingHash extends RollingHashBase {
      * @param m Some prime number.
      * @param p Usually alphabet size.
      */
-    public PolynomialRollingHash(byte @NotNull [] string, int k, int start, long m, long p) {
+    public PolynomialRollingHash(
+            final byte @NotNull [] string,
+            final int k,
+            final int start,
+            final long m,
+            final long p) {
         super(string, k, start);
         if (m <= 0 || p <= 0) {
             throw new IllegalArgumentException(
@@ -110,9 +110,9 @@ public final class PolynomialRollingHash extends RollingHashBase {
 
     @Override
     protected void updateCurrentHashToNextState() {
-        var i = curPos - 1;
-        var seqi = string[i];
-        var seqk = string[i + k];
+        final var i = curPos - 1;
+        final var seqi = string[i];
+        final var seqk = string[i + k];
         // + m in the following line prevents the genesis of negative values.
         currentHash = (currentHash + m - (pow * seqi) % m) % m;
         currentHash = ((currentHash * p) % m + seqk) % m;

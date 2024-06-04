@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public final class PrecomputedNtHash extends NtHashBase {
     private static final byte CP_OFF = 0x07;
-    private static final long[] VEC_A = new long[] {
+    private static final long[] VEC_A = {
         0x3c8bfbb395c60474L, 0x7917f7672b8c08e8L, 0xf22feece571811d0L, 0xe45fdd9cae3023a1L,
                 0xc8bfbb395c604743L, 0x917f7672b8c08e87L, 0x22feece571811d0fL, 0x45fdd9cae3023a1eL,
         0x8bfbb395c604743cL, 0x17f7672b8c08e879L, 0x2feece571811d0f2L, 0x5fdd9cae3023a1e4L,
@@ -27,7 +27,7 @@ public final class PrecomputedNtHash extends NtHashBase {
         0x743c8bfbb395c604L, 0xe87917f7672b8c08L, 0xd0f22feece571811L, 0xa1e45fdd9cae3023L,
                 0x43c8bfbb395c6047L, 0x87917f7672b8c08eL, 0x0f22feece571811dL, 0x1e45fdd9cae3023aL
     };
-    private static final long[] VEC_C = new long[] {
+    private static final long[] VEC_C = {
         0x3193c18562a02b4cL, 0x6327830ac5405698L, 0xc64f06158a80ad30L, 0x8c9e0c2b15015a61L,
                 0x193c18562a02b4c3L, 0x327830ac54056986L, 0x64f06158a80ad30cL, 0xc9e0c2b15015a618L,
         0x93c18562a02b4c31L, 0x27830ac540569863L, 0x4f06158a80ad30c6L, 0x9e0c2b15015a618cL,
@@ -45,7 +45,7 @@ public final class PrecomputedNtHash extends NtHashBase {
         0x4c3193c18562a02bL, 0x986327830ac54056L, 0x30c64f06158a80adL, 0x618c9e0c2b15015aL,
                 0xc3193c18562a02b4L, 0x86327830ac540569L, 0x0c64f06158a80ad3L, 0x18c9e0c2b15015a6L
     };
-    private static final long[] VEC_G = new long[] {
+    private static final long[] VEC_G = {
         0x20323ed082572324L, 0x40647da104ae4648L, 0x80c8fb42095c8c90L, 0x0191f68412b91921L,
                 0x0323ed0825723242L, 0x0647da104ae46484L, 0x0c8fb42095c8c908L, 0x191f68412b919210L,
         0x323ed08257232420L, 0x647da104ae464840L, 0xc8fb42095c8c9080L, 0x91f68412b9192101L,
@@ -63,7 +63,7 @@ public final class PrecomputedNtHash extends NtHashBase {
         0x2420323ed0825723L, 0x4840647da104ae46L, 0x9080c8fb42095c8cL, 0x210191f68412b919L,
                 0x420323ed08257232L, 0x840647da104ae464L, 0x080c8fb42095c8c9L, 0x10191f68412b9192L
     };
-    private static final long[] VEC_T = new long[] {
+    private static final long[] VEC_T = {
         0x295549f54be24456L, 0x52aa93ea97c488acL, 0xa55527d52f891158L, 0x4aaa4faa5f1222b1L,
                 0x95549f54be244562L, 0x2aa93ea97c488ac5L, 0x55527d52f891158aL, 0xaaa4faa5f1222b14L,
         0x5549f54be2445629L, 0xaa93ea97c488ac52L, 0x5527d52f891158a5L, 0xaa4faa5f1222b14aL,
@@ -82,7 +82,7 @@ public final class PrecomputedNtHash extends NtHashBase {
                 0x6295549f54be2445L, 0xc52aa93ea97c488aL, 0x8a55527d52f89115L, 0x14aaa4faa5f1222bL
     };
 
-    private static final long[] VEC_N = new long[] {
+    private static final long[] VEC_N = {
         SEED_N, SEED_N, SEED_N, SEED_N, SEED_N, SEED_N, SEED_N, SEED_N, SEED_N, SEED_N, SEED_N,
         SEED_N, SEED_N, SEED_N, SEED_N, SEED_N, SEED_N, SEED_N, SEED_N, SEED_N, SEED_N, SEED_N,
         SEED_N, SEED_N, SEED_N, SEED_N, SEED_N, SEED_N, SEED_N, SEED_N, SEED_N, SEED_N, SEED_N,
@@ -91,7 +91,7 @@ public final class PrecomputedNtHash extends NtHashBase {
         SEED_N, SEED_N, SEED_N, SEED_N, SEED_N, SEED_N, SEED_N, SEED_N, SEED_N
     };
 
-    private static final long[][] MS_TAB = new long[][] {
+    private static final long[][] MS_TAB = {
         VEC_N, VEC_T, VEC_N, VEC_G, VEC_A, VEC_A, VEC_N, VEC_C, // 0..7
         VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, // 8..15
         VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, // 16..23
@@ -127,23 +127,13 @@ public final class PrecomputedNtHash extends NtHashBase {
     };
 
     /**
-     * Default constructor with 0 for {@code start}.
-     *
-     * @param string As described.
-     * @param k As described.
-     */
-    public PrecomputedNtHash(final byte @NotNull [] string, int k) {
-        super(string, k, 0);
-    }
-
-    /**
      * As described.
      *
      * @param string As described.
      * @param k As described.
      * @param start As described.
      */
-    public PrecomputedNtHash(byte @NotNull [] string, int k, int start) {
+    public PrecomputedNtHash(final byte @NotNull [] string, final int k, final int start) {
         super(string, k, start);
     }
 
@@ -162,9 +152,9 @@ public final class PrecomputedNtHash extends NtHashBase {
 
     @Override
     protected void updateCurrentHashToNextState() {
-        var i = curPos - 1;
-        var seqi = string[i];
-        var seqk = string[i + k];
+        final var i = curPos - 1;
+        final var seqi = string[i];
+        final var seqk = string[i + k];
         fwdHash = Long.rotateLeft(fwdHash, 1) ^ MS_TAB[seqi][k % 64] ^ MS_TAB[seqk][0];
         revHash = Long.rotateRight(revHash, 1)
                 ^ MS_TAB[seqi & CP_OFF][63]

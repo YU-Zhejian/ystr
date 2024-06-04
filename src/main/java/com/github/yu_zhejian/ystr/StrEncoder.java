@@ -20,7 +20,7 @@ public final class StrEncoder {
      * @param nt As described.
      * @return As described.
      */
-    public static short simpleNucleotideEncoder(byte nt) {
+    public static short simpleNucleotideEncoder(final byte nt) {
         switch (nt) {
             case 'A' -> {
                 return 0b0001;
@@ -68,7 +68,7 @@ public final class StrEncoder {
      * @param nt As described.
      * @return As described.
      */
-    public static byte simpleNucleotideDecoder(short nt) {
+    public static byte simpleNucleotideDecoder(final short nt) {
         switch (nt) {
             case 0b0000 -> {
                 return 0;
@@ -119,12 +119,12 @@ public final class StrEncoder {
      * @param string As described.
      * @return As described.
      */
-    public static byte @NotNull [] simpleKmerEncoder(byte @NotNull [] string) {
+    public static byte @NotNull [] simpleKmerEncoder(final byte @NotNull [] string) {
         if (string.length == 0) {
             return new byte[0];
         }
-        int retlen = (string.length + ((string.length & 0x1) == 1 ? 1 : 0)) >> 1;
-        var retb = new byte[retlen];
+        final int retlen = (string.length + ((string.length & 0x1) == 1 ? 1 : 0)) >> 1;
+        final var retb = new byte[retlen];
         int i;
         for (i = 0; i < string.length - 1; i += 2) {
             retb[i / 2] = (byte) ((simpleNucleotideEncoder(string[i]) << 4)
@@ -142,7 +142,7 @@ public final class StrEncoder {
      * @param string As described.
      * @return As described.
      */
-    public static byte @NotNull [] simpleKmerDecoder(byte @NotNull [] string) {
+    public static byte @NotNull [] simpleKmerDecoder(final byte @NotNull [] string) {
         if (string.length == 0) {
             return new byte[0];
         }
@@ -150,7 +150,7 @@ public final class StrEncoder {
         if ((string[string.length - 1] & 0b1111) == 0b0000) {
             retlen -= 1;
         }
-        var retb = new byte[retlen];
+        final var retb = new byte[retlen];
         var retbPos = 0;
         int i;
         for (i = 0; i < string.length - 1; i += 1) {
@@ -173,7 +173,7 @@ public final class StrEncoder {
      * @param nt As described.
      * @return As described.
      */
-    public static short twoBitNucleotideEncoder(byte nt) {
+    public static short twoBitNucleotideEncoder(final byte nt) {
         switch (nt) {
             case 'A', 'a' -> {
                 return 0b10;
@@ -204,13 +204,13 @@ public final class StrEncoder {
      * @see <a href="http://jcomeau.freeshell.org/www/genome/2bitformat.html">Some external
      *     introduction to the 2bit format.</a>
      */
-    public static byte @NotNull [] simpleTwoBitEncoder(byte @NotNull [] string) {
+    public static byte @NotNull [] simpleTwoBitEncoder(final byte @NotNull [] string) {
         if (string.length == 0) {
             return new byte[0];
         }
         var last4len = string.length - ((string.length >> 2) << 2);
-        var retlen = (string.length >> 2) + (last4len == 0 ? 0 : 1);
-        var retb = new byte[retlen];
+        final var retlen = (string.length >> 2) + (last4len == 0 ? 0 : 1);
+        final var retb = new byte[retlen];
         int i;
         for (i = 0; i < string.length - 4; i += 4) {
             retb[i / 4] = (byte) (((twoBitNucleotideEncoder(string[i])) << 6)
