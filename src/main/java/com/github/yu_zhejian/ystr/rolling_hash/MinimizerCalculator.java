@@ -167,9 +167,7 @@ public final class MinimizerCalculator implements Iterator<Tuple2<Long, Integer>
         leadingEndHash = new LinkedList<>();
         terminatingEndHash = new LinkedList<>();
 
-        // System.out.println("---pre---");
         while (hashTo < windowSize && hashIterable.hasNext()) {
-            // System.out.println(hashFrom + " " + hashTo);
             final var currentHash = hashIterable.next();
             minimizerRingBuffer.add(currentHash);
             if (endHash) {
@@ -184,7 +182,6 @@ public final class MinimizerCalculator implements Iterator<Tuple2<Long, Integer>
             minimizerRingBuffer.add(MinimizerRingBuffer.MAX_ULONG);
             calculateTerminatingEndHash();
         }
-        // System.out.println("---begin---");
     }
 
     @Override
@@ -196,18 +193,14 @@ public final class MinimizerCalculator implements Iterator<Tuple2<Long, Integer>
     }
 
     private void calculateTerminatingEndHash() {
-        // System.out.println("---end---");
         terminateHashIsCalculated = true;
         // Since hashTo is always increasing, it should now exceed the boundary.
         hashTo--;
         while (hashFrom < hashTo) {
-            // System.out.println(hashFrom + " " + hashTo);
             minimizerRingBuffer.add(MinimizerRingBuffer.MAX_ULONG);
             if (endHash) {
                 terminatingEndHash.add(minimizerRingBuffer.getCurrentMinimizer());
             }
-            // System.out.println(minimizerRingBuffer);
-            // System.out.println(minimizerRingBuffer.getCurrentMinimizer());
             hashFrom++;
         }
     }
@@ -221,7 +214,6 @@ public final class MinimizerCalculator implements Iterator<Tuple2<Long, Integer>
 
         // Normal cases.
         if (hashIterable.hasNext()) {
-            // System.out.println(hashFrom + " " + hashTo);
             minimizerRingBuffer.add(hashIterable.next());
             final var retv = minimizerRingBuffer.getCurrentMinimizer();
             hashTo++;
