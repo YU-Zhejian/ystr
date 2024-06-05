@@ -1,13 +1,13 @@
 package com.github.yu_zhejian.ystr;
 
 import com.github.yu_zhejian.ystr.iter_utils.IteratorDuplicationRemover;
+
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
-import java.util.NoSuchElementException;
 import java.util.Objects;
 
 /** Various utility functions to support other classes. */
@@ -182,5 +182,3 @@ public final class StrUtils {
         return Integer.compare(array1.length, array2.length);
     }
 }
-
-

@@ -1,4 +1,4 @@
-package com.github.yu_zhejian.ystr.rolling_hash;
+package com.github.yu_zhejian.ystr.rolling;
 
 import static org.junit.jupiter.api.Assertions.*;
 

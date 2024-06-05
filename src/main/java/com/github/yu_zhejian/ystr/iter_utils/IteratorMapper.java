@@ -7,7 +7,7 @@ public final class IteratorMapper<T, V> implements Iterator<V> {
     private final Iterator<T> sourceIterator;
     private final Function<T, V> mapper;
 
-    public IteratorMapper(final Iterator<T> sourceIterator, final Function<T, V> mapper){
+    public IteratorMapper(final Iterator<T> sourceIterator, final Function<T, V> mapper) {
         this.sourceIterator = sourceIterator;
         this.mapper = mapper;
     }

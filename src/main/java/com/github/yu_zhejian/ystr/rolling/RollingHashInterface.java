@@ -1,10 +1,14 @@
+package com.github.yu_zhejian.ystr.rolling;
+
+import java.util.Iterator;
+
 /**
  * Rabin-Karp-Compatible Rolling Hash Algorithm.
  *
  * <p><b>Introduction</b>
  *
- * <p>Represented by {@link com.github.yu_zhejian.ystr.rolling_hash.RollingHashInterface}, a rolling
- * hash algorithm (aka., recursive hash algorithm) should be some {@link java.util.Iterator} of
+ * <p>Represented by {@link com.github.yu_zhejian.ystr.rolling.RollingHashInterface}, a rolling hash
+ * algorithm (aka., recursive hash algorithm) should be some {@link java.util.Iterator} of
  * {@link java.lang.Long} that would firstly compute the hash for the initial window. When
  * {@link java.util.Iterator#next()} is called, the window will slide towards the end of the string
  * and the hash would be updated.
@@ -29,12 +33,5 @@
  * assertEquals(getNthNtHash1(str1, 3, 4), getNthNtHash1(str2, 0, 4));
  * // Which should both be "AGCT"
  * }</pre>
- *
- * <b>TODO</b>
- *
- * <ol>
- *   <li>Migrate the aaHash algorithm.
- *   <li>Check whether the current ntHash implementation matches its C++ versions.
- * </ol>
  */
-package com.github.yu_zhejian.ystr.rolling_hash;
+public interface RollingHashInterface extends Iterator<Long> {}

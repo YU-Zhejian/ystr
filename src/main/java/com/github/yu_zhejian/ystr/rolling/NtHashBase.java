@@ -1,4 +1,4 @@
-package com.github.yu_zhejian.ystr.rolling_hash;
+package com.github.yu_zhejian.ystr.rolling;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -24,7 +24,7 @@ abstract class NtHashBase extends RollingHashBase {
      */
     protected NtHashBase(final byte @NotNull [] string, final int k, final int start) {
         super(string, k, start);
-        initCurrentHash();
+        initCurrentValue();
     }
 
     /**
@@ -75,6 +75,6 @@ abstract class NtHashBase extends RollingHashBase {
      */
     @Contract(pure = true)
     public long @NotNull [] multiHash(final int m) {
-        return multiHash(m, k, currentHash);
+        return multiHash(m, k, currentValue);
     }
 }

@@ -2,8 +2,8 @@ package com.github.yu_zhejian.ystr;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.github.yu_zhejian.ystr.rolling_hash.NtHash;
-import com.github.yu_zhejian.ystr.rolling_hash.PolynomialRollingHash;
+import com.github.yu_zhejian.ystr.rolling.NtHash;
+import com.github.yu_zhejian.ystr.rolling.PolynomialRollingHash;
 
 import io.vavr.Function4;
 import io.vavr.Tuple;

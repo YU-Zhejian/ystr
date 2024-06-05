@@ -4,12 +4,13 @@ import java.util.Iterator;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
 
-public final class IteratorReducer <T, V> implements Supplier<V> {
+public final class IteratorReducer<T, V> implements Supplier<V> {
     private final Iterator<T> sourceIterator;
-    private final BiFunction<T,V, V> reducer;
+    private final BiFunction<T, V, V> reducer;
     private final V initialValue;
 
-    public IteratorReducer(final Iterator<T> sourceIterator, final BiFunction<T,V, V> reducer, V initialValue){
+    public IteratorReducer(
+            final Iterator<T> sourceIterator, final BiFunction<T, V, V> reducer, V initialValue) {
         this.sourceIterator = sourceIterator;
         this.reducer = reducer;
         this.initialValue = initialValue;
@@ -18,7 +19,7 @@ public final class IteratorReducer <T, V> implements Supplier<V> {
     @Override
     public V get() {
         var currentResult = initialValue;
-        while (sourceIterator.hasNext()){
+        while (sourceIterator.hasNext()) {
             currentResult = reducer.apply(sourceIterator.next(), currentResult);
         }
         return currentResult;

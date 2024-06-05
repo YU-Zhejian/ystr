@@ -1,4 +1,4 @@
-package com.github.yu_zhejian.ystr.rolling_hash;
+package com.github.yu_zhejian.ystr.rolling;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -138,7 +138,7 @@ public final class PrecomputedNtHash extends NtHashBase {
     }
 
     @Override
-    protected void initCurrentHash() {
+    protected void initCurrentValue() {
         fwdHash = 0;
         for (var i = 0; i < k; i++) {
             fwdHash ^= MS_TAB[string[i + start]][(k - 1 - i) % 64];
@@ -147,11 +147,11 @@ public final class PrecomputedNtHash extends NtHashBase {
         for (var i = 0; i < k; i++) {
             revHash ^= MS_TAB[string[i + start] & CP_OFF][i % 64];
         }
-        currentHash = Long.compareUnsigned(fwdHash, revHash) < 0 ? fwdHash : revHash;
+        currentValue = Long.compareUnsigned(fwdHash, revHash) < 0 ? fwdHash : revHash;
     }
 
     @Override
-    protected void updateCurrentHashToNextState() {
+    protected void updateCurrentValueToNextState() {
         final var i = curPos - 1;
         final var seqi = string[i];
         final var seqk = string[i + k];
@@ -159,6 +159,6 @@ public final class PrecomputedNtHash extends NtHashBase {
         revHash = Long.rotateRight(revHash, 1)
                 ^ MS_TAB[seqi & CP_OFF][63]
                 ^ MS_TAB[seqk & CP_OFF][(k - 1) % 64];
-        currentHash = Long.compareUnsigned(fwdHash, revHash) < 0 ? fwdHash : revHash;
+        currentValue = Long.compareUnsigned(fwdHash, revHash) < 0 ? fwdHash : revHash;
     }
 }

@@ -1,4 +1,4 @@
-package com.github.yu_zhejian.ystr.rolling_hash;
+package com.github.yu_zhejian.ystr.rolling;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;

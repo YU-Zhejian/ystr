@@ -1,4 +1,4 @@
-package com.github.yu_zhejian.ystr.rolling_hash;
+package com.github.yu_zhejian.ystr.rolling;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -93,14 +93,14 @@ public final class PolynomialRollingHash extends RollingHashBase {
         }
         this.m = m;
         this.p = p;
-        initCurrentHash();
+        initCurrentValue();
     }
 
     @Override
-    protected void initCurrentHash() {
-        currentHash = 0L;
+    protected void initCurrentValue() {
+        currentValue = 0L;
         for (int i = 0; i < k; i++) {
-            currentHash = (currentHash * p + string[i + start]) % m;
+            currentValue = (currentValue * p + string[i + start]) % m;
         }
         pow = 1L;
         for (int i = 0; i < k - 1; i++) {
@@ -109,13 +109,13 @@ public final class PolynomialRollingHash extends RollingHashBase {
     }
 
     @Override
-    protected void updateCurrentHashToNextState() {
+    protected void updateCurrentValueToNextState() {
         final var i = curPos - 1;
         final var seqi = string[i];
         final var seqk = string[i + k];
         // + m in the following line prevents the genesis of negative values.
-        currentHash = (currentHash + m - (pow * seqi) % m) % m;
-        currentHash = ((currentHash * p) % m + seqk) % m;
+        currentValue = (currentValue + m - (pow * seqi) % m) % m;
+        currentValue = ((currentValue * p) % m + seqk) % m;
     }
 
     @Contract(pure = true)

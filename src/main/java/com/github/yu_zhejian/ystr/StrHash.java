@@ -2,9 +2,9 @@ package com.github.yu_zhejian.ystr;
 
 import com.github.yu_zhejian.ystr.checksum.CRC32;
 import com.github.yu_zhejian.ystr.checksum.ChecksumInterface;
-import com.github.yu_zhejian.ystr.rolling_hash.NtHash;
-import com.github.yu_zhejian.ystr.rolling_hash.PolynomialRollingHash;
-import com.github.yu_zhejian.ystr.rolling_hash.PrecomputedNtHash;
+import com.github.yu_zhejian.ystr.rolling.NtHash;
+import com.github.yu_zhejian.ystr.rolling.PolynomialRollingHash;
+import com.github.yu_zhejian.ystr.rolling.PrecomputedNtHash;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;

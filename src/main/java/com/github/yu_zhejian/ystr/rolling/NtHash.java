@@ -1,4 +1,4 @@
-package com.github.yu_zhejian.ystr.rolling_hash;
+package com.github.yu_zhejian.ystr.rolling;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -57,7 +57,7 @@ public final class NtHash extends NtHashBase {
     }
 
     @Override
-    protected void initCurrentHash() {
+    protected void initCurrentValue() {
         fwdHash = 0;
         for (var i = 0; i < k; i++) {
             fwdHash ^= Long.rotateLeft(seedTableGet(string[i + start]), k - 1 - i);
@@ -66,11 +66,11 @@ public final class NtHash extends NtHashBase {
         for (var i = 0; i < k; i++) {
             revHash ^= Long.rotateLeft(complSeedTableGet(string[i + start]), i);
         }
-        currentHash = Long.compareUnsigned(fwdHash, revHash) < 0 ? fwdHash : revHash;
+        currentValue = Long.compareUnsigned(fwdHash, revHash) < 0 ? fwdHash : revHash;
     }
 
     @Override
-    protected void updateCurrentHashToNextState() {
+    protected void updateCurrentValueToNextState() {
         final var i = curPos - 1;
         final var seqi = string[i];
         final var seqk = string[i + k];
@@ -80,7 +80,7 @@ public final class NtHash extends NtHashBase {
         revHash = Long.rotateRight(revHash, 1)
                 ^ Long.rotateRight(complSeedTableGet(seqi), 1)
                 ^ Long.rotateLeft(complSeedTableGet(seqk), k - 1);
-        currentHash = Long.compareUnsigned(fwdHash, revHash) < 0 ? fwdHash : revHash;
+        currentValue = Long.compareUnsigned(fwdHash, revHash) < 0 ? fwdHash : revHash;
     }
 
     /**

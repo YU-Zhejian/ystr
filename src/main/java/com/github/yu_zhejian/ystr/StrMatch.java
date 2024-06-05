@@ -1,8 +1,8 @@
 package com.github.yu_zhejian.ystr;
 
-import com.github.yu_zhejian.ystr.rolling_hash.PolynomialRollingHash;
-import com.github.yu_zhejian.ystr.rolling_hash.RollingHashFactory;
-import com.github.yu_zhejian.ystr.rolling_hash.RollingHashInterface;
+import com.github.yu_zhejian.ystr.rolling.PolynomialRollingHash;
+import com.github.yu_zhejian.ystr.rolling.RollingHashFactory;
+import com.github.yu_zhejian.ystr.rolling.RollingHashInterface;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
