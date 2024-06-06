@@ -63,6 +63,9 @@ dependencies {
 	implementation "org.jetbrains:annotations:24.1.0"
 
 	implementation "com.github.samtools:htsjdk:4.1.0"
+
+	// https://mvnrepository.com/artifact/it.unimi.dsi/fastutil
+	implementation 'it.unimi.dsi:fastutil:8.5.13'
 }
 
 

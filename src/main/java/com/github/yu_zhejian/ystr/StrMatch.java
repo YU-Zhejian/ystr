@@ -4,10 +4,11 @@ import com.github.yu_zhejian.ystr.rolling.PolynomialRollingHash;
 import com.github.yu_zhejian.ystr.rolling.RollingHashFactory;
 import com.github.yu_zhejian.ystr.rolling.RollingHashInterface;
 
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -18,7 +19,7 @@ import java.util.Objects;
 public final class StrMatch {
 
     /**
-     * Test whether a substring on {@code haystack} from {@code start} with length
+     * Test whether a substring on {@code haystack} from {@code skipFirst} with length
      * {@code needle.length} matches {@code needle}.
      *
      * <p>This algorithm is brute-force.
@@ -80,10 +81,10 @@ public final class StrMatch {
             final int end) {
         ensureParametersValid(haystack, needle, start, end);
         if (haystack.length == 0 || needle.length == 0) {
-            return new ArrayList<>();
+            return List.of();
         }
         var haystackPos = start;
-        final var retl = new ArrayList<Integer>();
+        final var retl = new IntArrayList();
         while (haystackPos + needle.length <= end) {
             if (isMatch(haystack, needle, haystackPos)) {
                 retl.add(haystackPos);
@@ -117,11 +118,11 @@ public final class StrMatch {
             final int end) {
         ensureParametersValid(haystack, needle, start, end);
         if (haystack.length == 0 || needle.length == 0) {
-            return new ArrayList<>();
+            return List.of();
         }
         final var needleLen = needle.length;
         var haystackPos = start;
-        final var retl = new ArrayList<Integer>();
+        final var retl = new IntArrayList();
         while (haystackPos + needleLen <= end) {
             // Find first match
             while (haystack[haystackPos] != needle[0] && haystackPos + needleLen <= end) {
@@ -165,7 +166,7 @@ public final class StrMatch {
             final Object... rollingHashParams) {
         ensureParametersValid(haystack, needle, start, end);
         if (haystack.length == 0 || needle.length == 0) {
-            return new ArrayList<>();
+            return List.of();
         }
         // Create initial hash
         var haystackPos = start;
@@ -176,7 +177,7 @@ public final class StrMatch {
                         rollingHashClaz, needle, needleLen, 0, rollingHashParams)
                 .next();
 
-        final var retl = new ArrayList<Integer>();
+        final var retl = new IntArrayList();
         while (haystackPos + needleLen <= end) {
             final var nextHash = rhHaystack.next();
             if (Objects.equals(nextHash, needleHash) && isMatch(haystack, needle, haystackPos)) {
@@ -324,9 +325,9 @@ public final class StrMatch {
             final int end) {
         ensureParametersValid(haystack, needle, start, end);
         if (haystack.length == 0 || needle.length == 0) {
-            return new ArrayList<>();
+            return List.of();
         }
-        final var retl = new ArrayList<Integer>();
+        final var retl = new IntArrayList();
         final var lpsNeedle = lps(needle);
         var needlePos = 0;
         var haystackPos = start;

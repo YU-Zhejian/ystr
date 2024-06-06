@@ -1,9 +1,14 @@
 package com.github.yu_zhejian.ystr.rolling;
 
+import io.vavr.Tuple;
+import io.vavr.Tuple2;
+
+import it.unimi.dsi.fastutil.longs.LongArrayList;
+
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Iterator;
+import java.util.List;
 
 /** Constants for {@link NtHash} and {@link PrecomputedNtHash}. */
 public abstract class NtHashBase extends RollingHashBase {
@@ -22,10 +27,10 @@ public abstract class NtHashBase extends RollingHashBase {
      *
      * @param string As described.
      * @param k As described.
-     * @param start As described.
+     * @param skipFirst As described.
      */
-    protected NtHashBase(final byte @NotNull [] string, final int k, final int start) {
-        super(string, k, start);
+    protected NtHashBase(final byte @NotNull [] string, final int k, final int skipFirst) {
+        super(string, k, skipFirst);
         initCurrentValue();
     }
 
@@ -39,35 +44,15 @@ public abstract class NtHashBase extends RollingHashBase {
     }
 
     @Contract(value = "_ -> new", pure = true)
-    public static @NotNull Iterator<Long> getFwdHash(final NtHashBase ntHash) {
-        return new Iterator<>() {
-            @Override
-            public boolean hasNext() {
-                return ntHash.hasNext();
-            }
-
-            @Override
-            public Long next() {
-                ntHash.next();
-                return ntHash.getFwdHash();
-            }
-        };
-    }
-
-    @Contract(value = "_ -> new", pure = true)
-    public static @NotNull Iterator<Long> getRevHash(final NtHashBase ntHash) {
-        return new Iterator<>() {
-            @Override
-            public boolean hasNext() {
-                return ntHash.hasNext();
-            }
-
-            @Override
-            public Long next() {
-                ntHash.next();
-                return ntHash.getRevHash();
-            }
-        };
+    public static @NotNull Tuple2<List<Long>, List<Long>> getAllBothHash(
+            @NotNull NtHashBase ntHash) {
+        var rett = Tuple.of((List<Long>) new LongArrayList(), (List<Long>) new LongArrayList());
+        while (ntHash.hasNext()) {
+            ntHash.next();
+            rett._1().add(ntHash.getFwdHash());
+            rett._2().add(ntHash.getRevHash());
+        }
+        return rett;
     }
 
     /**

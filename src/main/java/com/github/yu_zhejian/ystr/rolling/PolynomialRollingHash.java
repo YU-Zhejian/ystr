@@ -49,15 +49,15 @@ public final class PolynomialRollingHash extends RollingHashBase {
     /**
      * Default constructor that is identical to Robert Sedgewick's implementation.
      *
-     * @param start As described.
+     * @param skipFirst As described.
      * @param string As described.
      * @param k As described.
      */
-    public PolynomialRollingHash(final byte @NotNull [] string, final int k, final int start) {
+    public PolynomialRollingHash(final byte @NotNull [] string, final int k, final int skipFirst) {
         this(
                 string,
                 k,
-                start,
+                skipFirst,
                 DEFAULT_POLYNOMIAL_ROLLING_HASH_M,
                 DEFAULT_POLYNOMIAL_ROLLING_HASH_RADIX_P);
     }
@@ -76,17 +76,17 @@ public final class PolynomialRollingHash extends RollingHashBase {
      *
      * @param string As described.
      * @param k As described.
-     * @param start As described.
+     * @param skipFirst As described.
      * @param m Some prime number.
      * @param p Usually alphabet size.
      */
     public PolynomialRollingHash(
             final byte @NotNull [] string,
             final int k,
-            final int start,
+            final int skipFirst,
             final long m,
             final long p) {
-        super(string, k, start);
+        super(string, k, skipFirst);
         if (m <= 0 || p <= 0) {
             throw new IllegalArgumentException(
                     "m and p must be positive. Actual: %d, %d".formatted(m, p));
@@ -100,7 +100,7 @@ public final class PolynomialRollingHash extends RollingHashBase {
     protected void initCurrentValue() {
         currentValue = 0L;
         for (int i = 0; i < k; i++) {
-            currentValue = (currentValue * p + string[i + start]) % m;
+            currentValue = (currentValue * p + string[i + skipFirst]) % m;
         }
         pow = 1L;
         for (int i = 0; i < k - 1; i++) {

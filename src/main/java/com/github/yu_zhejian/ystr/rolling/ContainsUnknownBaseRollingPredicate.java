@@ -31,11 +31,11 @@ public final class ContainsUnknownBaseRollingPredicate extends RollingPredicateB
      *
      * @param string As described.
      * @param k As described.
-     * @param start As described.
+     * @param skipFirst As described.
      */
-    public ContainsUnknownBaseRollingPredicate(byte @NotNull [] string, int k, int start) {
-        super(string, k, start);
-        nPos = start - 1;
+    public ContainsUnknownBaseRollingPredicate(byte @NotNull [] string, int k, int skipFirst) {
+        super(string, k, skipFirst);
+        nPos = skipFirst - 1;
     }
 
     @Override
@@ -53,11 +53,10 @@ public final class ContainsUnknownBaseRollingPredicate extends RollingPredicateB
     protected void updateCurrentValueToNextState() {
         final var i = curPos - 1;
         final var seqk = string[i + k];
-        if (!currentValue) {
-            if (nPos - curPos > k) {
-                currentValue = true;
-            }
+        if (Boolean.FALSE.equals(currentValue) && nPos - curPos > k) {
+            currentValue = true;
         }
+
         if (!PREDICATE[seqk]) {
             currentValue = false;
             nPos = i + k;

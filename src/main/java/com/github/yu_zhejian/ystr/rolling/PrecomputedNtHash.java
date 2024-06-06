@@ -126,11 +126,11 @@ public final class PrecomputedNtHash extends NtHashBase {
     protected void initCurrentValue() {
         fwdHash = 0;
         for (var i = 0; i < k; i++) {
-            fwdHash ^= MS_TAB[string[i + start]][(k - 1 - i) % 64];
+            fwdHash ^= MS_TAB[string[i + skipFirst]][(k - 1 - i) % 64];
         }
         revHash = 0;
         for (var i = 0; i < k; i++) {
-            revHash ^= MS_TAB[string[i + start] & CP_OFF][i % 64];
+            revHash ^= MS_TAB[string[i + skipFirst] & CP_OFF][i % 64];
         }
         currentValue = Long.compareUnsigned(fwdHash, revHash) < 0 ? fwdHash : revHash;
     }
@@ -144,6 +144,7 @@ public final class PrecomputedNtHash extends NtHashBase {
         revHash = Long.rotateRight(revHash, 1)
                 ^ MS_TAB[seqi & CP_OFF][63]
                 ^ MS_TAB[seqk & CP_OFF][(k - 1) % 64];
-        currentValue = Long.compareUnsigned(fwdHash, revHash) < 0 ? fwdHash : revHash;
+        // This line redone Long.compareUnsigned
+        currentValue = (fwdHash + Long.MIN_VALUE < revHash + Long.MIN_VALUE) ? fwdHash : revHash;
     }
 }

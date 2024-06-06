@@ -38,11 +38,12 @@ public final class IsPolyARollingPredicate extends RollingPredicateBase {
      *
      * @param string As described.
      * @param k As described.
-     * @param start As described.
+     * @param skipFirst As described.
      * @param numAThreshold As described.
      */
-    public IsPolyARollingPredicate(byte @NotNull [] string, int k, int start, int numAThreshold) {
-        super(string, k, start);
+    public IsPolyARollingPredicate(
+            byte @NotNull [] string, int k, int skipFirst, int numAThreshold) {
+        super(string, k, skipFirst);
         this.numAThreshold = numAThreshold;
         if (numAThreshold < 1) {
             throw new IllegalArgumentException(
@@ -55,10 +56,10 @@ public final class IsPolyARollingPredicate extends RollingPredicateBase {
      *
      * @param string As described.
      * @param k As described.
-     * @param start As described.
+     * @param skipFirst As described.
      */
-    public IsPolyARollingPredicate(byte @NotNull [] string, int k, int start) {
-        this(string, k, start, Math.min((int) (0.75 * k), 1));
+    public IsPolyARollingPredicate(byte @NotNull [] string, int k, int skipFirst) {
+        this(string, k, skipFirst, Math.min((int) (0.75 * k), 1));
     }
 
     @Override

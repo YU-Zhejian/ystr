@@ -50,21 +50,21 @@ public final class NtHash extends NtHashBase {
      *
      * @param string As described.
      * @param k As described.
-     * @param start As described.
+     * @param skipFirst As described.
      */
-    public NtHash(final byte @NotNull [] string, final int k, final int start) {
-        super(string, k, start);
+    public NtHash(final byte @NotNull [] string, final int k, final int skipFirst) {
+        super(string, k, skipFirst);
     }
 
     @Override
     protected void initCurrentValue() {
         fwdHash = 0;
         for (var i = 0; i < k; i++) {
-            fwdHash ^= Long.rotateLeft(seedTableGet(string[i + start]), k - 1 - i);
+            fwdHash ^= Long.rotateLeft(seedTableGet(string[i + skipFirst]), k - 1 - i);
         }
         revHash = 0;
         for (var i = 0; i < k; i++) {
-            revHash ^= Long.rotateLeft(complSeedTableGet(string[i + start]), i);
+            revHash ^= Long.rotateLeft(complSeedTableGet(string[i + skipFirst]), i);
         }
         currentValue = Long.compareUnsigned(fwdHash, revHash) < 0 ? fwdHash : revHash;
     }

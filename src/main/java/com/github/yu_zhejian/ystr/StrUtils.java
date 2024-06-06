@@ -54,7 +54,7 @@ public final class StrUtils {
     }
 
     /**
-     * Ensure start and end is valid for some open-close interval.
+     * Ensure skipFirst and end is valid for some open-close interval.
      *
      * @param start As described.
      * @param end As described.
@@ -71,7 +71,7 @@ public final class StrUtils {
     }
 
     /**
-     * Ensure start and end is valid for some open-close interval within a string.
+     * Ensure skipFirst and end is valid for some open-close interval within a string.
      *
      * @param start As described.
      * @param end As described.

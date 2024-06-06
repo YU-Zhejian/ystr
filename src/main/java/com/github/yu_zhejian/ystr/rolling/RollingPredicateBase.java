@@ -10,9 +10,9 @@ abstract class RollingPredicateBase extends RollingBase<Boolean>
      *
      * @param string As described.
      * @param k As described.
-     * @param start As described.
+     * @param skipFirst As described.
      */
-    protected RollingPredicateBase(byte @NotNull [] string, int k, int start) {
-        super(string, k, start);
+    protected RollingPredicateBase(byte @NotNull [] string, int k, int skipFirst) {
+        super(string, k, skipFirst);
     }
 }

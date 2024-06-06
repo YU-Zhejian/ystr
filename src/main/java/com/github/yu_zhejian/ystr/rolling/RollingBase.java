@@ -18,7 +18,7 @@ abstract class RollingBase<T> implements Iterator<T> {
     /** The offset of the current window is. */
     protected int curPos;
     /** Arbitrary starting position. */
-    protected final int start;
+    protected final int skipFirst;
 
     /** The current value of some kind. */
     protected T currentValue;
@@ -34,9 +34,9 @@ abstract class RollingBase<T> implements Iterator<T> {
      *
      * @param string As described.
      * @param k As described.
-     * @param start As described.
+     * @param skipFirst As described.
      */
-    private void checkInput(final byte @NotNull [] string, final int k, final int start) {
+    private void checkInput(final byte @NotNull [] string, final int k, final int skipFirst) {
         if (k <= 0) {
             throw new IllegalArgumentException("k should be positive. Actual: %d".formatted(k));
         }
@@ -45,13 +45,13 @@ abstract class RollingBase<T> implements Iterator<T> {
                     "k cannot be larger than string length (current: %d vs. %d)"
                             .formatted(k, string.length));
         }
-        if (start < 0) {
+        if (skipFirst < 0) {
             throw new IllegalArgumentException(
-                    "start should be positive or zero. Actual: %d".formatted(start));
+                    "start should be positive or zero. Actual: %d".formatted(skipFirst));
         }
-        if (start > string.length - k) {
+        if (skipFirst > string.length - k) {
             throw new IllegalArgumentException(
-                    "start too long. Max: %d. Actual: %d".formatted(string.length - k, start));
+                    "start too long. Max: %d. Actual: %d".formatted(string.length - k, skipFirst));
         }
     }
 
@@ -60,14 +60,14 @@ abstract class RollingBase<T> implements Iterator<T> {
      *
      * @param string As described.
      * @param k As described.
-     * @param start As described.
+     * @param skipFirst As described.
      */
-    protected RollingBase(final byte @NotNull [] string, final int k, final int start) {
-        checkInput(string, k, start);
+    protected RollingBase(final byte @NotNull [] string, final int k, final int skipFirst) {
+        checkInput(string, k, skipFirst);
         this.string = string;
         this.k = k;
-        this.start = start;
-        curPos = start;
+        this.skipFirst = skipFirst;
+        curPos = skipFirst;
     }
 
     @Override
@@ -75,7 +75,7 @@ abstract class RollingBase<T> implements Iterator<T> {
         if (!this.hasNext()) {
             throw new NoSuchElementException();
         }
-        if (curPos != start) {
+        if (curPos != skipFirst) {
             updateCurrentValueToNextState();
         }
         curPos++;

@@ -14,7 +14,7 @@ public final class RollingHashFactory {
      * @param claz TODO
      * @param string TODO
      * @param k TODO
-     * @param start TODO
+     * @param skipFirst TODO
      * @param params TODO
      * @param <T> TODO
      * @return TODO
@@ -24,18 +24,18 @@ public final class RollingHashFactory {
             final @NotNull Class<T> claz,
             final byte @NotNull [] string,
             final int k,
-            final int start,
+            final int skipFirst,
             final Object... params) {
 
         if (claz == NtHash.class) {
-            return new NtHash(string, k, start);
+            return new NtHash(string, k, skipFirst);
         } else if (claz.equals(PolynomialRollingHash.class)) {
             if (params.length == 2
                     && params[0] instanceof Long lp0
                     && params[1] instanceof Long lp1) {
-                return new PolynomialRollingHash(string, k, start, lp0, lp1);
+                return new PolynomialRollingHash(string, k, skipFirst, lp0, lp1);
             } else if (params.length == 0) {
-                return new PolynomialRollingHash(string, k, start);
+                return new PolynomialRollingHash(string, k, skipFirst);
             } else {
                 throw new IllegalArgumentException("Can't handle PolynomialRollingHash parameters: "
                         + Arrays.toString(params));

@@ -9,9 +9,9 @@ abstract class RollingHashBase extends RollingBase<Long> implements RollingHashI
      *
      * @param string As described.
      * @param k As described.
-     * @param start As described.
+     * @param skipFirst As described.
      */
-    protected RollingHashBase(byte @NotNull [] string, int k, int start) {
-        super(string, k, start);
+    protected RollingHashBase(byte @NotNull [] string, int k, int skipFirst) {
+        super(string, k, skipFirst);
     }
 }

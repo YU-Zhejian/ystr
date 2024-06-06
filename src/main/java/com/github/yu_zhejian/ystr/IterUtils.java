@@ -6,11 +6,14 @@ import com.github.yu_zhejian.ystr.iter_utils.IteratorDuplicator;
 import com.github.yu_zhejian.ystr.iter_utils.IteratorFilterer;
 import com.github.yu_zhejian.ystr.iter_utils.IteratorFiltererByAnother;
 import com.github.yu_zhejian.ystr.iter_utils.IteratorMapper;
-import com.github.yu_zhejian.ystr.iter_utils.IteratorRanker;
 import com.github.yu_zhejian.ystr.iter_utils.IteratorReducer;
 
 import io.vavr.Tuple;
 import io.vavr.Tuple2;
+
+import it.unimi.dsi.fastutil.booleans.BooleanArrayList;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.longs.LongArrayList;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -18,9 +21,11 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.StreamSupport;
 
 /**
  * Various utility functions concerning {@link Iterator}, {@link Iterable} and
@@ -56,11 +61,21 @@ public final class IterUtils {
      * @return As described.
      */
     public static @NotNull Iterator<Long> arrayToIterator(final long @NotNull [] array) {
-        final var retl = new ArrayList<Long>(array.length);
+        final var retl = new LongArrayList(array.length);
         for (final var i : array) {
             retl.add(i);
         }
         return retl.iterator();
+    }
+
+    /**
+     * Convert some {@link Iterator} to {@link List}.
+     *
+     * @param iterator As described.
+     * @return As described.
+     */
+    public static <T> @NotNull List<T> toList(final @NotNull Iterator<T> iterator) {
+        return StreamSupport.stream(iterable(iterator).spliterator(), false).toList();
     }
 
     @SafeVarargs
@@ -75,7 +90,7 @@ public final class IterUtils {
      * @return As described.
      */
     public static @NotNull Iterator<Integer> arrayToIterator(final int @NotNull [] array) {
-        final var retl = new ArrayList<Integer>(array.length);
+        final var retl = new IntArrayList(array.length);
         for (final var i : array) {
             retl.add(i);
         }
@@ -89,7 +104,7 @@ public final class IterUtils {
      * @return As described.
      */
     public static @NotNull Iterator<Boolean> arrayToIterator(final boolean @NotNull [] array) {
-        final var retl = new ArrayList<Boolean>(array.length);
+        final var retl = new BooleanArrayList(array.length);
         for (final var i : array) {
             retl.add(i);
         }
@@ -192,8 +207,9 @@ public final class IterUtils {
         return Tuple.of(di.iterator1, di.iterator2);
     }
 
-    public static <T> @NotNull Iterator<Tuple2<T, Integer>> rank(
-            Iterator<T> sourceIterator, int start) {
-        return new IteratorRanker<>(sourceIterator, start);
+    public static <T, U> @NotNull Tuple2<Iterator<T>, Iterator<U>> split(
+            Iterator<Tuple2<T, U>> sourceIterator) {
+        var dupi = IterUtils.duplicate(sourceIterator);
+        return Tuple.of(IterUtils.map(dupi._1(), Tuple2::_1), IterUtils.map(dupi._2(), Tuple2::_2));
     }
 }

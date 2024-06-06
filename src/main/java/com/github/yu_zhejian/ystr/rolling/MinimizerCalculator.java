@@ -1,18 +1,14 @@
 package com.github.yu_zhejian.ystr.rolling;
 
-import io.vavr.Tuple;
-import io.vavr.Tuple2;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.NoSuchElementException;
+import java.util.List;
 
 /**
- * A ring-buffer of minimizers.
+ * A ring-buffer of minimizers and its position.
  *
  * <p><b>Implementation</b>
  *
@@ -26,24 +22,29 @@ import java.util.NoSuchElementException;
  * Notice, if hash collision occurs, will use the one with smaller position.
  */
 final class MinimizerRingBuffer {
+    /** Placeholder for leat possible minimizer. */
     public static final long MAX_ULONG = 0xffffffffffffffffL;
+
+    /** Length of {@link #contents} and {@link #pos}. */
     private final int capacity;
+    /** The ring buffer itself. */
     private final long[] contents;
+    /** Real position of each element inside {@link #contents}. */
     private final int[] pos;
+    /** Where we are inside the buffer. */
     private int curPos;
 
     /**
      * Default constructor.
      *
      * @param capacity As described.
-     * @param start See {@link MinimizerCalculator}.
      */
-    public MinimizerRingBuffer(final int capacity, final int start) {
+    public MinimizerRingBuffer(final int capacity) {
         this.capacity = capacity;
         contents = new long[capacity];
         pos = new int[capacity];
         Arrays.fill(contents, MAX_ULONG);
-        Arrays.fill(pos, start - 1);
+        Arrays.fill(pos, -1);
         curPos = 0;
     }
 
@@ -60,23 +61,23 @@ final class MinimizerRingBuffer {
     }
 
     /**
-     * As described.
+     * The current minimizer position.
      *
      * <p>Note, the current implementation is brute-force. There should have been better.
      *
      * @return As described.
      */
-    public @NotNull Tuple2<Long, Integer> getCurrentMinimizer() {
+    public int getCurrentMinimizer() {
         long minimizer = MAX_ULONG;
         int minPos = Integer.MAX_VALUE;
         for (int i = 0; i < capacity; i++) {
-            final var cmp = Long.compareUnsigned(contents[i], minimizer);
-            if (cmp < 0 || (cmp == 0 && pos[i] < minPos)) {
+            if ((contents[i] == minimizer && pos[i] < minPos)
+                    || (contents[i] + Long.MIN_VALUE < minimizer + Long.MIN_VALUE)) {
                 minimizer = contents[i];
                 minPos = pos[i];
             }
         }
-        return Tuple.of(minimizer, minPos);
+        return minPos;
     }
 
     @Override
@@ -93,14 +94,12 @@ final class MinimizerRingBuffer {
             sb.append(", ");
         }
         sb.delete(sb.length() - 2, sb.length());
-        return "MinimizerRingBuffer[%s]".formatted(sb);
+        return "MinimizerRingBuffer[%s] (%d)".formatted(sb, getCurrentMinimizer());
     }
 }
 
 /**
- * Calculate minimizers and their offsets. That is, the minimum of every {@link #windowSize} hashes.
- *
- * <p><b>References</b>
+ * <b>References</b>
  *
  * <ul>
  *   <li>Roberts, W. Hayes, B. R. Hunt, S. M. Mount, and J. A. Yorke, “Reducing storage requirements
@@ -108,128 +107,54 @@ final class MinimizerRingBuffer {
  *       2004 <a href="https://doi.org/10.1093/bioinformatics/bth408">DOI</a>
  * </ul>
  */
-public final class MinimizerCalculator implements Iterator<Tuple2<Long, Integer>> {
-    /** Result of a rolling hashing function. */
-    private final Iterator<Long> hashIterable;
-    /** Calculate minimizer per {@code windowSize} hashes. */
-    private final int windowSize;
-
+public final class MinimizerCalculator {
+    private MinimizerCalculator() {}
     /**
-     * Whether to calculate endHash as-is specified in the article. Calculating endHash enables
-     * "overlapping matches".
-     */
-    private final boolean endHash;
-
-    /** End hash as-is described at the paper. */
-    private final LinkedList<Tuple2<Long, Integer>> leadingEndHash;
-
-    /** End hash as-is described at the paper. */
-    private final LinkedList<Tuple2<Long, Integer>> terminatingEndHash;
-
-    private final MinimizerRingBuffer minimizerRingBuffer;
-
-    /**
-     * Helper variable that indicates the current minimizer was started from where. Inclusive
-     * 0-based regardless of {@code start}.
-     */
-    private int hashFrom;
-    /**
-     * Helper variable that indicates the current minimizer was ended at where. Exclusive 0-based
-     * regardless of {@code start}.
-     */
-    private int hashTo;
-    /** Whether {@link #terminatingEndHash} were calculated. */
-    private boolean terminateHashIsCalculated;
-
-    /**
-     * Default constructor.
+     * Calculate minimizers offsets.
      *
-     * @param hashIterable As described.
-     * @param windowSize As described.
-     * @param start Start offset of the {@link #hashIterable}.
-     * @param endHash As described.
+     * @param hashes Result of a rolling hashing function.
+     * @param windowSize Calculate minimizer per {@code windowSize} hashes.
+     * @param endHash Whether to calculate endHash as-is specified in the article. Calculating
+     *     endHash enables "overlapping matches".
+     * @return As described.
      */
-    public MinimizerCalculator(
-            final Iterator<Long> hashIterable,
-            final int windowSize,
-            final int start,
-            final boolean endHash) {
-        this.hashIterable = hashIterable;
-        this.windowSize = windowSize;
-        this.endHash = endHash;
-
-        terminateHashIsCalculated = false;
-        hashFrom = 0;
-        hashTo = 1;
-        minimizerRingBuffer = new MinimizerRingBuffer(windowSize, start);
+    public static @NotNull List<Integer> getMinimizerPositions(
+            final @NotNull List<Long> hashes, final int windowSize, final boolean endHash) {
+        var hashFrom = -1;
+        var hashTo = 0;
+        var hLen = hashes.size();
+        var retl = new IntArrayList(hLen);
+        if (!endHash && windowSize > hLen) {
+            return retl;
+        }
+        var finalWindowSize = Integer.min(windowSize, hLen);
+        var minimizerRingBuffer = new MinimizerRingBuffer(finalWindowSize);
 
         // Populating the rolling buffer
-        leadingEndHash = new LinkedList<>();
-        terminatingEndHash = new LinkedList<>();
-
-        while (hashTo < windowSize && hashIterable.hasNext()) {
-            final var currentHash = hashIterable.next();
-            minimizerRingBuffer.add(currentHash);
+        while (hashTo < finalWindowSize - 1 && hashTo < hLen) {
+            minimizerRingBuffer.add(hashes.get(hashTo));
             if (endHash) {
-                leadingEndHash.add(minimizerRingBuffer.getCurrentMinimizer());
+                retl.add(minimizerRingBuffer.getCurrentMinimizer());
             }
+            // System.out.printf("%d %d -- %s%n", hashFrom, hashTo, minimizerRingBuffer);
             hashTo++;
         }
-
-        if (!hashIterable.hasNext()) {
-            // Remove the first hash from the ring buffer, otherwise there will be duplicates.
+        while (hashTo < hLen) {
+            minimizerRingBuffer.add(hashes.get(hashTo));
+            retl.add(minimizerRingBuffer.getCurrentMinimizer());
+            // System.out.printf("%d %d -- %s%n", hashFrom, hashTo, minimizerRingBuffer);
+            hashTo++;
             hashFrom++;
-            minimizerRingBuffer.add(MinimizerRingBuffer.MAX_ULONG);
-            calculateTerminatingEndHash();
         }
-    }
-
-    @Override
-    public boolean hasNext() {
-        if (!terminateHashIsCalculated) {
-            return true;
-        }
-        return !terminatingEndHash.isEmpty();
-    }
-
-    private void calculateTerminatingEndHash() {
-        terminateHashIsCalculated = true;
-        // Since hashTo is always increasing, it should now exceed the boundary.
-        hashTo--;
+        hashFrom++;
         while (hashFrom < hashTo) {
             minimizerRingBuffer.add(MinimizerRingBuffer.MAX_ULONG);
             if (endHash) {
-                terminatingEndHash.add(minimizerRingBuffer.getCurrentMinimizer());
+                retl.add(minimizerRingBuffer.getCurrentMinimizer());
             }
+            // System.out.printf("%d %d -- %s%n", hashFrom, hashTo, minimizerRingBuffer);
             hashFrom++;
         }
-    }
-
-    @Override
-    public @Nullable Tuple2<Long, Integer> next() {
-        // Exhaustion of leading end hash.
-        if (!leadingEndHash.isEmpty()) {
-            return leadingEndHash.pollFirst();
-        }
-
-        // Normal cases.
-        if (hashIterable.hasNext()) {
-            minimizerRingBuffer.add(hashIterable.next());
-            final var retv = minimizerRingBuffer.getCurrentMinimizer();
-            hashTo++;
-            if (hashTo != windowSize) {
-                hashFrom++;
-            }
-            if (!hashIterable.hasNext()) {
-                calculateTerminatingEndHash();
-            }
-            return retv;
-        }
-
-        // Exhaustion of terminating end hash.
-        if (!terminatingEndHash.isEmpty()) {
-            return terminatingEndHash.pollFirst();
-        }
-        throw new NoSuchElementException();
+        return retl;
     }
 }

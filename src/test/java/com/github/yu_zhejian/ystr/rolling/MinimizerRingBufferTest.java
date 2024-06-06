@@ -11,7 +11,7 @@ class MinimizerRingBufferTest {
     void test() {
         // [M, M, M, M]
         // [9, 9, 9, 9]
-        var mrb = new MinimizerRingBuffer(4, 10);
+        var mrb = new MinimizerRingBuffer(4);
         assertEquals(Tuple.of(MinimizerRingBuffer.MAX_ULONG, 9), mrb.getCurrentMinimizer());
         // [15, M, M, M]
         // [10, 9, 9, 9]

@@ -9,9 +9,9 @@ abstract class RollingEntropyBase extends RollingBase<Double> implements Rolling
      *
      * @param string As described.
      * @param k As described.
-     * @param start As described.
+     * @param skipFirst As described.
      */
-    protected RollingEntropyBase(byte @NotNull [] string, int k, int start) {
-        super(string, k, start);
+    protected RollingEntropyBase(byte @NotNull [] string, int k, int skipFirst) {
+        super(string, k, skipFirst);
     }
 }
