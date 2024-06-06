@@ -203,6 +203,8 @@ public final class StrEncoder {
      * @return As described.
      * @see <a href="http://jcomeau.freeshell.org/www/genome/2bitformat.html">Some external
      *     introduction to the 2bit format.</a>
+     * @see <a href="https://github.com/weng-lab/TwoBit">An alternate implementation of 2bit
+     *     reader/writer.</a>
      */
     public static byte @NotNull [] simpleTwoBitEncoder(final byte @NotNull [] string) {
         if (string.length == 0) {

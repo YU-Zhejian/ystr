@@ -2,7 +2,7 @@ package com.github.yu_zhejian.ystr.rolling;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.github.yu_zhejian.ystr.StrUtils;
+import com.github.yu_zhejian.ystr.IterUtils;
 
 import io.vavr.Tuple;
 
@@ -35,12 +35,12 @@ class MinimizerCalculatorTest {
                 );
         assertIterableEquals(
                 minHash4False,
-                StrUtils.iterable(
-                        new MinimizerCalculator(StrUtils.arrayToIterator(hashes), 4, 0, false)));
+                IterUtils.iterable(
+                        new MinimizerCalculator(IterUtils.arrayToIterator(hashes), 4, 0, false)));
         assertIterableEquals(
                 minHash4True,
-                StrUtils.iterable(
-                        new MinimizerCalculator(StrUtils.arrayToIterator(hashes), 4, 0, true)));
+                IterUtils.iterable(
+                        new MinimizerCalculator(IterUtils.arrayToIterator(hashes), 4, 0, true)));
     }
 
     @Test
@@ -63,8 +63,8 @@ class MinimizerCalculatorTest {
                 );
         assertIterableEquals(
                 minHash3,
-                StrUtils.iterable(
-                        new MinimizerCalculator(StrUtils.arrayToIterator(hashes), 3, 0, false)));
+                IterUtils.iterable(
+                        new MinimizerCalculator(IterUtils.arrayToIterator(hashes), 3, 0, false)));
     }
 
     @Test
@@ -85,8 +85,8 @@ class MinimizerCalculatorTest {
                 );
         assertIterableEquals(
                 minHash3,
-                StrUtils.iterable(
-                        new MinimizerCalculator(StrUtils.arrayToIterator(hashes), 3, 0, true)));
+                IterUtils.iterable(
+                        new MinimizerCalculator(IterUtils.arrayToIterator(hashes), 3, 0, true)));
     }
 
     @Test
@@ -104,16 +104,16 @@ class MinimizerCalculatorTest {
         var minHash4 = List.of();
         assertIterableEquals(
                 minHash2,
-                StrUtils.iterable(
-                        new MinimizerCalculator(StrUtils.arrayToIterator(hashes), 2, 0, false)));
+                IterUtils.iterable(
+                        new MinimizerCalculator(IterUtils.arrayToIterator(hashes), 2, 0, false)));
         assertIterableEquals(
                 minHash3,
-                StrUtils.iterable(
-                        new MinimizerCalculator(StrUtils.arrayToIterator(hashes), 3, 0, false)));
+                IterUtils.iterable(
+                        new MinimizerCalculator(IterUtils.arrayToIterator(hashes), 3, 0, false)));
         assertIterableEquals(
                 minHash4,
-                StrUtils.iterable(
-                        new MinimizerCalculator(StrUtils.arrayToIterator(hashes), 4, 0, false)));
+                IterUtils.iterable(
+                        new MinimizerCalculator(IterUtils.arrayToIterator(hashes), 4, 0, false)));
     }
 
     @Test
@@ -143,15 +143,15 @@ class MinimizerCalculatorTest {
                 );
         assertIterableEquals(
                 minHash2,
-                StrUtils.iterable(
-                        new MinimizerCalculator(StrUtils.arrayToIterator(hashes), 2, 0, true)));
+                IterUtils.iterable(
+                        new MinimizerCalculator(IterUtils.arrayToIterator(hashes), 2, 0, true)));
         assertIterableEquals(
                 minHash3,
-                StrUtils.iterable(
-                        new MinimizerCalculator(StrUtils.arrayToIterator(hashes), 3, 0, true)));
+                IterUtils.iterable(
+                        new MinimizerCalculator(IterUtils.arrayToIterator(hashes), 3, 0, true)));
         assertIterableEquals(
                 minHash4,
-                StrUtils.iterable(
-                        new MinimizerCalculator(StrUtils.arrayToIterator(hashes), 4, 0, true)));
+                IterUtils.iterable(
+                        new MinimizerCalculator(IterUtils.arrayToIterator(hashes), 4, 0, true)));
     }
 }

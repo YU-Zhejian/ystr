@@ -1,6 +1,24 @@
 = Readme for `yStr` -- Yu ZJ's Implementation of Commonly-Used Bioinformatics String Algorithms
+:icons: font
 
-Here contains some Java 17 implementation over commonly-used bioinformatics string algorithms.
+WARNING: Work-in-progress, do not use.
+
+Here contains some Java 17 implementations over commonly used bioinformatics string algorithms.
+
+== What We Have So Far
+
+=== Checksum Algorithms
+
+. https://wiki.osdev.org/CRC32[CRC32].
+
+=== Hashing Algorithms
+
+. Rabin-Karp-compatible rolling hashes, including polynomial hashes and https://doi.org/10.1093/bioinformatics/btw397[ntHash version 1].
+
+=== Encoders/Decoders
+
+. A simple 4-bit nucleotide encoder.
+. A 2-bit nucleotide encoder, resembling the http://genome.ucsc.edu/FAQ/FAQformat.html#format7[UCSC 2bit format].
 
 == Getting `yStr` In Your Project
 

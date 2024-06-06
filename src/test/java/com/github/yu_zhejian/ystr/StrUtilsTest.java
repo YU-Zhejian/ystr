@@ -50,27 +50,29 @@ class StrUtilsTest {
     @Test
     void dedup() {
         assertIterableEquals(
-                List.of(), StrUtils.iterable(StrUtils.dedup(StrUtils.arrayToIterator(new int[0]))));
+                List.of(),
+                IterUtils.iterable(IterUtils.dedup(IterUtils.arrayToIterator(new int[0]))));
         assertIterableEquals(
                 List.of(1),
-                StrUtils.iterable(StrUtils.dedup(StrUtils.arrayToIterator(new int[] {1}))));
+                IterUtils.iterable(IterUtils.dedup(IterUtils.arrayToIterator(new int[] {1}))));
         assertIterableEquals(
                 List.of(1),
-                StrUtils.iterable(StrUtils.dedup(StrUtils.arrayToIterator(new int[] {1, 1}))));
+                IterUtils.iterable(IterUtils.dedup(IterUtils.arrayToIterator(new int[] {1, 1}))));
         assertIterableEquals(
                 List.of(1, 2),
-                StrUtils.iterable(StrUtils.dedup(StrUtils.arrayToIterator(new int[] {1, 1, 2}))));
+                IterUtils.iterable(
+                        IterUtils.dedup(IterUtils.arrayToIterator(new int[] {1, 1, 2}))));
         assertIterableEquals(
                 List.of(1, 2),
-                StrUtils.iterable(
-                        StrUtils.dedup(StrUtils.arrayToIterator(new int[] {1, 1, 2, 2, 2}))));
+                IterUtils.iterable(
+                        IterUtils.dedup(IterUtils.arrayToIterator(new int[] {1, 1, 2, 2, 2}))));
         assertIterableEquals(
                 List.of(1, 2, 3),
-                StrUtils.iterable(
-                        StrUtils.dedup(StrUtils.arrayToIterator(new int[] {1, 1, 2, 2, 2, 3}))));
+                IterUtils.iterable(
+                        IterUtils.dedup(IterUtils.arrayToIterator(new int[] {1, 1, 2, 2, 2, 3}))));
         assertIterableEquals(
-                StrUtils.iterable(StrUtils.arrayToIterator(new Integer[] {1, 2, 3, null})),
-                StrUtils.iterable(StrUtils.dedup(
-                        StrUtils.arrayToIterator(new Integer[] {1, 1, 2, 2, 2, 3, null}))));
+                IterUtils.iterable(IterUtils.arrayToIterator(new Integer[] {1, 2, 3, null})),
+                IterUtils.iterable(IterUtils.dedup(
+                        IterUtils.arrayToIterator(new Integer[] {1, 1, 2, 2, 2, 3, null}))));
     }
 }
