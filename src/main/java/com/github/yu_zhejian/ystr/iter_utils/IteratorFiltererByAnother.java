@@ -33,6 +33,7 @@ public final class IteratorFiltererByAnother<T> implements Iterator<T> {
     @Override
     public T next() {
         var retv = current;
+        currentIsValid = false;
         tryPopulateCurrent();
         return retv;
     }

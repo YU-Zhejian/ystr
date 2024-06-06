@@ -3,8 +3,10 @@ package com.github.yu_zhejian.ystr.rolling;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Iterator;
+
 /** Constants for {@link NtHash} and {@link PrecomputedNtHash}. */
-abstract class NtHashBase extends RollingHashBase {
+public abstract class NtHashBase extends RollingHashBase {
     protected static final long SEED_A = 0x3c8bfbb395c60474L;
     protected static final long SEED_C = 0x3193c18562a02b4cL;
     protected static final long SEED_G = 0x20323ed082572324L;
@@ -34,6 +36,38 @@ abstract class NtHashBase extends RollingHashBase {
      */
     public long getFwdHash() {
         return fwdHash;
+    }
+
+    @Contract(value = "_ -> new", pure = true)
+    public static @NotNull Iterator<Long> getFwdHash(final NtHashBase ntHash) {
+        return new Iterator<>() {
+            @Override
+            public boolean hasNext() {
+                return ntHash.hasNext();
+            }
+
+            @Override
+            public Long next() {
+                ntHash.next();
+                return ntHash.getFwdHash();
+            }
+        };
+    }
+
+    @Contract(value = "_ -> new", pure = true)
+    public static @NotNull Iterator<Long> getRevHash(final NtHashBase ntHash) {
+        return new Iterator<>() {
+            @Override
+            public boolean hasNext() {
+                return ntHash.hasNext();
+            }
+
+            @Override
+            public Long next() {
+                ntHash.next();
+                return ntHash.getRevHash();
+            }
+        };
     }
 
     /**

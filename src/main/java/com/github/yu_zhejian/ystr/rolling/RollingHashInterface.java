@@ -13,7 +13,7 @@ import java.util.Iterator;
  * {@link java.util.Iterator#next()} is called, the window will slide towards the end of the string
  * and the hash would be updated.
  *
- * <p>Most algorithms generates 64-bit hashes. There are also algorithms that generates shorter
+ * <p>Most algorithms generate 64-bit hashes. There are also algorithms that generate shorter
  * hashes.
  *
  * <p><b>Properties of the Algorithm</b>

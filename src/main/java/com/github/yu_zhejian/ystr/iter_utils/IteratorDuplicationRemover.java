@@ -5,13 +5,14 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 import java.util.Objects;
+import java.util.function.Function;
 
 /**
  * Remove adjacent duplications.
  *
  * @param <T> As described.
  */
-public final class IteratorDuplicationRemover<T> implements Iterator<T> {
+public final class IteratorDuplicationRemover<T, U> implements Iterator<T> {
     private final Iterator<T> sourceIterator;
 
     /** Whether {@link #currentValue} is reliable. */
@@ -22,14 +23,22 @@ public final class IteratorDuplicationRemover<T> implements Iterator<T> {
 
     /** What to return when {@link #next()} is called. */
     private T currentValue;
+
+    private U currentExtracted;
     /**
      * Next value that is different from {@link #currentValue}. I.e., next value to return when
      * {@link #next()} is called.
      */
     private T nextValue;
 
-    public IteratorDuplicationRemover(@NotNull Iterator<T> sourceIterator) {
+    private U nextExtracted;
+
+    private final Function<T, U> extractor;
+
+    public IteratorDuplicationRemover(
+            @NotNull Iterator<T> sourceIterator, Function<T, U> extractor) {
         this.sourceIterator = sourceIterator;
+        this.extractor = extractor;
 
         if (!sourceIterator.hasNext()) {
             currentIsValid = false;
@@ -38,8 +47,10 @@ public final class IteratorDuplicationRemover<T> implements Iterator<T> {
             nextValue = null;
         } else {
             currentValue = sourceIterator.next();
+            currentExtracted = extractor.apply(currentValue);
             currentIsValid = true;
             nextIsValid = false;
+            nextExtracted = null;
             tryPopulateNext();
         }
     }
@@ -56,7 +67,8 @@ public final class IteratorDuplicationRemover<T> implements Iterator<T> {
     private void tryPopulateNext() {
         while (sourceIterator.hasNext() && !nextIsValid) {
             nextValue = sourceIterator.next();
-            if (!Objects.equals(currentValue, nextValue)) {
+            nextExtracted = extractor.apply(nextValue);
+            if (!Objects.equals(currentExtracted, nextExtracted)) {
                 nextIsValid = true;
             }
         }
@@ -87,6 +99,7 @@ public final class IteratorDuplicationRemover<T> implements Iterator<T> {
             final var retv = currentValue;
             if (nextIsValid) {
                 currentValue = nextValue;
+                currentExtracted = nextExtracted;
                 nextIsValid = false;
                 tryPopulateNext();
             } else {

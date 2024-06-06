@@ -14,7 +14,6 @@ public final class IteratorFilterer<T> implements Iterator<T> {
             current = sourceIterator.next();
             if (predicate.test(current)) {
                 currentIsValid = true;
-                break;
             }
         }
     }
@@ -34,6 +33,7 @@ public final class IteratorFilterer<T> implements Iterator<T> {
     @Override
     public T next() {
         var retv = current;
+        currentIsValid = false;
         tryPopulateCurrent();
         return retv;
     }
