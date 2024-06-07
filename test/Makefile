@@ -1,6 +1,7 @@
 all:\
 	e_coli.genomic.fna \
 	sars_cov2.genomic.fna \
+	ce11.genomic.fna \
 
 
 e_coli.genomic.fna:
@@ -12,3 +13,9 @@ sars_cov2.genomic.fna:
 	curl https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/009/858/895/GCF_009858895.2_ASM985889v3/GCF_009858895.2_ASM985889v3_genomic.fna.gz | \
     pigz -cdf > sars_cov2.genomic.fna
 	samtools faidx sars_cov2.genomic.fna
+
+ce11.genomic.fna:
+	curl https://hgdownload.soe.ucsc.edu/goldenPath/ce11/bigZips/ce11.fa.gz | \
+    pigz -cdf > ce11.genomic.fna
+	samtools faidx ce11.genomic.fna
+

@@ -1,0 +1,20 @@
+plugins {
+	id 'java'
+}
+
+group = findProperty("proj_group")
+version = findProperty("proj_version")
+
+dependencies {
+	implementation "com.github.samtools:htsjdk:${HTSJDK_VER}"
+	implementation project(":ystr_core")
+	implementation "io.vavr:vavr:${VAVR_VER}"
+	implementation "org.jetbrains:annotations:${JETBRAINS_ANNOTATION_VER}"
+	implementation "it.unimi.dsi:fastutil:${FASTUTIL_VER}"
+	implementation "org.slf4j:slf4j-api:${SLF4J_VER}"
+	implementation "org.slf4j:jcl-over-slf4j:${SLF4J_VER}"
+	implementation "org.slf4j:jul-to-slf4j:${SLF4J_VER}"
+	implementation "org.slf4j:log4j-over-slf4j:${SLF4J_VER}"
+	implementation "org.apache.commons:commons-math3:3.6.1"
+	runtimeOnly "ch.qos.logback:logback-classic:${LOGBACK_VER}"
+}

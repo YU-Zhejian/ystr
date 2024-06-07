@@ -20,6 +20,10 @@ Here contains some Java 17 implementations over commonly used bioinformatics str
 . A simple 4-bit nucleotide encoder.
 . A 2-bit nucleotide encoder, resembling the http://genome.ucsc.edu/FAQ/FAQformat.html#format7[UCSC 2bit format].
 
+=== Demonstration Projects
+
+. A simple seed-and-extend algorithm using `ntHash` for hashing. Currently only construction of genomic index was finished.
+
 == Getting `yStr` In Your Project
 
 Currently, we haven't published this module on https://central.sonatype.com/[Maven Central]. However, you may still use it inside your own project if you use Gradle as your build system.

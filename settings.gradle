@@ -1,1 +1,3 @@
 rootProject.name = 'ystr'
+include 'ystr_core'
+include 'ystr_demo'
