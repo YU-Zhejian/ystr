@@ -5,6 +5,7 @@ import com.github.yu_zhejian.ystr.iter_utils.IteratorDuplicationRemover;
 import com.github.yu_zhejian.ystr.iter_utils.IteratorFilterer;
 import com.github.yu_zhejian.ystr.iter_utils.IteratorMapper;
 import com.github.yu_zhejian.ystr.iter_utils.IteratorReducer;
+import com.github.yu_zhejian.ystr.iter_utils.IteratorWindowExtractor;
 
 import it.unimi.dsi.fastutil.booleans.BooleanArrayList;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
@@ -180,7 +181,6 @@ public final class IterUtils {
         return new IteratorFilterer<>(sourceIterator, predicat);
     }
 
-
     @Contract(value = "_, _, _ -> new", pure = true)
     public static <V, T, U> @NotNull Iterator<V> combine(
             BiFunction<T, U, V> combinator, Iterator<T> tIterator, Iterator<U> uIterator) {
@@ -204,5 +204,11 @@ public final class IterUtils {
             i++;
         }
         return retl;
+    }
+
+    @Contract("_, _ -> new")
+    public static <T> @NotNull Iterator<List<T>> window(
+            @NotNull Iterator<T> sourceIterator, int windowSize) {
+        return new IteratorWindowExtractor<>(sourceIterator, windowSize);
     }
 }

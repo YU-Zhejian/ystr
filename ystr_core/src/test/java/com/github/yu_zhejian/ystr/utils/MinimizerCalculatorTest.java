@@ -1,4 +1,4 @@
-package com.github.yu_zhejian.ystr.rolling;
+package com.github.yu_zhejian.ystr.utils;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -28,7 +28,10 @@ class MinimizerCalculatorTest {
 
         var hashes = List.of(1L, 2L, 3L, 4L, 5L, 4L, 3L, 2L, 1L, 2L, 3L, 4L, 5L);
         var minHash3 = List.of(0, 1, 2, 3, 6, 7, 8, 8, 8, 9, 10);
+        var minHash1 = List.of(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12);
         assertIterableEquals(minHash3, MinimizerCalculator.getMinimizerPositions(hashes, 3, false));
+        assertIterableEquals(minHash1, MinimizerCalculator.getMinimizerPositions(hashes, 1, false));
+        assertIterableEquals(minHash1, MinimizerCalculator.getMinimizerPositions(hashes, 1, true));
     }
 
     @Test

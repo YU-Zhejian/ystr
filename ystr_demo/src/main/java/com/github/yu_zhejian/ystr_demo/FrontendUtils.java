@@ -13,10 +13,6 @@ public final class FrontendUtils {
     private static final long T = K * G;
     private static final DecimalFormat DF = new DecimalFormat("###.##");
 
-    public static @NotNull String toHumanReadable(double n) {
-        return toHumanReadable(n, "B");
-    }
-
     public static @NotNull String toHumanReadable(double n, String suffix) {
         if (n > T) {
             return DF.format(n / T) + "T" + suffix;
@@ -29,5 +25,9 @@ public final class FrontendUtils {
         } else {
             return DF.format(n) + suffix;
         }
+    }
+
+    public static @NotNull String toHumanReadable(@NotNull Number n, String suffix) {
+        return toHumanReadable(n.doubleValue(), suffix);
     }
 }

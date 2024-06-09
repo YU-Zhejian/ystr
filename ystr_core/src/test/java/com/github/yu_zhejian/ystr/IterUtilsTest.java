@@ -9,7 +9,6 @@ import io.vavr.Tuple2;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -88,5 +87,4 @@ class IterUtilsTest {
                 IterUtils.of(true, true),
                 IterUtils.filter(IterUtils.of(false, false, true, true), (Boolean b) -> b));
     }
-
 }

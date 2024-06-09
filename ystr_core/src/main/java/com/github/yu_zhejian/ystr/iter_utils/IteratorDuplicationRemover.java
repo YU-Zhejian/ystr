@@ -8,8 +8,7 @@ import java.util.Objects;
 import java.util.function.Function;
 
 /**
- * Remove adjacent duplications.
- * Duplications could be defined using extracted values.
+ * Remove adjacent duplications. Duplications could be defined using extracted values.
  *
  * @param <T> The type of iterable items before extraction.
  * @param <U> The type of iterable items after extraction.
@@ -26,9 +25,7 @@ public final class IteratorDuplicationRemover<T, U> implements Iterator<T> {
     /** What to return when {@link #next()} is called. */
     private T currentValue;
 
-    /**
-     * Extraction result of {@link #currentValue}.
-     */
+    /** Extraction result of {@link #currentValue}. */
     private U currentExtracted;
     /**
      * Next value that is different from {@link #currentValue}. I.e., next value to return when
@@ -36,18 +33,15 @@ public final class IteratorDuplicationRemover<T, U> implements Iterator<T> {
      */
     private T nextValue;
 
-    /**
-     * Extraction result of {@link #nextValue}.
-     */
+    /** Extraction result of {@link #nextValue}. */
     private U nextExtracted;
 
-    /**
-     * Function that performs extraction.
-     */
+    /** Function that performs extraction. */
     private final Function<T, U> extractor;
 
     /**
      * Default constructor.
+     *
      * @param sourceIterator As described.
      * @param extractor As described.
      */

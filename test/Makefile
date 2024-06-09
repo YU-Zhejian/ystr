@@ -19,3 +19,10 @@ ce11.genomic.fna:
     pigz -cdf > ce11.genomic.fna
 	samtools faidx ce11.genomic.fna
 
+c_elegans_minion_drna.fq:
+	curl ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR892/005/SRR8929005/SRR8929005_1.fastq.gz | \
+	pigz -cdf > c_elegans_minion_drna.fq
+
+c_elegans_ests.fa:
+	curl https://hgdownload.soe.ucsc.edu/goldenPath/ce11/bigZips/est.fa.gz | \
+	pigz -cdf > c_elegans_ests.fa
