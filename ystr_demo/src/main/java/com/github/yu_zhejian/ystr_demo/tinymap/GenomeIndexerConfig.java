@@ -12,8 +12,7 @@ public record GenomeIndexerConfig(
     }
 
     /**
-     * The canonical NCBI Blast index which uses 7-mers
-     * without minimizer optimization.
+     * The canonical NCBI Blast index which uses 7-mers without minimizer optimization.
      *
      * @return As described.
      */

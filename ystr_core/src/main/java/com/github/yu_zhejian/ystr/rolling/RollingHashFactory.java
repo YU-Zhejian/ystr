@@ -29,7 +29,9 @@ public final class RollingHashFactory {
 
         if (claz == NtHash.class) {
             return new NtHash(string, k, skipFirst);
-        } else if (claz.equals(PolynomialRollingHash.class)) {
+        } else if (claz == PrecomputedNtHash.class) {
+            return new PrecomputedNtHash(string, k, skipFirst);
+        }else if (claz.equals(PolynomialRollingHash.class)) {
             if (params.length == 2
                     && params[0] instanceof Long lp0
                     && params[1] instanceof Long lp1) {

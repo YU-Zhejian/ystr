@@ -15,30 +15,20 @@ import java.util.Arrays;
  *       with {@link #curPos} moving to the next place.
  *   <li>{@link #curPos} will be moved to 0 when it reaches {@link #capacity}.
  * </ol>
- * <p>
- * Notice, if hash collision occurs, will use the one with smaller position.
+ *
+ * <p>Notice, if hash collision occurs, will use the one with smaller position.
  */
 public final class MinimizerRingBuffer {
-    /**
-     * Placeholder for leat possible minimizer.
-     */
+    /** Placeholder for leat possible minimizer. */
     public static final long MAX_ULONG = 0xffffffffffffffffL;
 
-    /**
-     * Length of {@link #contents} and {@link #pos}.
-     */
+    /** Length of {@link #contents} and {@link #pos}. */
     private final int capacity;
-    /**
-     * The ring buffer itself.
-     */
+    /** The ring buffer itself. */
     private final long[] contents;
-    /**
-     * Real position of each element inside {@link #contents}.
-     */
+    /** Real position of each element inside {@link #contents}. */
     private final int[] pos;
-    /**
-     * Where we are inside the buffer.
-     */
+    /** Where we are inside the buffer. */
     private int curPos;
 
     private long curMin;
@@ -72,7 +62,7 @@ public final class MinimizerRingBuffer {
     /**
      * As described.
      *
-     * @param hash   As described.
+     * @param hash As described.
      * @param newPos As described.
      */
     public void add(final long hash, int newPos) {

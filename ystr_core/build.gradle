@@ -12,6 +12,11 @@ dependencies {
 	implementation "io.vavr:vavr:${VAVR_VER}"
 	implementation "org.jetbrains:annotations:${JETBRAINS_ANNOTATION_VER}"
 	implementation "it.unimi.dsi:fastutil:${FASTUTIL_VER}"
+	testImplementation "org.openjdk.jmh:jmh-core:${JMH_VER}"
+	testAnnotationProcessor "org.openjdk.jmh:jmh-generator-annprocess:${JMH_VER}"
+	// https://mvnrepository.com/artifact/org.eclipse.jgit/org.eclipse.jgit
+	testImplementation 'org.eclipse.jgit:org.eclipse.jgit:6.10.0.202406032230-r'
+	testRuntimeOnly "ch.qos.logback:logback-classic:${LOGBACK_VER}"
 }
 
 test {

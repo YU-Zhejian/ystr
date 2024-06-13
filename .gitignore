@@ -114,3 +114,4 @@ runtime_wrapper.sh
 .idea/.name
 .idea/rGraphicsSettings.xml
 .idea/rSettings.xml
+*.json
