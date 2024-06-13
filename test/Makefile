@@ -4,6 +4,11 @@ all:\
 	ce11.genomic.fna \
 	c_elegans_minion_drna.fq \
 	ce11.ncbiRefSeq.gtf \
+	oxford_3k.txt \
+	shakespeare_gutenberg.txt \
+	c_elegans_ests.fa \
+	kjv_gutenberg.txt \
+
 
 e_coli.genomic.fna:
 	curl https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/005/845/GCF_000005845.2_ASM584v2/GCF_000005845.2_ASM584v2_genomic.fna.gz | \
@@ -31,3 +36,12 @@ c_elegans_minion_drna.fq:
 c_elegans_ests.fa:
 	curl https://hgdownload.soe.ucsc.edu/goldenPath/ce11/bigZips/est.fa.gz | \
 	pigz -cdf > c_elegans_ests.fa
+
+oxford_3k.txt:
+	curl -L https://github.com/jnoodle/English-Vocabulary-Word-List/raw/master/Oxford%203000.txt > oxford_3k.txt
+
+shakespeare_gutenberg.txt:
+	curl -L https://www.gutenberg.org/ebooks/100.txt.utf-8 > shakespeare_gutenberg.txt
+
+kjv_gutenberg.txt:
+	curl -L https://www.gutenberg.org/ebooks/10.txt.utf-8 > kjv_gutenberg.txt

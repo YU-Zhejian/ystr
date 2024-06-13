@@ -2,7 +2,7 @@ package com.github.yu_zhejian.ystr.rolling;
 
 import com.github.yu_zhejian.ystr.IterUtils;
 import com.github.yu_zhejian.ystr.io.FastxIterator;
-import com.github.yu_zhejian.ystr.utils.GitUtils;
+import com.github.yu_zhejian.ystr.test_utils.GitUtils;
 
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
@@ -20,6 +20,7 @@ import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.concurrent.TimeUnit;
@@ -42,12 +43,11 @@ public class RollingHashBenchmark {
             })
     private int k;
 
-    public static void main(String[] args) throws RunnerException {
+    public static void main(String[] args) throws RunnerException, FileNotFoundException {
         var className = RollingHashBenchmark.class.getSimpleName();
         var options = new OptionsBuilder()
                 .include("%s.*".formatted(className))
-                .result(Path.of(".", "%s.json".formatted(className))
-                        .toAbsolutePath()
+                .result(Path.of(GitUtils.getGitRoot(), "benchmark_out", className + ".json")
                         .toString())
                 .resultFormat(ResultFormatType.JSON)
                 .build();

@@ -1,4 +1,4 @@
-package com.github.yu_zhejian.ystr.utils;
+package com.github.yu_zhejian.ystr.test_utils;
 
 import org.eclipse.jgit.storage.file.FileRepositoryBuilder;
 import org.jetbrains.annotations.NotNull;

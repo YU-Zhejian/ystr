@@ -153,7 +153,7 @@ public abstract class NtHashBase extends RollingHashBase {
         var rett = Tuple.of((List<Long>) new LongArrayList(estimatedLength), (List<Long>)
                 new LongArrayList(estimatedLength));
         while (ntHash.hasNext()) {
-            ntHash.next();
+            ntHash.nextUnboxed();
             rett._1().add(ntHash.getFwdHash());
             rett._2().add(ntHash.getRevHash());
         }
@@ -199,6 +199,6 @@ public abstract class NtHashBase extends RollingHashBase {
      */
     @Contract(pure = true)
     public long @NotNull [] multiHash(final int m) {
-        return multiHash(m, k, currentValue);
+        return multiHash(m, k, currentValueUnboxed);
     }
 }

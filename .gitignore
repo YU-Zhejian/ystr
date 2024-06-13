@@ -109,9 +109,10 @@ runtime_wrapper.sh
 *.cool
 *.bam
 *.bai
-/tmp_*
+*tmp*
 .idea/deployment.xml
 .idea/.name
 .idea/rGraphicsSettings.xml
 .idea/rSettings.xml
 *.json
+*Tmp*

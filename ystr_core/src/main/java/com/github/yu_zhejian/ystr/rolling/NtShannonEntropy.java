@@ -84,7 +84,7 @@ public final class NtShannonEntropy extends RollingEntropyBase {
         for (var i = 0; i < k; i++) {
             MAPPING_TABLE[string[i]].increase();
         }
-        currentValue = getEntropy();
+        currentValueUnboxed = getEntropy();
     }
 
     @Override
@@ -94,6 +94,6 @@ public final class NtShannonEntropy extends RollingEntropyBase {
         final var seqk = string[i + k];
         MAPPING_TABLE[seqi].reduce();
         MAPPING_TABLE[seqk].increase();
-        currentValue = getEntropy();
+        currentValueUnboxed = getEntropy();
     }
 }

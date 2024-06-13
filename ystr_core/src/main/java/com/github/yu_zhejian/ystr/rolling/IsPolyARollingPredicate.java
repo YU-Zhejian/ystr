@@ -69,7 +69,7 @@ public final class IsPolyARollingPredicate extends RollingPredicateBase {
                 numA += 1;
             }
         }
-        currentValue = numA >= numAThreshold;
+        currentValueUnboxed = numA >= numAThreshold;
     }
 
     @Override
@@ -88,6 +88,6 @@ public final class IsPolyARollingPredicate extends RollingPredicateBase {
         if (predk) {
             numA++;
         }
-        currentValue = numA >= numAThreshold;
+        currentValueUnboxed = numA >= numAThreshold;
     }
 }

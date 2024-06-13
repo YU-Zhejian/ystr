@@ -17,6 +17,8 @@ dependencies {
 	// https://mvnrepository.com/artifact/org.eclipse.jgit/org.eclipse.jgit
 	testImplementation 'org.eclipse.jgit:org.eclipse.jgit:6.10.0.202406032230-r'
 	testRuntimeOnly "ch.qos.logback:logback-classic:${LOGBACK_VER}"
+	// https://mvnrepository.com/artifact/org.apache.commons/commons-csv
+	testImplementation "org.apache.commons:commons-csv:1.11.0"
 }
 
 test {

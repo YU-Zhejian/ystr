@@ -10,7 +10,6 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.Objects;
 
 /**
  * String matching problem in the form of "finding {@code needle} inside a substring of a
@@ -123,10 +122,13 @@ public final class StrMatch {
         final var needleLen = needle.length;
         var haystackPos = start;
         final var retl = new IntArrayList();
-        while (haystackPos + needleLen <= end) {
+        while (true) {
             // Find first match
-            while (haystack[haystackPos] != needle[0] && haystackPos + needleLen <= end) {
+            while (haystackPos + needleLen <= end && haystack[haystackPos] != needle[0]) {
                 haystackPos += 1;
+            }
+            if (haystackPos + needleLen >= end) {
+                break;
             }
             int needlePos;
             // Start from 2nd position since 1st position is of course match.
@@ -175,12 +177,12 @@ public final class StrMatch {
                 rollingHashClaz, haystack, needleLen, start, rollingHashParams);
         final var needleHash = RollingHashFactory.newRollingHash(
                         rollingHashClaz, needle, needleLen, 0, rollingHashParams)
-                .next();
+                .nextUnboxed();
 
         final var retl = new IntArrayList();
         while (haystackPos + needleLen <= end) {
-            final var nextHash = rhHaystack.next();
-            if (Objects.equals(nextHash, needleHash) && isMatch(haystack, needle, haystackPos)) {
+            final var nextHash = rhHaystack.nextUnboxed();
+            if (nextHash == needleHash && isMatch(haystack, needle, haystackPos)) {
                 retl.add(haystackPos);
             }
             haystackPos++;

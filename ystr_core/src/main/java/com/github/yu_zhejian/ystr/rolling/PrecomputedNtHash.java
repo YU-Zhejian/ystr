@@ -29,7 +29,7 @@ public final class PrecomputedNtHash extends NtHashBase {
         for (var i = 0; i < k; i++) {
             revHash ^= MS_TAB[string[i + skipFirst] & CP_OFF][i % 64];
         }
-        currentValue = Long.compareUnsigned(fwdHash, revHash) < 0 ? fwdHash : revHash;
+        currentValueUnboxed = Long.compareUnsigned(fwdHash, revHash) < 0 ? fwdHash : revHash;
     }
 
     @Override
@@ -42,6 +42,7 @@ public final class PrecomputedNtHash extends NtHashBase {
                 ^ MS_TAB[seqi & CP_OFF][63]
                 ^ MS_TAB[seqk & CP_OFF][(k - 1) % 64];
         // This line redone Long.compareUnsigned
-        currentValue = (fwdHash + Long.MIN_VALUE < revHash + Long.MIN_VALUE) ? fwdHash : revHash;
+        currentValueUnboxed =
+                (fwdHash + Long.MIN_VALUE < revHash + Long.MIN_VALUE) ? fwdHash : revHash;
     }
 }

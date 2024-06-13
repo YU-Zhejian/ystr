@@ -98,9 +98,9 @@ public final class PolynomialRollingHash extends RollingHashBase {
 
     @Override
     protected void initCurrentValue() {
-        currentValue = 0L;
+        currentValueUnboxed = 0L;
         for (int i = 0; i < k; i++) {
-            currentValue = (currentValue * p + string[i + skipFirst]) % m;
+            currentValueUnboxed = (currentValueUnboxed * p + string[i + skipFirst]) % m;
         }
         pow = 1L;
         for (int i = 0; i < k - 1; i++) {
@@ -114,8 +114,8 @@ public final class PolynomialRollingHash extends RollingHashBase {
         final var seqi = string[i];
         final var seqk = string[i + k];
         // + m in the following line prevents the genesis of negative values.
-        currentValue = (currentValue + m - (pow * seqi) % m) % m;
-        currentValue = ((currentValue * p) % m + seqk) % m;
+        currentValueUnboxed = (currentValueUnboxed + m - (pow * seqi) % m) % m;
+        currentValueUnboxed = ((currentValueUnboxed * p) % m + seqk) % m;
     }
 
     @Contract(pure = true)

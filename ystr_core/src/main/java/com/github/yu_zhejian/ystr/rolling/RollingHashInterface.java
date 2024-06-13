@@ -34,4 +34,6 @@ import java.util.Iterator;
  * // Which should both be "AGCT"
  * }</pre>
  */
-public interface RollingHashInterface extends Iterator<Long> {}
+public interface RollingHashInterface extends Iterator<Long> {
+    long nextUnboxed();
+}

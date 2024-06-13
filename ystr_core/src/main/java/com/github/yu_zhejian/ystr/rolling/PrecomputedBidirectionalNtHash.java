@@ -30,7 +30,7 @@ public final class PrecomputedBidirectionalNtHash extends NtHashBase {
         for (var i = 0; i < k; i++) {
             revHash ^= MS_TAB[string[i + skipFirst] & CP_OFF][i % 64];
         }
-        currentValue = 0L;
+        currentValueUnboxed = 0L;
     }
 
     @Override

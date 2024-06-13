@@ -40,10 +40,10 @@ public final class ContainsUnknownBaseRollingPredicate extends RollingPredicateB
 
     @Override
     protected void initCurrentValue() {
-        currentValue = true;
+        currentValueUnboxed = true;
         for (int i = 0; i < k; i++) {
             if (!PREDICATE[string[i]]) {
-                currentValue = false;
+                currentValueUnboxed = false;
                 nPos = i;
             }
         }
@@ -53,12 +53,12 @@ public final class ContainsUnknownBaseRollingPredicate extends RollingPredicateB
     protected void updateCurrentValueToNextState() {
         final var i = curPos - 1;
         final var seqk = string[i + k];
-        if (Boolean.FALSE.equals(currentValue) && nPos - curPos > k) {
-            currentValue = true;
+        if (!currentValueUnboxed && nPos - curPos > k) {
+            currentValueUnboxed = true;
         }
 
         if (!PREDICATE[seqk]) {
-            currentValue = false;
+            currentValueUnboxed = false;
             nPos = i + k;
         }
     }

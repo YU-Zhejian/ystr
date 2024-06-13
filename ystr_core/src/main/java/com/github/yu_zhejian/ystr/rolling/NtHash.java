@@ -66,7 +66,7 @@ public final class NtHash extends NtHashBase {
         for (var i = 0; i < k; i++) {
             revHash ^= Long.rotateLeft(complSeedTableGet(string[i + skipFirst]), i);
         }
-        currentValue = Long.compareUnsigned(fwdHash, revHash) < 0 ? fwdHash : revHash;
+        currentValueUnboxed = Long.compareUnsigned(fwdHash, revHash) < 0 ? fwdHash : revHash;
     }
 
     @Override
@@ -80,7 +80,7 @@ public final class NtHash extends NtHashBase {
         revHash = Long.rotateRight(revHash, 1)
                 ^ Long.rotateRight(complSeedTableGet(seqi), 1)
                 ^ Long.rotateLeft(complSeedTableGet(seqk), k - 1);
-        currentValue = Long.compareUnsigned(fwdHash, revHash) < 0 ? fwdHash : revHash;
+        currentValueUnboxed = Long.compareUnsigned(fwdHash, revHash) < 0 ? fwdHash : revHash;
     }
 
     /**
