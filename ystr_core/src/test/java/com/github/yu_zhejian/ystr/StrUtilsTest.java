@@ -45,4 +45,16 @@ class StrUtilsTest {
         assertEquals(0L, StrUtils.pow(0L, 3));
         assertEquals(1L, StrUtils.pow(0L, 0));
     }
+
+    @Test
+    void hammingDistance() {
+        assertEquals(0, StrUtils.hammingDistance(new byte[0], new byte[0]));
+        assertEquals(0, StrUtils.hammingDistance(new byte[] {1, 2, 3}, new byte[] {1, 2, 3}));
+        assertEquals(1, StrUtils.hammingDistance(new byte[] {1, 2, 4}, new byte[] {1, 2, 3}));
+        assertEquals(2, StrUtils.hammingDistance(new byte[] {1, 2, 4}, new byte[] {1, 3, 3}));
+        assertEquals(3, StrUtils.hammingDistance(new byte[] {1, 2, 4}, new byte[] {4, 3, 3}));
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> StrUtils.hammingDistance(new byte[] {1, 2, 4}, new byte[] {4, 3, 3, 4}));
+    }
 }

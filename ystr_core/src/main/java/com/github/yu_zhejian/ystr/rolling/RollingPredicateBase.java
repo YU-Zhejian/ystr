@@ -21,6 +21,7 @@ abstract class RollingPredicateBase extends RollingBase<Boolean>
     /** By setting type into unboxed form could increase speed. */
     protected boolean currentValueUnboxed;
     /** @deprecated Disabled ever since. Use {@link #currentValueUnboxed} instead. */
+    @Deprecated
     protected final Boolean currentValue = null;
 
     /** @deprecated Unoptimized version; use {@link #nextUnboxed()} instead. */

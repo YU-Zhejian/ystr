@@ -3,8 +3,9 @@ package com.github.yu_zhejian.ystr.rolling;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Pre-computed {@link NtHash} implementation without updating {@link #currentValue}. Only
- * {@link #getFwdHash()} and {@link #getRevHash()} is working; {@link #next()} will always return 0.
+ * Pre-computed {@link NtHash} implementation without updating {@link #currentValueUnboxed}. Only
+ * {@link #getFwdHash()} and {@link #getRevHash()} is working; {@link #nextUnboxed()} will always
+ * return 0.
  */
 public final class PrecomputedBidirectionalNtHash extends NtHashBase {
 

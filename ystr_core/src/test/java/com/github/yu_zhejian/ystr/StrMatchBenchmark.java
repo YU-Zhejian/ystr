@@ -95,4 +95,10 @@ public class StrMatchBenchmark {
         blackhole.consume(StrMatch.knuthMorrisPrattMatch(
                 TEST_CHR, needle.getBytes(StandardCharsets.UTF_8), 0, TEST_CHR.length));
     }
+
+    @Benchmark
+    public void benchShiftOr(@NotNull Blackhole blackhole) {
+        blackhole.consume(StrMatch.shiftOrMatch(
+                TEST_CHR, needle.getBytes(StandardCharsets.UTF_8), 0, TEST_CHR.length));
+    }
 }

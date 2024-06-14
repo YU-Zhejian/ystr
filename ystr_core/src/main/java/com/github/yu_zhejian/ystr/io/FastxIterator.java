@@ -76,9 +76,7 @@ public class FastxIterator implements Iterator<FastxRecord>, AutoCloseable {
             } else if (isFASTQ && !hadFastqSeqPopulated) {
                 currentSequence.append(line.trim());
                 hadFastqSeqPopulated = true;
-            } else if (isFASTQ && line.charAt(0) == '+') {
-                continue;
-            } else if (isFASTQ) {
+            } else if (isFASTQ && line.charAt(0) != '+') {
                 // Quality scores after '+'
                 currentQuality.append(line.trim());
                 break; // End of record
@@ -101,11 +99,10 @@ public class FastxIterator implements Iterator<FastxRecord>, AutoCloseable {
     public @NotNull FastxRecord next() {
         if (!hasNext) throw new NoSuchElementException();
 
-        var qualityBytes = currentQuality.toString().getBytes(StandardCharsets.UTF_8);
         var record = new FastxRecord(
                 currentSeqId,
-                currentSequence.toString().getBytes(StandardCharsets.UTF_8),
-                qualityBytes);
+                currentSequence.toString().getBytes(StandardCharsets.US_ASCII),
+                currentQuality.toString().getBytes(StandardCharsets.US_ASCII));
         try {
             nextRecord(); // Prepare for the next record
         } catch (IOException e) {

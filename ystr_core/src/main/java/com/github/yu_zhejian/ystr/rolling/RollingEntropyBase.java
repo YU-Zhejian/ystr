@@ -20,6 +20,7 @@ abstract class RollingEntropyBase extends RollingBase<Double> implements Rolling
     /** By setting type into unboxed form could increase speed. */
     protected double currentValueUnboxed;
     /** @deprecated Disabled ever since. Use {@link #currentValueUnboxed} instead. */
+    @Deprecated
     protected final Double currentValue = null;
 
     /** @deprecated Unoptimized version; use {@link #nextUnboxed()} instead. */

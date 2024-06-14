@@ -13,13 +13,10 @@ import java.util.List;
 class NtShannonEntropyTest {
     void testNtShannonEntropy(@NotNull List<Double> expected, @NotNull String bases, int k) {
         var nth = new NtShannonEntropy(bases.getBytes(StandardCharsets.UTF_8), k, 0);
-        IterUtils.exhaust(IterUtils.combine(
-                (Double i, Double j) -> {
-                    assertEquals(i, j, 0.0, "");
-                    return null;
-                },
-                expected.iterator(),
-                nth));
+        var result = IterUtils.collect(nth);
+        for (var i = 0; i < result.size(); i++) {
+            assertEquals(expected.get(i), result.get(i), 0.0, "");
+        }
     }
 
     @Test

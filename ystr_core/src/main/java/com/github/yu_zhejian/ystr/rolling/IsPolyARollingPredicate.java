@@ -2,7 +2,13 @@ package com.github.yu_zhejian.ystr.rolling;
 
 import org.jetbrains.annotations.NotNull;
 
-/** k-mers with bases except {@code AGCTUagctu}. */
+/**
+ * k-mers with bases except {@code AGCTUagctu}.
+ *
+ * <p>TODO: testing
+ *
+ * <p>Warning, the negative part of {@link Byte} is not used.
+ */
 public final class IsPolyARollingPredicate extends RollingPredicateBase {
     private static final boolean[] PREDICATE = {
         false, false, false, false, false, false, false, false, // 0..7

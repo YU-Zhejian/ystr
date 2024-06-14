@@ -5,7 +5,6 @@ import java.nio.charset.StandardCharsets
 plugins {
 	id "java"
 	id "distribution"
-	// id "application"
 	id "jacoco"
 	id "jacoco-report-aggregation"
 	id "pmd"
@@ -17,8 +16,8 @@ plugins {
 	id "com.github.spotbugs" version "6.0.15"
 }
 
-group = findProperty("proj_group")
-version = findProperty("proj_version")
+group = "${proj_group}"
+version = "${proj_version}"
 
 // ---------------------------- Dependencies ----------------------------
 
@@ -77,19 +76,23 @@ spotless {
 	encoding StandardCharsets.UTF_8
 	lineEndings LineEnding.UNIX
 	java {
-		target fileTree(".") {
-			include '**/*.java'
-		}
+		target '**/*.java'
 		importOrder()
 		removeUnusedImports()
 		palantirJavaFormat(PALANTIR_JAVA_FMT_VER).style("AOSP").formatJavadoc(true)
 	}
-//	groovyGradle {
-//		target fileTree(".") {
-//			include '**/build.gradle'
-//		}
-//		importOrder()
-//		removeSemicolons()
-//		greclipse(ECLIPSE_JDT_VER)
-//	}
+	shell {
+		target '**/*.sh'
+		shfmt('v3.8.0')
+	}
+	groovyGradle {
+		target '**/*.gradle'
+		importOrder()
+		removeSemicolons()
+		greclipse(ECLIPSE_JDT_VER)
+	}
+	format 'xml', {
+		target 'src/**/*.xml'
+		eclipseWtp('xml')
+	}
 }

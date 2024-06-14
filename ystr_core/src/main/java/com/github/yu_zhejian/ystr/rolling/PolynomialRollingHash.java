@@ -32,11 +32,8 @@ import java.util.Random;
  * </ol>
  */
 public final class PolynomialRollingHash extends RollingHashBase {
-    /**
-     * Default {@link #p}. Since we do not use negative part of {@link Byte}, the alphabet size is
-     * 128.
-     */
-    public static final long DEFAULT_POLYNOMIAL_ROLLING_HASH_RADIX_P = 128;
+    /** Default {@link #p}. Since we use negative part of {@link Byte}, the alphabet size is 256. */
+    public static final long DEFAULT_POLYNOMIAL_ROLLING_HASH_RADIX_P = 256;
     /** Default {@link #m}. Same as Robert Sedgewick's Implementation. */
     public static final long DEFAULT_POLYNOMIAL_ROLLING_HASH_M = 997;
 

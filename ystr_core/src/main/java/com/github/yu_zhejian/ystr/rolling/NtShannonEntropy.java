@@ -1,8 +1,10 @@
 package com.github.yu_zhejian.ystr.rolling;
 
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-class IntegerWrapper {
+/** Lightweight {@link Integer}. */
+final class IntegerWrapper {
     private int val;
 
     public IntegerWrapper() {
@@ -21,12 +23,18 @@ class IntegerWrapper {
         val--;
     }
 
+    @Contract(pure = true)
     @Override
-    public String toString() {
+    public @NotNull String toString() {
         return String.valueOf(val);
     }
 }
 
+/**
+ * Shannon's entropy for {@code AGCTUagctu}. If other based found, will return {@code 0.0}.
+ *
+ * <p>Warning, the negative part of {@link Byte} is not used.
+ */
 public final class NtShannonEntropy extends RollingEntropyBase {
     private final IntegerWrapper numA = new IntegerWrapper();
     private final IntegerWrapper numG = new IntegerWrapper();

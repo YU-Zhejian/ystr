@@ -8,8 +8,6 @@ import it.unimi.dsi.fastutil.longs.LongArrayList;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-
 /** Constants for {@link NtHash} and {@link PrecomputedNtHash}. */
 public abstract class NtHashBase extends RollingHashBase {
     protected static final long SEED_A = 0x3c8bfbb395c60474L;
@@ -148,10 +146,9 @@ public abstract class NtHashBase extends RollingHashBase {
     }
 
     @Contract(value = "_, _ -> new", pure = true)
-    public static @NotNull Tuple2<List<Long>, List<Long>> getAllBothHash(
+    public static @NotNull Tuple2<LongArrayList, LongArrayList> getAllBothHash(
             @NotNull NtHashBase ntHash, int estimatedLength) {
-        var rett = Tuple.of((List<Long>) new LongArrayList(estimatedLength), (List<Long>)
-                new LongArrayList(estimatedLength));
+        var rett = Tuple.of(new LongArrayList(estimatedLength), new LongArrayList(estimatedLength));
         while (ntHash.hasNext()) {
             ntHash.nextUnboxed();
             rett._1().add(ntHash.getFwdHash());

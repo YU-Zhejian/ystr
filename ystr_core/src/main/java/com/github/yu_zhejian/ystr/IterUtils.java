@@ -1,25 +1,17 @@
 package com.github.yu_zhejian.ystr;
 
-import com.github.yu_zhejian.ystr.iter_utils.IteratorCombinator;
-import com.github.yu_zhejian.ystr.iter_utils.IteratorDuplicationRemover;
-import com.github.yu_zhejian.ystr.iter_utils.IteratorFilterer;
-import com.github.yu_zhejian.ystr.iter_utils.IteratorMapper;
-import com.github.yu_zhejian.ystr.iter_utils.IteratorReducer;
 import com.github.yu_zhejian.ystr.iter_utils.IteratorWindowExtractor;
 
-import it.unimi.dsi.fastutil.booleans.BooleanArrayList;
+import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
-import it.unimi.dsi.fastutil.longs.LongArrayList;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
-import java.util.function.BiFunction;
-import java.util.function.Function;
+import java.util.Objects;
 import java.util.function.Predicate;
 
 /**
@@ -31,174 +23,99 @@ public final class IterUtils {
     private IterUtils() {}
 
     /**
-     * Remove adjacent duplications. See {@link IteratorDuplicationRemover} for implementation.
+     * Remove adjacent duplications.
      *
-     * @param sourceIterator As described.
-     * @param extractor As described.
-     * @return As described.
-     * @param <T> As described.
-     * @param <U> As described.
-     */
-    @Contract(value = "_, _ -> new", pure = true)
-    public static <T, U> @NotNull Iterator<T> dedup(
-            final Iterator<T> sourceIterator, Function<T, U> extractor) {
-        return new IteratorDuplicationRemover<>(sourceIterator, extractor);
-    }
-    /**
-     * {@link #dedup(Iterator, Function)} with extractor disabled.
-     *
-     * @param sourceIterator As described.
+     * @param list As described.
      * @return As described.
      * @param <T> As described.
      */
-    @Contract(value = "_ -> new", pure = true)
-    public static <T> @NotNull Iterator<T> dedup(final Iterator<T> sourceIterator) {
-        return new IteratorDuplicationRemover<>(sourceIterator, i -> i);
-    }
-
-    /**
-     * {@link Long} version of {@link #arrayToIterator(Object[])}.
-     *
-     * @param array As described.
-     * @return As described.
-     */
-    public static @NotNull Iterator<Long> arrayToIterator(final long @NotNull [] array) {
-        final var retl = new LongArrayList(array.length);
-        for (final var i : array) {
-            retl.add(i);
+    public static <T> @NotNull List<T> dedup(@NotNull List<T> list) {
+        var result = new ArrayList<T>();
+        if (list.isEmpty()) {
+            return result;
         }
-        return retl.iterator();
-    }
-
-    @SafeVarargs
-    public static <T> @NotNull Iterator<T> of(T... objs) {
-        return arrayToIterator(objs);
-    }
-
-    /**
-     * {@link Integer} version of {@link #arrayToIterator(Object[])}.
-     *
-     * @param array As described.
-     * @return As described.
-     */
-    public static @NotNull Iterator<Integer> arrayToIterator(final int @NotNull [] array) {
-        final var retl = new IntArrayList(array.length);
-        for (final var i : array) {
-            retl.add(i);
-        }
-        return retl.iterator();
-    }
-
-    /**
-     * {@link Boolean} version of {@link #arrayToIterator(Object[])}.
-     *
-     * @param array As described.
-     * @return As described.
-     */
-    public static @NotNull Iterator<Boolean> arrayToIterator(final boolean @NotNull [] array) {
-        final var retl = new BooleanArrayList(array.length);
-        for (final var i : array) {
-            retl.add(i);
-        }
-        return retl.iterator();
-    }
-
-    /**
-     * Convert some array to iterator. This method uses an {@link ArrayList} for storing the values.
-     *
-     * @param array As described.
-     * @param <T> As described.
-     * @return As described.
-     */
-    public static <T> @NotNull Iterator<T> arrayToIterator(final T @NotNull [] array) {
-        final var retl = new ArrayList<T>(array.length);
-        retl.addAll(Arrays.asList(array));
-        return retl.iterator();
-    }
-
-    /**
-     * Convert some iterable to some iterator.
-     *
-     * @param iterator As described.
-     * @return As described.
-     * @param <T> As described.
-     */
-    public static <T> @NotNull Iterable<T> iterable(final @NotNull Iterator<T> iterator) {
-        return new Iterable<>() {
-            @NotNull
-            @Override
-            public Iterator<T> iterator() {
-                return iterator;
+        var prev = list.get(0);
+        for (int i = 1; i < list.size(); i++) {
+            var current = list.get(i);
+            if (!Objects.equals(prev, current)) {
+                result.add(current);
+                prev = current;
             }
-        };
+        }
+        return result;
+    }
+
+    public static @NotNull IntArrayList dedup(@NotNull IntArrayList list) {
+        var result = new IntArrayList();
+        if (list.isEmpty()) {
+            return result;
+        }
+        var prev = list.getInt(0);
+        for (int i = 1; i < list.size(); i++) {
+            var current = list.getInt(i);
+            if (prev != current) {
+                result.add(current);
+                prev = current;
+            }
+        }
+        return result;
     }
 
     /**
-     * Reduce the source iterator to some value.
+     * Collect current iterator to {@link ArrayList}.
      *
-     * <p>Reduction will be done from left to right. That is,
-     *
-     * <pre>{@code
-     *   red(1, 2, 3, 4)
-     * = red(red(1, 2), 3, 4)
-     * = red(red(red(1, 2), 3), 4)
-     *
-     * }</pre>
+     * <p>Warning, this method impairs performance.
      *
      * @param sourceIterator As described.
-     * @param reducer The reducing function.
-     * @param initialValue The initial value for reduction.
-     * @return Reduced value.
-     * @param <T> Type of input iterable.
-     * @param <V> Type of reduced value.
-     * @see <a href="https://docs.python.org/3/library/functools.html#functools.reduce">Python
-     *     interface.</a>
-     */
-    public static <T, V> V reduce(
-            Iterator<T> sourceIterator, BiFunction<T, V, V> reducer, V initialValue) {
-        return new IteratorReducer<>(sourceIterator, reducer, initialValue).get();
-    }
-
-    /**
-     * Convert one iterator to another.
-     *
-     * @param sourceIterator As described.
-     * @param mapper As described.
      * @return As described.
-     * @param <T> As described.
-     * @param <V> As described.
-     * @see <a href="https://docs.python.org/3/library/functions.html#map">Python interface</a>
+     * @param <T> Type of elements inside the iterator.
      */
-    @Contract(value = "_, _ -> new", pure = true)
-    public static <T, V> @NotNull Iterator<V> map(
-            Iterator<T> sourceIterator, Function<T, V> mapper) {
-        return new IteratorMapper<>(sourceIterator, mapper);
+    public static <T> @NotNull List<T> collect(@NotNull Iterator<T> sourceIterator) {
+        var retl = new ArrayList<T>();
+        while (sourceIterator.hasNext()) {
+            retl.add(sourceIterator.next());
+        }
+        return retl;
     }
 
-    @Contract("_, _ -> new")
-    public static <T> @NotNull Iterator<T> filter(
-            Iterator<T> sourceIterator, Predicate<T> predicat) {
-        return new IteratorFilterer<>(sourceIterator, predicat);
-    }
-
-    @Contract(value = "_, _, _ -> new", pure = true)
-    public static <V, T, U> @NotNull Iterator<V> combine(
-            BiFunction<T, U, V> combinator, Iterator<T> tIterator, Iterator<U> uIterator) {
-        return new IteratorCombinator<>(combinator, tIterator, uIterator);
-    }
-
-    public static <T> void exhaust(@NotNull Iterator<T> sourceIterator) {
+    /**
+     * Consume the entire iterator.
+     *
+     * @param sourceIterator As described.
+     */
+    public static void exhaust(@NotNull Iterator<?> sourceIterator) {
         while (sourceIterator.hasNext()) {
             sourceIterator.next();
         }
     }
 
-    public static <T> @NotNull List<Integer> where(
+    /**
+     * Return the indices of items inside {@code sourceIterator} which were evaluated to
+     * {@code true}.
+     *
+     * @param sourceIterator As described.
+     * @param predicate As described.
+     * @return As described.
+     * @param <T> As described.
+     */
+    public static <T> @NotNull IntArrayList where(
             @NotNull Iterator<T> sourceIterator, Predicate<T> predicate) {
         var retl = new IntArrayList();
         var i = 0;
-        for (var it : iterable(sourceIterator)) {
-            if (predicate.test(it)) {
+        while (sourceIterator.hasNext()) {
+            if (predicate.test(sourceIterator.next())) {
+                retl.add(i);
+            }
+            i++;
+        }
+        return retl;
+    }
+
+    public static @NotNull IntArrayList where(
+            @NotNull DoubleArrayList list, Predicate<Double> predicate) {
+        var retl = new IntArrayList();
+        for (var i = 0; i < list.size(); i++) {
+            if (predicate.test(list.getDouble(i))) {
                 retl.add(i);
             }
             i++;

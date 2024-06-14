@@ -30,8 +30,9 @@ public final class MinimizerRingBuffer {
     private final int[] pos;
     /** Where we are inside the buffer. */
     private int curPos;
-
+    /** Current minimizer value. */
     private long curMin;
+    /** Current minimizer position. */
     private int curMinPos;
 
     /**
@@ -49,7 +50,7 @@ public final class MinimizerRingBuffer {
     }
 
     /**
-     * As described.
+     * {@link #add(long, int)} with automatic calculation of positions.
      *
      * <p>Note, This method is extremely slow and should not be used in production.
      *
@@ -60,7 +61,7 @@ public final class MinimizerRingBuffer {
     }
 
     /**
-     * As described.
+     * Add a new hash while updating {@link #curMin}.
      *
      * @param hash As described.
      * @param newPos As described.
@@ -82,6 +83,7 @@ public final class MinimizerRingBuffer {
         }
     }
 
+    /** Force reset of {@link #curMin} and {@link #curMinPos}. */
     public void resetMinAndPos() {
         curMin = contents[0];
         curMinPos = pos[0];
@@ -96,8 +98,6 @@ public final class MinimizerRingBuffer {
 
     /**
      * The current minimizer position.
-     *
-     * <p>Note, the current implementation is brute-force. There should have been better.
      *
      * @return As described.
      */

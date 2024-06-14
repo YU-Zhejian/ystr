@@ -3,19 +3,19 @@
 # shellcheck disable=SC2086
 echo "Enumerating sources..."
 SOURCES=$(
-    git ls-files |\
-    grep -v '\.maint' |\
-    grep -v '\.idea' |\
-    grep -v gradlew |\
+  git ls-files |
+    grep -v '\.maint' |
+    grep -v '\.idea' |
+    grep -v gradlew |
     xargs
 )
 echo "Enumerating sources FIN"
 if [ -n "${SCC:-}" ]; then
   "${SCC}" ${SOURCES}
-elif which scc &>/dev/null;then
-    scc ${SOURCES}
-elif which cloc &>/dev/null;then
-    cloc ${SOURCES}
+elif which scc &>/dev/null; then
+  scc ${SOURCES}
+elif which cloc &>/dev/null; then
+  cloc ${SOURCES}
 else
-    echo "scc or cloc required!"
+  echo "scc or cloc required!"
 fi

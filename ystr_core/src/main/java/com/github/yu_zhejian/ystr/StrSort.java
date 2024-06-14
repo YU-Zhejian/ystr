@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public final class StrSort {
-    private static final int BYTE_MAX = 128;
+    private static final int BYTE_MAX = 256;
 
     private StrSort() {}
 
@@ -24,7 +24,7 @@ public final class StrSort {
     public static int @NotNull [] keyIndexedCounting(final byte @NotNull [] keys) {
         final var counts = new int[BYTE_MAX + 1];
         for (final var key : keys) {
-            counts[key + 1]++;
+            counts[key + 1]++; // FIXME: This line does not consider negative side of bytes.
         }
         for (int i = 0; i < BYTE_MAX; i++) {
             counts[i + 1] += counts[i];

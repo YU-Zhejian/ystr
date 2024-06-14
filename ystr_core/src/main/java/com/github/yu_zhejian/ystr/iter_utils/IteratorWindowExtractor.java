@@ -9,22 +9,33 @@ import java.util.*;
 /**
  * Implemented with the help of TONGYI Lingma.
  *
- * @param <T>
+ * @param <T> As described.
  */
-public class IteratorWindowExtractor<T> implements Iterator<List<T>> {
+public final class IteratorWindowExtractor<T> implements Iterator<List<T>> {
+    /** As described. */
     private final Iterator<T> sourceIterator;
+    /** As described. */
     private final int windowSize;
+    /** As described. */
     private final List<T> currentWindow;
+    /** As described. */
     private boolean hasNextBatch;
 
+    /**
+     * Default constructor.
+     *
+     * @param sourceIterator As described.
+     * @param windowSize As described.
+     */
     public IteratorWindowExtractor(@NotNull Iterator<T> sourceIterator, int windowSize) {
         this.sourceIterator = sourceIterator;
         this.windowSize = windowSize;
-        this.hasNextBatch = sourceIterator.hasNext();
-        this.currentWindow = new ObjectArrayList<>(windowSize);
+        hasNextBatch = sourceIterator.hasNext();
+        currentWindow = new ObjectArrayList<>(windowSize);
         populateCurrentWindow();
     }
 
+    /** As described. */
     private void populateCurrentWindow() {
         while (currentWindow.size() < windowSize && sourceIterator.hasNext()) {
             currentWindow.add(sourceIterator.next());
@@ -40,7 +51,7 @@ public class IteratorWindowExtractor<T> implements Iterator<List<T>> {
     }
 
     @Override
-    public List<T> next() {
+    public @NotNull List<T> next() {
         if (!hasNextBatch) {
             throw new NoSuchElementException();
         }

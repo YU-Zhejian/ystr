@@ -14,22 +14,22 @@ import java.util.List;
 
 class NtHashTest {
     long getNthNtHash1(@NotNull String input, int n, int k) {
-        return new NtHash(input.getBytes(StandardCharsets.UTF_8), k, n).next();
+        return new NtHash(input.getBytes(StandardCharsets.UTF_8), k, n).nextUnboxed();
     }
 
     long getNthNtHash2(@NotNull String input, int n, int k) {
         var nLeft = n;
         var nth = new NtHash(input.getBytes(StandardCharsets.UTF_8), k, 0);
         while (nLeft > 0) {
-            nth.next();
+            nth.nextUnboxed();
             nLeft--;
         }
-        return nth.next();
+        return nth.nextUnboxed();
     }
 
     void testNtHash(List<Long> expected, @NotNull String bases, int k) {
         var nth = new NtHash(bases.getBytes(StandardCharsets.UTF_8), k, 0);
-        assertIterableEquals(expected, IterUtils.iterable(nth));
+        assertIterableEquals(expected, IterUtils.collect(nth));
     }
 
     void testNtHash(List<Long> expected, @NotNull String bases) {

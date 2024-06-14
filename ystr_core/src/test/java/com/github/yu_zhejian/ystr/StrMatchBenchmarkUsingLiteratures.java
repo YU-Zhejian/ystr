@@ -17,6 +17,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Locale;
+import java.util.Random;
 
 public final class StrMatchBenchmarkUsingLiteratures {
     private static final byte[] KJV = readLC("kjv_gutenberg.txt");
@@ -53,10 +54,24 @@ public final class StrMatchBenchmarkUsingLiteratures {
 
     void testSS(
             @NotNull Function4<byte[], byte[], Integer, Integer, List<Integer>> function,
-            String name)
+            String name,
+            int strLenLimit)
             throws IOException {
+        LH.info("Testing {}... Warming up JVM", name);
+        var rng = new Random();
+        for (int j = 0; j < 20; j++) {
+            var word = OXFORD_3K.get(rng.nextInt(OXFORD_3K.size()) - 1);
+            IterUtils.exhaust(
+                    function.apply(SHAKESPEARE, word, 0, SHAKESPEARE.length).iterator());
+            IterUtils.exhaust(function.apply(KJV, word, 0, KJV.length).iterator());
+        }
+
+        LH.info("Testing {}... Started", name);
         var i = 0;
         for (var word : OXFORD_3K) {
+            if (word.length > strLenLimit) {
+                continue;
+            }
             long startNS;
             long endNS;
             int occurrence;
@@ -75,13 +90,18 @@ public final class StrMatchBenchmarkUsingLiteratures {
                 LH.info("Testing {}... {}%", name, i / 30);
             }
         }
+        LH.info("Testing {}... Finished", name);
     }
 
     void test() throws IOException {
-        testSS(StrMatch::bruteForceMatch, "bruteForceMatch");
-        // testSS(StrMatch::naiveMatch, "naiveMatch"); // FIXME: This algorithm is having errors!
-        testSS(StrMatch::rabinKarpMatch, "rabinKarpMatch");
-        testSS(StrMatch::knuthMorrisPrattMatch, "knuthMorrisPrattMatch");
+        testSS(StrMatch::bruteForceMatch, "bruteForceMatch", Integer.MAX_VALUE);
+        testSS(
+                StrMatch::naiveMatch,
+                "naiveMatch",
+                Integer.MAX_VALUE); // FIXME: This algorithm is having errors!
+        testSS(StrMatch::rabinKarpMatch, "rabinKarpMatch", Integer.MAX_VALUE);
+        testSS(StrMatch::knuthMorrisPrattMatch, "knuthMorrisPrattMatch", Integer.MAX_VALUE);
+        testSS(StrMatch::shiftOrMatch, "shiftOrMatch", 64);
     }
 
     private static byte @NotNull [] readLC(String fileName) {

@@ -9,6 +9,7 @@ import it.unimi.dsi.fastutil.ints.IntArrayList;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -16,6 +17,8 @@ import java.util.List;
  * {@code haystack}". Will return a list of all identified substrings.
  */
 public final class StrMatch {
+
+    public static final int ASIZE = 256;
 
     /**
      * Test whether a substring on {@code haystack} from {@code skipFirst} with length
@@ -127,7 +130,7 @@ public final class StrMatch {
             while (haystackPos + needleLen <= end && haystack[haystackPos] != needle[0]) {
                 haystackPos += 1;
             }
-            if (haystackPos + needleLen >= end) {
+            if (haystackPos + needleLen > end) {
                 break;
             }
             int needlePos;
@@ -243,12 +246,13 @@ public final class StrMatch {
      *       </ul>
      *       <p>Since {@code s[i - lps[i] + 1: i + 1] == s[0: lps[i]] == s[i - lps[i] + 1: i + 1] +
      *       lps[i] - i - 1}, for {@code j < i},
-     *       <pre>
+     *       <pre>{@code
      *  s[0: j]
-     * = s[i - j + 1: i + 1] // By definition of {@code lps[j]}
-     * = s[i - j + 1: i + 1] + lps[i] - i - 1 // By definition of {@code lps[i]}
+     * = s[i - j + 1: i + 1] // By definition of lps[j]
+     * = s[i - j + 1: i + 1] + lps[i] - i - 1 // By definition of lps[i]
      * = s[lps[i] - j: lps[j]]
-     *         </pre>
+     *
+     * }</pre>
      *       So, {@code j} would be the {@code lps} of {@code s[0: lps[i]]}. So, next valid
      *       {@code j} is {@code lps[lps[i] - 1]}.
      *       <p>If we need to further search for smaller {@code j}, this rule applies until
@@ -348,6 +352,60 @@ public final class StrMatch {
                 } else {
                     haystackPos += 1;
                 }
+            }
+        }
+        return retl;
+    }
+
+    /**
+     * Shift-or string matching.
+     *
+     * <p>TODO: More docs needed.
+     *
+     * @param haystack As described.
+     * @param needle As described.
+     * @param start As described.
+     * @param end As described.
+     * @return As described.
+     * @see <a href="https://www-igm.univ-mlv.fr/~lecroq/string/node6.html">C source</a>
+     */
+    public static @NotNull List<Integer> shiftOrMatch(
+            final byte @NotNull [] haystack,
+            final byte @NotNull [] needle,
+            final int start,
+            final int end) {
+        ensureParametersValid(haystack, needle, start, end);
+        if (needle.length > 64) {
+            throw new IllegalArgumentException(
+                    "Needle length should not exceed 64! Actual: %d".formatted(needle.length));
+        }
+        if (haystack.length == 0 || needle.length == 0) {
+            return List.of();
+        }
+        final var retl = new IntArrayList();
+
+        // Pre-processing
+        long mask = 0L;
+        var positionOfEachByteOnNeedle = new long[ASIZE];
+        Arrays.fill(positionOfEachByteOnNeedle, ~0L);
+
+        // The `shift` variable will be an unsigned long where only one position will be set 1.
+        // The position of 1 is the current offset on the needle.
+        long shift = 1L;
+        for (byte b : needle) {
+            positionOfEachByteOnNeedle[StrUtils.byteToUnsigned(b)] &= ~shift;
+            mask |= shift;
+            shift <<= 1;
+        }
+        mask = ~(mask >> 1);
+
+        // Matching
+        long state = ~0L;
+        for (var haystackPos = start; haystackPos < end; ++haystackPos) {
+            state = (state << 1)
+                    | positionOfEachByteOnNeedle[StrUtils.byteToUnsigned(haystack[haystackPos])];
+            if (state < mask) { // TODO: Why?
+                retl.add(haystackPos - needle.length + 1);
             }
         }
         return retl;

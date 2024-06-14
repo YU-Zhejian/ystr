@@ -30,6 +30,12 @@ class StrMatchTest {
             Map.entry(Tuple.of("ACTC", "ACTC"), List.of(0)),
             Map.entry(Tuple.of("AAAA", ""), List.of()),
             Map.entry(Tuple.of("", ""), List.of()));
+    static final Map<Tuple2<String, String>, List<Integer>> TEST_CASES_STRANGE_ENCODING =
+            Map.ofEntries(
+                    Map.entry(
+                            Tuple.of("\0\0\u00c0\0\0", "\0"),
+                            List.of(0, 1, 4, 5)) // byte[] { 0, 0, -61, -128, 0, 0 }
+                    );
 
     @Test
     void testIsMatch() {
@@ -42,7 +48,9 @@ class StrMatchTest {
         });
     }
 
-    void testSS(@NotNull Function4<byte[], byte[], Integer, Integer, List<Integer>> function) {
+    void testSS(
+            @NotNull Function4<byte[], byte[], Integer, Integer, List<Integer>> function,
+            @NotNull Map<Tuple2<String, String>, List<Integer>> testCases) {
         // Test edge cases and illegal inputs
         assertThrows(
                 IllegalArgumentException.class,
@@ -51,7 +59,7 @@ class StrMatchTest {
                 IllegalArgumentException.class,
                 () -> function.apply(new byte[0], new byte[0], -1, 0));
         // Test real strings
-        TEST_CASES_AGCT.forEach((key, value) -> {
+        testCases.forEach((key, value) -> {
             var hayStack = key._1().getBytes(StandardCharsets.UTF_8);
             var needle = key._2().getBytes(StandardCharsets.UTF_8);
             assertIterableEquals(
@@ -63,35 +71,42 @@ class StrMatchTest {
 
     @Test
     void bruteForceMatch() {
-        testSS(StrMatch::bruteForceMatch);
+        testSS(StrMatch::bruteForceMatch, TEST_CASES_AGCT);
+        testSS(StrMatch::bruteForceMatch, TEST_CASES_STRANGE_ENCODING);
     }
 
     @Test
     void naiveMatch() {
-        testSS(StrMatch::naiveMatch);
+        testSS(StrMatch::naiveMatch, TEST_CASES_AGCT);
+        testSS(StrMatch::naiveMatch, TEST_CASES_STRANGE_ENCODING);
     }
 
     @Test
     void rabinKarpMatch() {
-        testSS(StrMatch::rabinKarpMatch);
+        testSS(StrMatch::rabinKarpMatch, TEST_CASES_AGCT);
+        testSS(StrMatch::rabinKarpMatch, TEST_CASES_STRANGE_ENCODING);
     }
 
     @Test
     void rabinKarpMatchUsingRandomPrime() {
-        testSS((haystack, needle, start, end) -> StrMatch.rabinKarpMatch(
-                haystack,
-                needle,
-                start,
-                end,
-                PolynomialRollingHash.class,
-                PolynomialRollingHash.longRandomPrime(),
-                128L));
+        testSS(
+                (haystack, needle, start, end) -> StrMatch.rabinKarpMatch(
+                        haystack,
+                        needle,
+                        start,
+                        end,
+                        PolynomialRollingHash.class,
+                        PolynomialRollingHash.longRandomPrime(),
+                        128L),
+                TEST_CASES_AGCT);
     }
 
     @Test
     void rabinKarpMatchUsingNtHash() {
-        testSS((haystack, needle, start, end) ->
-                StrMatch.rabinKarpMatch(haystack, needle, start, end, NtHash.class));
+        testSS(
+                (haystack, needle, start, end) ->
+                        StrMatch.rabinKarpMatch(haystack, needle, start, end, NtHash.class),
+                TEST_CASES_AGCT);
     }
 
     /**
@@ -117,6 +132,13 @@ class StrMatchTest {
 
     @Test
     void knuthMorrisPrattMatch() {
-        testSS(StrMatch::knuthMorrisPrattMatch);
+        testSS(StrMatch::knuthMorrisPrattMatch, TEST_CASES_AGCT);
+        testSS(StrMatch::knuthMorrisPrattMatch, TEST_CASES_STRANGE_ENCODING);
+    }
+
+    @Test
+    void shiftOrMatch() {
+        testSS(StrMatch::shiftOrMatch, TEST_CASES_AGCT);
+        testSS(StrMatch::shiftOrMatch, TEST_CASES_STRANGE_ENCODING);
     }
 }
