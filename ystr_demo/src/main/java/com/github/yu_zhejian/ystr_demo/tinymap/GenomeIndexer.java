@@ -76,7 +76,7 @@ public final class GenomeIndexer {
         numProcessedKmers = new AtomicLong(0);
     }
 
-    public long appendToOutput(@NotNull OutputStream w, long hash, ByteArrayList encodedPositions)
+    public long appendToOutput(@NotNull OutputStream w, long hash, @NotNull ByteArrayList encodedPositions)
             throws IOException {
         var wlen = 0L;
         var numPositions = encodedPositions.size() / ENCODED_POSITION_SIZE;
@@ -167,7 +167,7 @@ public final class GenomeIndexer {
         var hashOffsetDict = new Long2ObjectOpenHashMap<LongArrayList>();
 
         for (var i = 0; i < minimizers.size(); i++) {
-            var hashValue = minimizers.getLong(i);
+            long hashValue = minimizers.getLong(i);
             hashOffsetDict.computeIfAbsent(hashValue, k -> new LongArrayList());
             hashOffsetDict.get(hashValue).add(positions.getLong(i));
         }
@@ -183,7 +183,7 @@ public final class GenomeIndexer {
         numAllKmers.addAndGet(thisShannonEntropy.size());
 
         var passingIdx =
-                IterUtils.where(thisShannonEntropy, (i) -> i > config.ntShannonEntropyCutoff());
+                IterUtils.where(thisShannonEntropy, i -> i > config.ntShannonEntropyCutoff());
         numProcessedKmers.addAndGet(passingIdx.size());
 
         var hashes = NtHashBase.getAllBothHash(
@@ -203,7 +203,7 @@ public final class GenomeIndexer {
             minimizerDistances.addValue(realPos - lastPos);
             lastPos = realPos;
 
-            var hashValue = minimizers.getLong(i);
+            long hashValue = minimizers.getLong(i);
             encodedHashOffsetDict.computeIfAbsent(hashValue, k -> new ByteArrayList());
             encodedHashOffsetDict
                     .get(hashValue)

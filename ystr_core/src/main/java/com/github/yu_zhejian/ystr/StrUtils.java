@@ -8,7 +8,23 @@ import java.util.Objects;
 public final class StrUtils {
     private StrUtils() {}
 
+    /**
+     * Convert a signed byte to unsigned int.
+     *
+     * @param b As described.
+     * @return As described.
+     */
     public static int byteToUnsigned(byte b) {
+        return b & 0xFF;
+    }
+
+    /**
+     * As described.
+     *
+     * @param b As described.
+     * @return As described.
+     */
+    public static int byteToUnsigned(int b) {
         return b & 0xFF;
     }
 

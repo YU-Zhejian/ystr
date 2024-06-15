@@ -310,8 +310,8 @@ public final class StrMatch {
      * <p><b>References</b>
      *
      * <ul>
-     *   <li>D. E. Knuth, J. H. Morris, Jr., and V. R. Pratt, “Fast Pattern Matching in Strings,”
-     *       SIAM J. Comput., vol. 6, no. 2, pp. 323–350, Jun. 1977, <a
+     *   <li>D. E. Knuth, J. H. Morris, Jr., and V. R. Pratt, "Fast Pattern Matching in Strings,"
+     *       SIAM J. Comput., vol. 6, no. 2, pp. 323-350, Jun. 1977, <a
      *       href="https://doi.org/10.1137/0206024">DOI</a>
      *   <li>Introduction in <a href="https://en.oi-wiki.org/string/kmp/#_6">OIWiki</a>.
      *   <li>Implementation at <a

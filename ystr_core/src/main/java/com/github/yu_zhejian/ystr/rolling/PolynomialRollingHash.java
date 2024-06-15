@@ -24,7 +24,7 @@ import java.util.Random;
  * <p><b>References</b>
  *
  * <ol>
- *   <li>Karp, Richard M. and Michael O. Rabin. “Efficient Randomized Pattern-Matching Algorithms.”
+ *   <li>Karp, Richard M. and Michael O. Rabin. "Efficient Randomized Pattern-Matching Algorithms."
  *       <i>IBM J. Res. Dev.</i> 31 (1987): 249-260. <a
  *       href="https://doi.org/10.1147/rd.312.0249">DOI</a>
  *   <li><a href="https://algs4.cs.princeton.edu/53substring/RabinKarp.java">Robert Sedgewick's

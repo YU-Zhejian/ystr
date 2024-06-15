@@ -31,7 +31,7 @@ import org.jetbrains.annotations.NotNull;
  * <ul>
  *   <li>Hamid Mohamadi, Justin Chu, Benjamin P. Vandervalk, Inanc Birol, ntHash: recursive
  *       nucleotide hashing, <i>Bioinformatics</i>, Volume 32, Issue 22, November 2016, Pages
- *       3492–3494, <a href="https://doi.org/10.1093/bioinformatics/btw397">DOI</a>
+ *       3492-3494, <a href="https://doi.org/10.1093/bioinformatics/btw397">DOI</a>
  *   <li><a href="https://github.com/luizirber/nthash">Rust implementation</a> at commit
  *       {@code ee653d33}, which is based on <a
  *       href="https://github.com/bcgsc/ntHash/releases/tag/v1.0.4">1.0.4</a> version of the

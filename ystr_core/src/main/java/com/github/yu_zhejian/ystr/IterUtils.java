@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.DoublePredicate;
 import java.util.function.Predicate;
 
 /**
@@ -35,6 +36,7 @@ public final class IterUtils {
             return result;
         }
         var prev = list.get(0);
+        result.add(prev);
         for (int i = 1; i < list.size(); i++) {
             var current = list.get(i);
             if (!Objects.equals(prev, current)) {
@@ -45,12 +47,19 @@ public final class IterUtils {
         return result;
     }
 
+    /**
+     * Optimized {@link #dedup(List)}
+     *
+     * @param list As described.
+     * @return As described.
+     */
     public static @NotNull IntArrayList dedup(@NotNull IntArrayList list) {
         var result = new IntArrayList();
         if (list.isEmpty()) {
             return result;
         }
         var prev = list.getInt(0);
+        result.add(prev);
         for (int i = 1; i < list.size(); i++) {
             var current = list.getInt(i);
             if (prev != current) {
@@ -111,14 +120,20 @@ public final class IterUtils {
         return retl;
     }
 
+    /**
+     * Optimized {@link #where(Iterator, Predicate)}
+     *
+     * @param list As described.
+     * @param predicate As described.
+     * @return As described.
+     */
     public static @NotNull IntArrayList where(
-            @NotNull DoubleArrayList list, Predicate<Double> predicate) {
+            @NotNull DoubleArrayList list, DoublePredicate predicate) {
         var retl = new IntArrayList();
         for (var i = 0; i < list.size(); i++) {
             if (predicate.test(list.getDouble(i))) {
                 retl.add(i);
             }
-            i++;
         }
         return retl;
     }

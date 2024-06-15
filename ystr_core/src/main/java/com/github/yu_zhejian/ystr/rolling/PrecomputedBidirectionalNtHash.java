@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
  * {@link #getFwdHash()} and {@link #getRevHash()} is working; {@link #nextUnboxed()} will always
  * return 0.
  */
-public final class PrecomputedBidirectionalNtHash extends NtHashBase {
+public class PrecomputedBidirectionalNtHash extends NtHashBase {
 
     /**
      * As described.

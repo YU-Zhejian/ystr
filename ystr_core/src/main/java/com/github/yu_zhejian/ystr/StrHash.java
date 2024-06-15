@@ -6,7 +6,6 @@ import com.github.yu_zhejian.ystr.rolling.NtHash;
 import com.github.yu_zhejian.ystr.rolling.PolynomialRollingHash;
 import com.github.yu_zhejian.ystr.rolling.PrecomputedNtHash;
 
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -16,7 +15,6 @@ import org.jetbrains.annotations.NotNull;
  * string represented in {@code byte[]} and return some {@link Long}.
  */
 public final class StrHash {
-    private static final int JAVA_LATIN1_HASH_P = 31;
 
     private StrHash() {}
 
@@ -32,21 +30,6 @@ public final class StrHash {
     }
 
     /**
-     * The hashing function from {@link String#hashCode()} in JDK17.
-     *
-     * @param string As described.
-     * @return As described.
-     */
-    @Contract(pure = true)
-    public static long javaLatin1Hash(final byte @NotNull [] string) {
-        long h = 0;
-        for (final byte v : string) {
-            h = JAVA_LATIN1_HASH_P * h + (v & 0xff);
-        }
-        return h;
-    }
-
-    /**
      * ntHash for the entire DNA string. See {@link NtHash} for more details.
      *
      * @param string As described.
@@ -57,21 +40,20 @@ public final class StrHash {
     }
 
     /**
-     * See {@link StrEncoder#simpleNucleotideEncoder(byte)}
+     * Generate the CRC32 checksum for a string.
+     *
+     * <p><b>Implementation</b> Traditional CRC32 algorithm. This implementation was modified from
+     * <a href="https://wiki.osdev.org/CRC32">here</a> with a pre-computed lookup table.
+     *
+     * <p>Note, this algorithm may give different results than {@link java.util.zip.CRC32}.
+     *
+     * <p>Note, this algorithm is a <b>CHECKSUM</b> algorithm instead of a <b>HASHING</b> algorithm.
      *
      * @param string As described.
      * @return As described.
+     * @see <a href="https://introcs.cs.princeton.edu/java/61data/CRC32.java.html">Princeton
+     *     University Implementyation of the CRC32 algorithm.</a>
      */
-    @Contract(pure = true)
-    public static long simpleKmerHashing(final byte @NotNull [] string) {
-        long retv = 0;
-        for (final var nt : string) {
-            retv = retv << 4;
-            retv += StrEncoder.simpleNucleotideEncoder(nt);
-        }
-        return retv;
-    }
-
     public static long crc32(final byte @NotNull [] string) {
         return ChecksumInterface.fastChecksum(CRC32::new, string);
     }

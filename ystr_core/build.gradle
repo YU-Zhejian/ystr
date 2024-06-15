@@ -19,6 +19,8 @@ dependencies {
 	testRuntimeOnly "ch.qos.logback:logback-classic:${LOGBACK_VER}"
 	// https://mvnrepository.com/artifact/org.apache.commons/commons-csv
 	testImplementation "org.apache.commons:commons-csv:1.11.0"
+	// https://mvnrepository.com/artifact/commons-codec/commons-codec
+	testImplementation 'commons-codec:commons-codec:1.17.0'
 }
 
 test {

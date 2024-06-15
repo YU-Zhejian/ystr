@@ -14,6 +14,8 @@ plugins {
 	// https://mvnrepository.com/artifact/com.github.spotbugs/spotbugs-gradle-plugin
 	// https://plugins.gradle.org/plugin/com.github.spotbugs
 	id "com.github.spotbugs" version "6.0.15"
+	// https://plugins.gradle.org/plugin/org.asciidoctor.jvm.convert
+	id 'org.asciidoctor.jvm.convert' version '4.0.2'
 }
 
 group = "${proj_group}"
@@ -32,6 +34,13 @@ allprojects {
 		}
 	}
 
+	tasks.withType(JavaCompile).configureEach {
+		options.encoding = StandardCharsets.UTF_8
+	}
+	tasks.withType(Javadoc).configureEach {
+		options.encoding = StandardCharsets.UTF_8
+		options.locale = 'en_US'
+	}
 
 	configurations {
 		implementation {
@@ -41,17 +50,6 @@ allprojects {
 			exclude group: "org.apache.groovy", module: "groovy-console"
 		}
 	}
-}
-
-
-// ---------------------------- Compiling Java Sources ----------------------------
-
-tasks.javadoc {
-	options.encoding = StandardCharsets.UTF_8
-	options.locale = 'en_US'
-}
-tasks.withType(JavaCompile).configureEach {
-	options.encoding = StandardCharsets.UTF_8
 }
 
 // ---------------------------- Testings ----------------------------
@@ -95,4 +93,8 @@ spotless {
 		target 'src/**/*.xml'
 		eclipseWtp('xml')
 	}
+}
+asciidoctor {
+	sourceDir  file('src/docs')
+	outputDir  file('build/docs')
 }

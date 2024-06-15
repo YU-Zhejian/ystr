@@ -10,8 +10,8 @@ import java.util.List;
  * <b>References</b>
  *
  * <ul>
- *   <li>Roberts, W. Hayes, B. R. Hunt, S. M. Mount, and J. A. Yorke, “Reducing storage requirements
- *       for biological sequence comparison,” Bioinformatics, vol. 20, no. 18, pp. 3363–3369, Dec.
+ *   <li>Roberts, W. Hayes, B. R. Hunt, S. M. Mount, and J. A. Yorke, "Reducing storage requirements
+ *       for biological sequence comparison," Bioinformatics, vol. 20, no. 18, pp. 3363-3369, Dec.
  *       2004 <a href="https://doi.org/10.1093/bioinformatics/bth408">DOI</a>
  * </ul>
  */

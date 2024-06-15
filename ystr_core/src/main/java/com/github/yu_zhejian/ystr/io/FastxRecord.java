@@ -1,8 +1,11 @@
 package com.github.yu_zhejian.ystr.io;
 
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * A FASTA/FASTQ record.
@@ -20,14 +23,42 @@ import java.nio.charset.StandardCharsets;
  */
 public record FastxRecord(String seqid, byte[] seq, byte[] qual) {
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof FastxRecord that)) return false;
+        return Objects.deepEquals(seq, that.seq)
+                && Objects.deepEquals(qual, that.qual)
+                && Objects.equals(seqid, that.seqid);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(seqid, Arrays.hashCode(seq), Arrays.hashCode(qual));
+    }
+
+    @Override
     public @NotNull String toString() {
         if (qual.length == 0) {
-            return ">%s\n%s\n".formatted(seqid, new String(seq, StandardCharsets.US_ASCII));
+            return ">%s%n%s%n".formatted(seqid, new String(seq, StandardCharsets.US_ASCII));
         }
-        return "@%s\n%s\n+\n%s\n"
+        return "@%s%n%s%n+%n%s%n"
                 .formatted(
                         seqid,
                         new String(seq, StandardCharsets.US_ASCII),
                         new String(qual, StandardCharsets.US_ASCII));
+    }
+
+    @Contract("_, _, _ -> new")
+    public static @NotNull FastxRecord ofStrings(
+            String seqid, @NotNull String seq, @NotNull String qual) {
+        return new FastxRecord(
+                seqid,
+                seq.getBytes(StandardCharsets.US_ASCII),
+                qual.getBytes(StandardCharsets.US_ASCII));
+    }
+
+    @Contract("_, _ -> new")
+    public static @NotNull FastxRecord ofStrings(String seqid, @NotNull String seq) {
+        return ofStrings(seqid, seq, "");
     }
 }
