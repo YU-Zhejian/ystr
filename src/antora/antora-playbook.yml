@@ -1,0 +1,13 @@
+site:
+  title: yStr
+  robots: allow
+content:
+  sources:
+    - url: ./../../
+      start_path: src/antora/ROOT
+      branches: HEAD
+      worktree: false
+ui:
+  bundle:
+    url: https://gitlab.com/antora/antora-ui-default/-/jobs/artifacts/HEAD/raw/build/ui-bundle.zip?job=bundle-stable
+    snapshot: true

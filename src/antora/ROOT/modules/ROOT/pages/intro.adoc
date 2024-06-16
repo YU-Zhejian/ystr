@@ -1,0 +1,93 @@
+= Introduction to yStr
+:icons: font
+:toc:
+
+== Overview
+
+This guide would provide a brief introduction to yStr, a library for dealing with biological strings.
+
+yStr is developed for analysis of:
+
+- Biological sequences, like nucleotide or amino acid sequences.
+- Parse files of such bioinformatics strings, like FASTA and FASTQ.
+
+yStr is **NOT** for:
+
+- Natural language-related tasks, especially contents that cannot be encoded by ASCII encoding.
+
+== Goals
+
+yStr is designed to be fast, memory-efficient, with the support of the latest features from Java 17. Feature of yStr includes:
+
+- Pure-Java. This library does not carry JNI extensions so should be portable to all platforms supported by the JVM.
+- Fast. This library uses https://fastutil.di.unimi.it/[`fastutil`], which is faster than the Java standard library.
+- FP-ready. This library encourages the use of Functional Programming (FP) with the help of https://github.com/vavr-io/vavr[`vavr`] and https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/package-summary.html[Java Functional Interfaces].
+
+== Programming with yStr
+
+=== Representation of Biological Sequences
+
+Most yStr algorithms deal with `byte[]` instead of `String` or `char[]` since we hardly deal with unicode characters in biological texts. Using such could reduce time used on encoding and decoding, but would risk of loosing Java's optimization on strings (e.g., small string pool).
+
+yStr uses 2 types of encodings:
+
+- `UTF_8`, for sequence names and metadata. This is also the default encoding for all yStr parsers.
+- `US_ASCII`, for biological sequences. All parsed UTF-8 strings will be decoded as `US_ASCII` before being passed into yStr algorithms. The Java `US_ASCII` encoder would encode all unrecognized characters to `?`.
+
+To convert a Java `String` into `byte[]`, you may:
+
+[source,java]
+----
+import java.nio.charset.StandardCharsets;
+
+static byte[] demo(String string){
+    return string.getBytes(StandardCharsets.US_ASCII);
+}
+----
+
+Which could be converted back using:
+
+[source,java]
+----
+import java.nio.charset.StandardCharsets;
+
+static String demo(byte[] bytes){
+    return new String(bytes, StandardCharsets.US_ASCII);
+}
+----
+
+=== Signed and Unsigned `byte`
+
+In JVM, `byte` is an 8-bit signed integer, with ASCII characters are in the range of `0` to `127` inclusive. However, users may also pass strings that contain characters outside range (`-128` to `-1` inclusive), which would be problematic for using as array indices. Under such circumstances, most yStr algorithms would convert signed bytes to integers using `& 0xFF`, which would flip the negative side into `128` to `255` inclusive. That is,
+
+[source,java]
+----
+static int byteToInt(byte b){
+    return b & 0xFF;
+}
+----
+
+To convert back, we may:
+
+[source,java]
+----
+static byte intToByte(int i){
+    return (byte) i;
+}
+----
+
+=== Immutability of Parameters
+
+Although parameters of the majority of methods are marked `final`, it may still be mutable. For example, the following operation is valid in Java:
+
+[source,java]
+----
+static void demo(){
+    final int[] arr = {1, 2, 3};
+    arr[2] = 4;
+    System.out.println(arr[2]);
+    // Should give 4 as output.
+}
+----
+
+This makes the immutability of any passing `final byte[]` best-effort. If you're using yStr under a multi-threaded environment, you may protect your strings using mutex. On the contrary, `final String` completely immutable and considered safe.

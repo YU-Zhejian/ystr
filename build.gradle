@@ -15,7 +15,9 @@ plugins {
 	// https://plugins.gradle.org/plugin/com.github.spotbugs
 	id "com.github.spotbugs" version "6.0.15"
 	// https://plugins.gradle.org/plugin/org.asciidoctor.jvm.convert
-	id 'org.asciidoctor.jvm.convert' version '4.0.2'
+	// id 'org.asciidoctor.jvm.convert' version '4.0.2'
+	// https://plugins.gradle.org/plugin/com.github.node-gradle.node
+	id "com.github.node-gradle.node" version "7.0.2"
 }
 
 group = "${proj_group}"
@@ -94,7 +96,16 @@ spotless {
 		eclipseWtp('xml')
 	}
 }
-asciidoctor {
-	sourceDir  file('src/docs')
-	outputDir  file('build/docs')
+//asciidoctor {
+//	sourceDir  file('src/docs')
+//	outputDir  file('build/docs')
+//}
+node {
+	download = true
+	version = "${NODE_VER}"
+	nodeProjectDir = file("src/antora")
+}
+tasks.register('antora', NpxTask) {
+	command = 'antora'
+	args = ['--fetch', 'antora-playbook.yml', '--stacktrace']
 }

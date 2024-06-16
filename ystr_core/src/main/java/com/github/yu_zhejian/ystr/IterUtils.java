@@ -1,16 +1,16 @@
 package com.github.yu_zhejian.ystr;
 
-import com.github.yu_zhejian.ystr.iter_utils.IteratorWindowExtractor;
-
 import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Objects;
 import java.util.function.DoublePredicate;
 import java.util.function.Predicate;
@@ -18,6 +18,10 @@ import java.util.function.Predicate;
 /**
  * Various utility functions concerning {@link Iterator}, {@link Iterable} and
  * {@link java.util.Collections} to support other classes.
+ * Classes supporting {@link com.github.yu_zhejian.ystr.IterUtils}.
+ *
+ * <p>Warning, almost all generic methods inside this library could result in performance damage. Use with
+ * care. For performance issues, prefer/implement methods that use FastUtils instead.
  */
 public final class IterUtils {
 
@@ -142,5 +146,61 @@ public final class IterUtils {
     public static <T> @NotNull Iterator<List<T>> window(
             @NotNull Iterator<T> sourceIterator, int windowSize) {
         return new IteratorWindowExtractor<>(sourceIterator, windowSize);
+    }
+
+    /**
+     * Implemented with the help of TONGYI Lingma.
+     *
+     * @param <T> As described.
+     */
+    public static final class IteratorWindowExtractor<T> implements Iterator<List<T>> {
+        /** As described. */
+        private final Iterator<T> sourceIterator;
+        /** As described. */
+        private final int windowSize;
+        /** As described. */
+        private final List<T> currentWindow;
+        /** As described. */
+        private boolean hasNextBatch;
+
+        /**
+         * Default constructor.
+         *
+         * @param sourceIterator As described.
+         * @param windowSize As described.
+         */
+        public IteratorWindowExtractor(@NotNull Iterator<T> sourceIterator, int windowSize) {
+            this.sourceIterator = sourceIterator;
+            this.windowSize = windowSize;
+            hasNextBatch = sourceIterator.hasNext();
+            currentWindow = new ObjectArrayList<>(windowSize);
+            populateCurrentWindow();
+        }
+
+        /** As described. */
+        private void populateCurrentWindow() {
+            while (currentWindow.size() < windowSize && sourceIterator.hasNext()) {
+                currentWindow.add(sourceIterator.next());
+            }
+            if (currentWindow.isEmpty()) {
+                hasNextBatch = false;
+            }
+        }
+
+        @Override
+        public boolean hasNext() {
+            return hasNextBatch;
+        }
+
+        @Override
+        public @NotNull List<T> next() {
+            if (!hasNextBatch) {
+                throw new NoSuchElementException();
+            }
+            List<T> windowCopy = new ArrayList<>(currentWindow);
+            currentWindow.clear();
+            populateCurrentWindow();
+            return windowCopy;
+        }
     }
 }

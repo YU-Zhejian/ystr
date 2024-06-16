@@ -1,0 +1,5 @@
+name: ROOT
+title: yStr
+version: ~
+nav:
+  - modules/ROOT/nav.adoc

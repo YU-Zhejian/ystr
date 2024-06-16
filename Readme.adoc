@@ -1,4 +1,4 @@
-= Readme for `yStr` -- Yu ZJ's Implementation of Commonly-Used Bioinformatics String Algorithms
+= Readme for `yStr`: Yu ZJ's Implementation of Commonly-Used Bioinformatics String Algorithms
 :icons: font
 :toc:
 
