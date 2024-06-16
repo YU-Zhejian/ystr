@@ -23,8 +23,12 @@ import org.jetbrains.annotations.NotNull;
  *       {@link NtHashBase#multiHash} to generate multiple hashes.
  *   <li>This implementation will <b>NOT</b> skip k-mers with {@code N} inside. However, the
  *       official {@code ntHashIterator} would skip them.
- *   <li>The negative part of {@link Byte} is not used.
  * </ol>
+ *
+ * This is the reference implementation. However, it is slow and should not be used in production.
+ * Please refer to {@link PrecomputedNtHash} for faster implementation, or
+ * {@link PrecomputedBidirectionalNtHash} if you want both forward and reverse ntHash instead of the
+ * combined one.
  *
  * <p><b>References</b>
  *
@@ -47,7 +51,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public final class NtHash extends NtHashBase {
     /**
-     * As described.
+     * Default constructor.
      *
      * @param string As described.
      * @param k As described.

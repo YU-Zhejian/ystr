@@ -3,7 +3,6 @@ package com.github.yu_zhejian.ystr.io;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import javax.swing.text.html.StyleSheet;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -43,7 +42,7 @@ public final class FastxIterator implements Iterator<FastxRecord>, AutoCloseable
         String line;
         while (currentSeqID == null && (line = reader.readLine()) != null) {
             line = line.trim();
-            if(line.isEmpty()){
+            if (line.isEmpty()) {
                 continue;
             }
             if (line.charAt(0) == '>') {
@@ -115,7 +114,7 @@ public final class FastxIterator implements Iterator<FastxRecord>, AutoCloseable
      */
     private void nextRecord() throws IOException {
         currentRecord = null;
-        if(currentSeqID == null){
+        if (currentSeqID == null) {
             close();
             return;
         }
@@ -135,12 +134,12 @@ public final class FastxIterator implements Iterator<FastxRecord>, AutoCloseable
                 nextSeqID = line.substring(1).split(SPLIT_REGEX)[0].trim();
                 break;
             } else if (isFASTQ) {
-                if(line.charAt(0) == '+'){
+                if (line.charAt(0) == '+') {
                     continue;
                 }
-                if(currentSequence.isEmpty()){
+                if (currentSequence.isEmpty()) {
                     currentSequence.append(line);
-                } else{
+                } else {
                     currentQuality.append(line);
                 }
             } else {
@@ -148,7 +147,10 @@ public final class FastxIterator implements Iterator<FastxRecord>, AutoCloseable
                 currentSequence.append(line);
             }
         }
-        currentRecord = FastxRecord.ofStrings(currentSeqID, currentSequence.toString(), currentQuality.toString());
+        currentRecord = new FastxRecord(
+                currentSeqID,
+                currentSequence.toString().getBytes(StandardCharsets.US_ASCII),
+                isFASTQ ? currentQuality.toString().getBytes(StandardCharsets.US_ASCII) : null);
         currentSeqID = nextSeqID;
     }
 
@@ -160,7 +162,7 @@ public final class FastxIterator implements Iterator<FastxRecord>, AutoCloseable
     @Override
     public @NotNull FastxRecord next() {
         if (currentRecord == null) throw new NoSuchElementException();
-        var retv=currentRecord;
+        var retv = currentRecord;
         try {
             nextRecord(); // Prepare for the next record
         } catch (IOException e) {

@@ -12,8 +12,9 @@ import java.util.List;
 
 class NtShannonEntropyTest {
     void testNtShannonEntropy(@NotNull List<Double> expected, @NotNull String bases, int k) {
-        var nth = new NtShannonEntropy(bases.getBytes(StandardCharsets.UTF_8), k, 0);
+        var nth = new NtShannonEntropy(bases.getBytes(StandardCharsets.US_ASCII), k, 0);
         var result = IterUtils.collect(nth);
+        assertEquals(expected.size(), result.size());
         for (var i = 0; i < result.size(); i++) {
             assertEquals(expected.get(i), result.get(i), 0.0, "");
         }
@@ -26,5 +27,17 @@ class NtShannonEntropyTest {
         testNtShannonEntropy(List.of(0.0, 0.0), "NANN", 3);
         testNtShannonEntropy(List.of(0.0, 0.0), "AAAA", 3);
         testNtShannonEntropy(List.of(0.0, 0.6365141682948128), "AAAT", 3);
+        testNtShannonEntropy(
+                List.of(
+                        0.0,
+                        0.6365141682948128,
+                        1.0986122886681096,
+                        1.0986122886681096,
+                        0.6365141682948128,
+                        0.6365141682948128,
+                        1.0986122886681096,
+                        0.0),
+                "AAATCGCGA\0",
+                3);
     }
 }

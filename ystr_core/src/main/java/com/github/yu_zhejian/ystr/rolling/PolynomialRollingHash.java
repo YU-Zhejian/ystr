@@ -1,5 +1,7 @@
 package com.github.yu_zhejian.ystr.rolling;
 
+import io.vavr.Function3;
+
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -37,7 +39,9 @@ public final class PolynomialRollingHash extends RollingHashBase {
     /** Default {@link #m}. Same as Robert Sedgewick's Implementation. */
     public static final long DEFAULT_POLYNOMIAL_ROLLING_HASH_M = 997;
 
+    /** Some large prime number to prevent overflow. */
     private final long m;
+    /** Some small prime number. */
     private final long p;
 
     /** Is {@code Math.pow(p, k - 1)}. */
@@ -57,6 +61,12 @@ public final class PolynomialRollingHash extends RollingHashBase {
                 skipFirst,
                 DEFAULT_POLYNOMIAL_ROLLING_HASH_M,
                 DEFAULT_POLYNOMIAL_ROLLING_HASH_RADIX_P);
+    }
+
+    @Contract(pure = true)
+    public static @NotNull Function3<byte @NotNull [], Integer, Integer, RollingHashInterface>
+            supply(long m, long p) {
+        return (string, k, skipFirst) -> new PolynomialRollingHash(string, k, skipFirst, m, p);
     }
 
     /**

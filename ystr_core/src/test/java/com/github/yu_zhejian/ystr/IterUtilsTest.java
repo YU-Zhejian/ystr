@@ -25,6 +25,26 @@ class IterUtilsTest {
     void collect() {
         assertIterableEquals(List.of(), IterUtils.collect(Collections.emptyIterator()));
         assertIterableEquals(List.of(1), IterUtils.collect(List.of(1).iterator()));
-        assertIterableEquals(List.of(1, 3, 4), IterUtils.collect(List.of(1, 3, 4).iterator()));
+        assertIterableEquals(
+                List.of(1, 3, 4), IterUtils.collect(List.of(1, 3, 4).iterator()));
+    }
+
+    @Test
+    void window() {
+        assertIterableEquals(
+                List.of(List.of(1, 2), List.of(3, 4)),
+                IterUtils.collect(IterUtils.window(List.of(1, 2, 3, 4).iterator(), 2)));
+        assertIterableEquals(
+                List.of(List.of(1), List.of(2), List.of(3)),
+                IterUtils.collect(IterUtils.window(List.of(1, 2, 3).iterator(), 1)));
+        assertIterableEquals(
+                List.of(List.of(1, 2), List.of(3)),
+                IterUtils.collect(IterUtils.window(List.of(1, 2, 3).iterator(), 2)));
+        assertIterableEquals(
+                List.of(List.of(1, 2, 3)),
+                IterUtils.collect(IterUtils.window(List.of(1, 2, 3).iterator(), 3)));
+        assertIterableEquals(
+                List.of(List.of(1, 2, 3)),
+                IterUtils.collect(IterUtils.window(List.of(1, 2, 3).iterator(), 4)));
     }
 }

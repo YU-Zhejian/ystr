@@ -28,14 +28,7 @@ abstract class RollingPredicateBase extends RollingBase<Boolean>
     @Override
     @Deprecated
     public Boolean next() {
-        if (!this.hasNext()) {
-            throw new NoSuchElementException();
-        }
-        if (curPos != skipFirst) {
-            updateCurrentValueToNextState();
-        }
-        curPos++;
-        return currentValueUnboxed;
+        return nextUnboxed();
     }
 
     public boolean nextUnboxed() {

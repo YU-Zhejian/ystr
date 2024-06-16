@@ -58,7 +58,24 @@ public final class NtShannonEntropy extends RollingEntropyBase {
         numN, numA, numN, numC, numN, numN, numN, numG, // 96..103
         numN, numN, numN, numN, numN, numN, numN, numN, // 104..111
         numN, numN, numN, numN, numT, numT, numN, numN, // 112..119
-        numN, numN, numN, numN, numN, numN, numN, numN // 120..127
+        numN, numN, numN, numN, numN, numN, numN, numN, // 120..127
+        numN, numN, numN, numN, numN, numN, numN, numN, // 120..127
+        numN, numN, numN, numN, numN, numN, numN, numN, // 128..135
+        numN, numN, numN, numN, numN, numN, numN, numN, // 136..143
+        numN, numN, numN, numN, numN, numN, numN, numN, // 144..151
+        numN, numN, numN, numN, numN, numN, numN, numN, // 152..159
+        numN, numN, numN, numN, numN, numN, numN, numN, // 160..167
+        numN, numN, numN, numN, numN, numN, numN, numN, // 168..175
+        numN, numN, numN, numN, numN, numN, numN, numN, // 176..183
+        numN, numN, numN, numN, numN, numN, numN, numN, // 184..191
+        numN, numN, numN, numN, numN, numN, numN, numN, // 192..199
+        numN, numN, numN, numN, numN, numN, numN, numN, // 200..207
+        numN, numN, numN, numN, numN, numN, numN, numN, // 208..215
+        numN, numN, numN, numN, numN, numN, numN, numN, // 216..223
+        numN, numN, numN, numN, numN, numN, numN, numN, // 224..231
+        numN, numN, numN, numN, numN, numN, numN, numN, // 232..239
+        numN, numN, numN, numN, numN, numN, numN, numN, // 240..247
+        numN, numN, numN, numN, numN, numN, numN, numN // 248..255
     };
 
     /**

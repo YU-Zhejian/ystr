@@ -27,14 +27,7 @@ abstract class RollingEntropyBase extends RollingBase<Double> implements Rolling
     @Override
     @Deprecated
     public Double next() {
-        if (!this.hasNext()) {
-            throw new NoSuchElementException();
-        }
-        if (curPos != skipFirst) {
-            updateCurrentValueToNextState();
-        }
-        curPos++;
-        return currentValueUnboxed;
+        return nextUnboxed();
     }
 
     public double nextUnboxed() {

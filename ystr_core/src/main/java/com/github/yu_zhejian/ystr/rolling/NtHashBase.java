@@ -117,15 +117,30 @@ public abstract class NtHashBase extends RollingHashBase {
         VEC_N, VEC_A, VEC_N, VEC_C, VEC_N, VEC_N, VEC_N, VEC_G, // 96..103
         VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, // 104..111
         VEC_N, VEC_N, VEC_N, VEC_N, VEC_T, VEC_T, VEC_N, VEC_N, // 112..119
-        VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, VEC_N // 120..127
-        // Since we do not use positive half of byte, the remaining table is truncated.
+        VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, // 120..127
+        VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, // 128..135
+        VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, // 136..143
+        VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, // 144..151
+        VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, // 152..159
+        VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, // 160..167
+        VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, // 168..175
+        VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, // 176..183
+        VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, // 184..191
+        VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, // 192..199
+        VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, // 200..207
+        VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, // 208..215
+        VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, // 216..223
+        VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, // 224..231
+        VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, // 232..239
+        VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, // 240..247
+        VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, // 248..255
     };
 
     protected long fwdHash;
     protected long revHash;
 
     /**
-     * As described.
+     * Default constructor.
      *
      * @param string As described.
      * @param k As described.

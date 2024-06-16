@@ -27,14 +27,7 @@ abstract class RollingHashBase extends RollingBase<Long> implements RollingHashI
     @Override
     @Deprecated
     public Long next() {
-        if (!this.hasNext()) {
-            throw new NoSuchElementException();
-        }
-        if (curPos != skipFirst) {
-            updateCurrentValueToNextState();
-        }
-        curPos++;
-        return currentValueUnboxed;
+        return nextUnboxed();
     }
 
     public long nextUnboxed() {

@@ -47,18 +47,24 @@ class FastxIteratorTest {
     }
 
     @Test
-    void testFastq(){
+    void testFastq() {
         assertIterableEquals(
                 List.of(FastxRecord.ofStrings("A", "AAAA", "CCCC")),
                 IterUtils.collect(new FastxIterator(new StringReader("@A\nAAAA\n+\nCCCC\n"))));
         assertIterableEquals(
-                List.of(FastxRecord.ofStrings("A", "AAAA", "CCCC"), FastxRecord.ofStrings("B", "AAAAT", "CCCCT")),
-                IterUtils.collect(new FastxIterator(new StringReader("@A\nAAAA\n+\nCCCC\n@B\nAAAAT\n+\nCCCCT\n"))));
+                List.of(
+                        FastxRecord.ofStrings("A", "AAAA", "CCCC"),
+                        FastxRecord.ofStrings("B", "AAAAT", "CCCCT")),
+                IterUtils.collect(new FastxIterator(
+                        new StringReader("@A\nAAAA\n+\nCCCC\n@B\nAAAAT\n+\nCCCCT\n"))));
+        assertIterableEquals(List.of(), IterUtils.collect(new FastxIterator(new StringReader(""))));
         assertIterableEquals(
-                List.of(),
-                IterUtils.collect(new FastxIterator(new StringReader(""))));
+                List.of(), IterUtils.collect(new FastxIterator(new StringReader("\n\n"))));
         assertIterableEquals(
-                List.of(),
-                IterUtils.collect(new FastxIterator(new StringReader("\n\n"))));
+                List.of(
+                        FastxRecord.ofStrings("A", "", ""),
+                        FastxRecord.ofStrings("B", "AAAAT", "CCCCT")),
+                IterUtils.collect(
+                        new FastxIterator(new StringReader("@A\n\n+\n\n@B\nAAAAT\n+\nCCCCT\n"))));
     }
 }

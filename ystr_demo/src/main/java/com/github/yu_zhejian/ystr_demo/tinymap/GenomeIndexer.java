@@ -76,7 +76,8 @@ public final class GenomeIndexer {
         numProcessedKmers = new AtomicLong(0);
     }
 
-    public long appendToOutput(@NotNull OutputStream w, long hash, @NotNull ByteArrayList encodedPositions)
+    public long appendToOutput(
+            @NotNull OutputStream w, long hash, @NotNull ByteArrayList encodedPositions)
             throws IOException {
         var wlen = 0L;
         var numPositions = encodedPositions.size() / ENCODED_POSITION_SIZE;

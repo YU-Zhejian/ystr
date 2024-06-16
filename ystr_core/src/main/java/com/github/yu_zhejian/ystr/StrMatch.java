@@ -1,8 +1,9 @@
 package com.github.yu_zhejian.ystr;
 
 import com.github.yu_zhejian.ystr.rolling.PolynomialRollingHash;
-import com.github.yu_zhejian.ystr.rolling.RollingHashFactory;
 import com.github.yu_zhejian.ystr.rolling.RollingHashInterface;
+
+import io.vavr.Function3;
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 
@@ -157,18 +158,15 @@ public final class StrMatch {
      * @param needle As described.
      * @param start As described.
      * @param end As described.
-     * @param rollingHashClaz Class that is passed to {@link RollingHashFactory}.
-     * @param rollingHashParams Other parameters used to initialize {@code T}.
+     * @param supplier Supplier of some {@link RollingHashInterface}.
      * @return As described.
-     * @param <T> Some Rabin-Karp-compatible rolling hash calculator.
      */
-    public static <T extends RollingHashInterface> @NotNull List<Integer> rabinKarpMatch(
+    public static @NotNull List<Integer> rabinKarpMatch(
             final byte @NotNull [] haystack,
             final byte @NotNull [] needle,
             final int start,
             final int end,
-            final Class<T> rollingHashClaz,
-            final Object... rollingHashParams) {
+            final Function3<byte[], Integer, Integer, RollingHashInterface> supplier) {
         ensureParametersValid(haystack, needle, start, end);
         if (haystack.length == 0 || needle.length == 0) {
             return List.of();
@@ -176,11 +174,8 @@ public final class StrMatch {
         // Create initial hash
         var haystackPos = start;
         final var needleLen = needle.length;
-        final var rhHaystack = RollingHashFactory.newRollingHash(
-                rollingHashClaz, haystack, needleLen, start, rollingHashParams);
-        final var needleHash = RollingHashFactory.newRollingHash(
-                        rollingHashClaz, needle, needleLen, 0, rollingHashParams)
-                .nextUnboxed();
+        final var rhHaystack = supplier.apply(haystack, needleLen, start);
+        final var needleHash = supplier.apply(needle, needleLen, start).nextUnboxed();
 
         final var retl = new IntArrayList();
         while (haystackPos + needleLen <= end) {
@@ -194,7 +189,7 @@ public final class StrMatch {
     }
 
     /**
-     * {@link #rabinKarpMatch(byte[], byte[], int, int, Class, Object...)} with
+     * {@link #rabinKarpMatch(byte[], byte[], int, int, Function3)} with
      * {@link PolynomialRollingHash} using its default version for rolling hash.
      *
      * @param haystack As described.
@@ -208,7 +203,7 @@ public final class StrMatch {
             final byte @NotNull [] needle,
             final int start,
             final int end) {
-        return rabinKarpMatch(haystack, needle, start, end, PolynomialRollingHash.class);
+        return rabinKarpMatch(haystack, needle, start, end, PolynomialRollingHash::new);
     }
 
     /**

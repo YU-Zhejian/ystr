@@ -95,9 +95,9 @@ class StrMatchTest {
                         needle,
                         start,
                         end,
-                        PolynomialRollingHash.class,
-                        PolynomialRollingHash.longRandomPrime(),
-                        128L),
+                        PolynomialRollingHash.supply(
+                                PolynomialRollingHash.longRandomPrime(),
+                                PolynomialRollingHash.DEFAULT_POLYNOMIAL_ROLLING_HASH_RADIX_P)),
                 TEST_CASES_AGCT);
     }
 
@@ -105,7 +105,7 @@ class StrMatchTest {
     void rabinKarpMatchUsingNtHash() {
         testSS(
                 (haystack, needle, start, end) ->
-                        StrMatch.rabinKarpMatch(haystack, needle, start, end, NtHash.class),
+                        StrMatch.rabinKarpMatch(haystack, needle, start, end, NtHash::new),
                 TEST_CASES_AGCT);
     }
 

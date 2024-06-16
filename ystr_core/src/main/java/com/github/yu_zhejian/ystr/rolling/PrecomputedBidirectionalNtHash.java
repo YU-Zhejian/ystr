@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 public class PrecomputedBidirectionalNtHash extends NtHashBase {
 
     /**
-     * As described.
+     * Default constructor.
      *
      * @param string As described.
      * @param k As described.
@@ -37,8 +37,8 @@ public class PrecomputedBidirectionalNtHash extends NtHashBase {
     @Override
     protected void updateCurrentValueToNextState() {
         final var i = curPos - 1;
-        final var seqi = string[i];
-        final var seqk = string[i + k];
+        final var seqi = string[i] & 0xFF;
+        final var seqk = string[i + k] & 0xFF;
         fwdHash = Long.rotateLeft(fwdHash, 1) ^ MS_TAB[seqi][k % 64] ^ MS_TAB[seqk][0];
         revHash = Long.rotateRight(revHash, 1)
                 ^ MS_TAB[seqi & CP_OFF][63]

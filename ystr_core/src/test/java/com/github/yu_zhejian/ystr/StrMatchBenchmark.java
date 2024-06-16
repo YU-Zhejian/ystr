@@ -87,7 +87,7 @@ public class StrMatchBenchmark {
                 needle.getBytes(StandardCharsets.UTF_8),
                 0,
                 TEST_CHR.length,
-                PrecomputedNtHash.class));
+                PrecomputedNtHash::new));
     }
 
     @Benchmark

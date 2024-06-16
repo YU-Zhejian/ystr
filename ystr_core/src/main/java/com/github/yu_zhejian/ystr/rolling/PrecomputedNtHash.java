@@ -9,7 +9,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public final class PrecomputedNtHash extends PrecomputedBidirectionalNtHash {
     /**
-     * As described.
+     * Default constructor.
      *
      * @param string As described.
      * @param k As described.
