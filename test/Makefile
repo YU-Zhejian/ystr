@@ -2,6 +2,7 @@ all:\
 	e_coli.genomic.fna \
 	sars_cov2.genomic.fna \
 	ce11.genomic.fna \
+	ce11.genomic.2bit \
 	c_elegans_minion_drna.fq \
 	ce11.ncbiRefSeq.gtf \
 	oxford_3k.txt \
@@ -28,6 +29,12 @@ ce11.genomic.fna:
 	curl https://hgdownload.soe.ucsc.edu/goldenPath/ce11/bigZips/ce11.fa.gz | \
     pigz -cdf > ce11.genomic.fna
 	samtools faidx ce11.genomic.fna
+	bgzip -l9 -i -@32 ce11.genomic.fna
+	pigz -dk ce11.genomic.fna.gz
+	samtools faidx ce11.genomic.fna.gz
+
+ce11.genomic.2bit:
+	curl https://hgdownload.soe.ucsc.edu/goldenPath/ce11/bigZips/ce11.2bit -O ce11.genomic.2bit
 
 c_elegans_minion_drna.fq:
 	curl ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR892/005/SRR8929005/SRR8929005_1.fastq.gz | \

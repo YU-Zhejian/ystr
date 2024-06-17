@@ -1,13 +1,14 @@
 package com.github.yu_zhejian.ystr.io;
 
-import com.github.yu_zhejian.ystr.PyUtils;
 import com.github.yu_zhejian.ystr.StrUtils;
 
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.roaringbitmap.RoaringBitmap;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,12 +17,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
 /**
- * A UCSC 2bit file parser supporting the use of:
+ * A UCSC 2bit file parser supporting version 1 of the 2bit format.
  *
- * <p>Long formats.
+ * <p>TODO: Get a big endian testing file somewhere.
  */
 public final class TwoBitParser implements AutoCloseable {
-
     /** The random accessing engine. */
     private final RandomAccessFile raf;
     /** Whether the file is created under Little Endian byte order. */
@@ -64,10 +64,10 @@ public final class TwoBitParser implements AutoCloseable {
      * each block. Will be 0 if not evaluated.
      */
     private final long[] seqOffsets;
-    /** the number of blocks of Ns in the file (representing unknown sequence) */
-    private final int[] nBlockCount;
-    /** the number of masked (lower-case) blocks */
-    private final int[] maskBlockCount;
+    /** The number of blocks of Ns in the file (representing unknown sequences) */
+    private final RoaringBitmap[] nBlocks;
+    /** The number of masked (lower-case) blocks */
+    private final RoaringBitmap[] maskBlocks;
 
     /**
      * the DNA packed to two bits per base, represented as so: T - 00, C - 01, A - 10, G - 11. The
@@ -119,8 +119,8 @@ public final class TwoBitParser implements AutoCloseable {
         offsets = new long[sequenceCount];
         seqOffsets = new long[sequenceCount];
         dnaSizes = new int[sequenceCount];
-        nBlockCount = new int[sequenceCount];
-        maskBlockCount = new int[sequenceCount];
+        nBlocks = new RoaringBitmap[sequenceCount];
+        maskBlocks = new RoaringBitmap[sequenceCount];
         for (var seqID = 0; seqID < sequenceCount; seqID++) {
             var nameSize = raf.readByte();
             if (nameSize < 0) {
@@ -142,10 +142,32 @@ public final class TwoBitParser implements AutoCloseable {
     }
 
     /**
-     * Ensure the {@link #dnaSizes}, {@link #dnaSizes}, {@link #nBlockCount},
-     * {@link #maskBlockCount} and {@link #seqOffsets} are populated. This method will be called for
-     * all operations inside this class. Users may also call this method in advance for performance
-     * gains.
+     * Populate masks or n count btmap.
+     *
+     * @return As described.
+     * @throws IOException As described.
+     */
+    private @NotNull RoaringBitmap populate() throws IOException {
+        var retv = new RoaringBitmap();
+        var count = (int) readFourBytes();
+        var starts = new long[count];
+        var sizes = new long[count];
+        for (var i = 0; i < count; i++) {
+            starts[i] = (int) readFourBytes();
+        }
+        for (var i = 0; i < count; i++) {
+            sizes[i] = (int) readFourBytes();
+        }
+        for (var i = 0; i < count; i++) {
+            retv.add(starts[i], starts[i] + sizes[i]);
+        }
+        return retv;
+    }
+
+    /**
+     * Ensure the {@link #dnaSizes}, {@link #dnaSizes}, {@link #nBlocks}, {@link #maskBlocks} and
+     * {@link #seqOffsets} are populated. This method will be called for all operations inside this
+     * class. Users may also call this method in advance for performance gains.
      *
      * @param seqID As described.
      * @throws IOException As described.
@@ -159,12 +181,11 @@ public final class TwoBitParser implements AutoCloseable {
         // 4GiB.
         // TODO: Check this.
         dnaSizes[seqID] = (int) readFourBytes();
-        nBlockCount[seqID] = (int) readFourBytes();
-        // which is 4 * nBlockCount * 2
-        raf.skipBytes(nBlockCount[seqID] << 3);
-        maskBlockCount[seqID] = (int) readFourBytes();
+        nBlocks[seqID] = populate();
+        maskBlocks[seqID] = populate();
+
         // which is 4 * maskBlockCount * 2 + reserved
-        seqOffsets[seqID] = raf.getFilePointer() + ((long) maskBlockCount[seqID] << 3) + 4;
+        seqOffsets[seqID] = raf.getFilePointer() + 4;
     }
 
     /**
@@ -205,6 +226,12 @@ public final class TwoBitParser implements AutoCloseable {
         return ret;
     }
 
+    /**
+     * Helper function that read one byte for 4 bases.
+     *
+     * @return As described.
+     * @throws IOException As described.
+     */
     private byte @NotNull [] readNt() throws IOException {
         var curByte = (byte) raf.read();
         return new byte[] {
@@ -214,22 +241,49 @@ public final class TwoBitParser implements AutoCloseable {
             BASES[curByte & 0b11]
         };
     }
+    /**
+     * Helper function that read multiple bytes.
+     *
+     * @param outArr As described.
+     * @param startPos As described.
+     * @param numByteToRead As described.
+     * @throws IOException As described.
+     */
+    private void readNts(byte[] outArr, final int startPos, final int numByteToRead)
+            throws IOException {
+        var buffer = new byte[numByteToRead];
+        var curPos = startPos;
+        raf.read(buffer);
+        // The following 6 lines are the most time-consuming. Interesting.
+        for (byte b : buffer) {
+            outArr[curPos++] = BASES[b >> 6 & 0b11];
+            outArr[curPos++] = BASES[b >> 4 & 0b11];
+            outArr[curPos++] = BASES[b >> 2 & 0b11];
+            outArr[curPos++] = BASES[b & 0b11];
+        }
+    }
 
     @Contract("_, _, _, _ -> new")
     public byte @NotNull [] getSequence(
-            final int seqID, final int start, final int end, final boolean parseMasks)
+            final int seqID, final int start, final int end, boolean parseMasks)
             throws IOException {
         if (start == end) {
             return new byte[0];
         }
         loadSeqInfo(seqID);
         StrUtils.ensureStartEndValid(start, end, dnaSizes[seqID]);
+
+        // Number of bases to read at the end.
         var retLen = end - start;
         var retl = new byte[retLen];
+
+        // Number of bytes to skip at start.
         var numSkippedBytes = start >>> 2;
+
         var numBasesToDiscard = start - (numSkippedBytes << 2);
         raf.seek(numSkippedBytes + seqOffsets[seqID]);
 
+        // Read until we reach the first complete byte
         var posOnBuffer = 0;
         var curPosOnRetSeq = 0;
         if (numBasesToDiscard != 0) {
@@ -244,16 +298,40 @@ public final class TwoBitParser implements AutoCloseable {
                 curPosOnRetSeq++;
             }
         }
-        while (curPosOnRetSeq < retLen) {
+
+        var numBytesToRead = (retLen - curPosOnRetSeq) >> 2;
+        readNts(retl, curPosOnRetSeq, numBytesToRead);
+        curPosOnRetSeq += numBytesToRead << 2;
+
+        // Read the last byte
+        if (curPosOnRetSeq < retLen) {
             posOnBuffer = 0;
             var firstBase = readNt();
-            while (posOnBuffer < 4 && curPosOnRetSeq < retLen) {
+            while (curPosOnRetSeq < retLen) {
                 retl[curPosOnRetSeq] = firstBase[posOnBuffer];
                 posOnBuffer++;
                 curPosOnRetSeq++;
             }
         }
 
+        final var curMask = new RoaringBitmap();
+        curMask.add((long) start, end);
+
+        { // N is always dealt with otherwise it will be mistaken as probably T.
+            final var cm1 = curMask.clone();
+            cm1.and(nBlocks[seqID]);
+            for (int i : cm1.toArray()) {
+                retl[i - start] = 'N';
+            }
+        }
+
+        if (parseMasks) {
+            final var cm2 = curMask.clone();
+            cm2.and(maskBlocks[seqID]);
+            for (int i : cm2.toArray()) {
+                retl[i - start] += 32;
+            }
+        }
         return retl;
     }
 
@@ -301,11 +379,34 @@ public final class TwoBitParser implements AutoCloseable {
     }
 
     /**
+     * Get sequence lengths as an ordered list.
+     *
+     * @return As described.
+     */
+    public @NotNull IntArrayList getSeqLengths() throws IOException {
+        var retl = new IntArrayList(this.sequenceCount);
+        for (var seqID = 0; seqID < sequenceCount; seqID++) {
+            retl.add(getSeqLength(seqID));
+        }
+        return retl;
+    }
+
+    /**
+     * Get the name of a specific sequence.
+     *
+     * @param seqID As described.
+     * @return As described.
+     */
+    public @NotNull String getSeqName(int seqID) {
+        return seqNames[seqID];
+    }
+
+    /**
      * Get sequence names and lengths of arbitrary order.
      *
      * @return As described.
      */
-    public @NotNull Object2IntOpenHashMap<String> getSeqLengths() throws IOException {
+    public @NotNull Object2IntOpenHashMap<String> getSeqNameLengthMap() throws IOException {
         var retl = new Object2IntOpenHashMap<String>(this.sequenceCount);
         for (var seqID = 0; seqID < sequenceCount; seqID++) {
             retl.put(seqNames[seqID], getSeqLength(seqID));
@@ -322,55 +423,5 @@ public final class TwoBitParser implements AutoCloseable {
     public int getSeqLength(final int seqID) throws IOException {
         loadSeqInfo(seqID);
         return dnaSizes[seqID];
-    }
-
-    /**
-     * @param nBlockStarts an array of length nBlockCount of 32-bit integers indicating the
-     *     (0-based) starting position of a block of Ns
-     * @param nBlockSizes an array of length nBlockCount of 32-bit integers indicating the length of
-     *     a block of Ns
-     * @param maskBlockStarts an array of length maskBlockCount of 32-bit integers indicating the
-     *     (0-based) starting position of a masked block
-     * @param maskBlockSizes an array of length maskBlockCount of 32-bit integers indicating the
-     *     length of a masked block
-     */
-    public record MaskingInformation(
-            int[] nBlockStarts, int[] nBlockSizes, int[] maskBlockStarts, int[] maskBlockSizes) {
-        @Override
-        public @NotNull String toString() {
-            return "MaskingInformation{" + "nBlockStarts="
-                    + Arrays.toString(nBlockStarts) + ", nBlockSizes="
-                    + Arrays.toString(nBlockSizes) + ", maskBlockStarts="
-                    + Arrays.toString(maskBlockStarts) + ", maskBlockSizes="
-                    + Arrays.toString(maskBlockSizes) + '}';
-        }
-    }
-
-    @Contract("_ -> new")
-    public @NotNull MaskingInformation getMaskingInformation(final int seqID) throws IOException {
-        loadSeqInfo(seqID);
-        raf.seek(offsets[seqID] + 8); // dnaSize, nBlockCount
-
-        var nBlockCount = this.nBlockCount[seqID];
-        var nBlockStarts = new int[nBlockCount];
-        var nBlockSizes = new int[nBlockCount];
-        for (var i = 0; i < nBlockCount; i++) {
-            nBlockStarts[i] = (int) readFourBytes();
-        }
-        for (var i = 0; i < nBlockCount; i++) {
-            nBlockSizes[i] = (int) readFourBytes();
-        }
-
-        var maskBlockCount = this.maskBlockCount[seqID];
-        raf.skipBytes(4); // maskBlockCount
-        var maskBlockStarts = new int[maskBlockCount];
-        var maskBlockSizes = new int[maskBlockCount];
-        for (var i = 0; i < maskBlockCount; i++) {
-            maskBlockStarts[i] = (int) readFourBytes();
-        }
-        for (var i = 0; i < maskBlockCount; i++) {
-            maskBlockSizes[i] = (int) readFourBytes();
-        }
-        return new MaskingInformation(nBlockStarts, nBlockSizes, maskBlockStarts, maskBlockSizes);
     }
 }

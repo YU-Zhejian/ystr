@@ -12,6 +12,8 @@ dependencies {
 	implementation "io.vavr:vavr:${VAVR_VER}"
 	implementation "org.jetbrains:annotations:${JETBRAINS_ANNOTATION_VER}"
 	implementation "it.unimi.dsi:fastutil:${FASTUTIL_VER}"
+	implementation "org.roaringbitmap:RoaringBitmap:${ROARING_BITMAP_VER}"
+	testImplementation "com.github.samtools:htsjdk:${HTSJDK_VER}"
 	testImplementation "org.openjdk.jmh:jmh-core:${JMH_VER}"
 	testAnnotationProcessor "org.openjdk.jmh:jmh-generator-annprocess:${JMH_VER}"
 	testImplementation "org.eclipse.jgit:org.eclipse.jgit:${JGIT_VER}"
