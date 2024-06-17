@@ -35,5 +35,10 @@ import java.util.Iterator;
  * }</pre>
  */
 public interface RollingHashInterface extends Iterator<Long> {
+    /**
+     * Unboxed version of {@link #next()}
+     *
+     * @return As described.
+     */
     long nextUnboxed();
 }

@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
  * <p>Warning, the negative part of {@link Byte} is not used.
  */
 public final class IsPolyARollingPredicate extends RollingPredicateBase {
+    /** Whether the underlying base is Poly(A). */
     public static final boolean[] PREDICATE = {
         false, false, false, false, false, false, false, false, // 0..7
         false, false, false, false, false, false, false, false, // 8..15
@@ -49,6 +50,11 @@ public final class IsPolyARollingPredicate extends RollingPredicateBase {
     /** Number of A, T and U inside the current bin. */
     private int numA;
 
+    /**
+     * See {@link #numAThreshold}.
+     *
+     * @return As described.
+     */
     public int getNumAThreshold() {
         return numAThreshold;
     }

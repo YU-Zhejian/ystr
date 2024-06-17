@@ -39,8 +39,7 @@ allprojects {
 	}
 	tasks.withType(Javadoc).configureEach {
 		options.encoding = StandardCharsets.UTF_8
-		options.locale = 'en_US'
-		// --allow-script-in-comments
+		options.locale = "en_US"
 	}
 
 	configurations {
@@ -95,16 +94,17 @@ spotless {
 		eclipseWtp('xml')
 	}
 }
-//asciidoctor {
-//	sourceDir  file('src/docs')
-//	outputDir  file('build/docs')
-//}
+
 node {
 	download = true
-	version = "${NODE_VER}"
+	version = NODE_VER
 	nodeProjectDir = file("src/antora")
 }
 tasks.register('antora', NpxTask) {
 	command = 'antora'
-	args = ['--fetch', 'antora-playbook.yml', '--stacktrace']
+	args = [
+		'--fetch',
+		'antora-playbook.yml',
+		'--stacktrace'
+	]
 }

@@ -114,6 +114,8 @@ public final class StrUtils {
      * <p>Implemented with the help of TONGYI Lingma.
      *
      * @return As described.
+     * @param array1 As described.
+     * @param array2 As described.
      */
     public static int strcmp(final byte @NotNull [] array1, final byte @NotNull [] array2) {
         // FIXME: Negative byte values.
@@ -216,14 +218,14 @@ public final class StrUtils {
     /**
      * Full-length distance calculator.
      *
-     * @param calculator Functions like {@link #simpleLevenshteinDistance(byte[], byte[], int, int, int, int)} or {@link #hammingDistance(byte[], byte[], int, int, int, int)}.
+     * @param calculator Functions like {@link #simpleLevenshteinDistance(byte[], byte[], int, int,
+     *     int, int)} or {@link #hammingDistance(byte[], byte[], int, int, int, int)}.
      * @param array1 As described.
      * @param array2 As described.
      * @return As described.
      */
     public static int fullLengthDistance(
-            final @NotNull
-                    Function6<byte[], byte[], Integer, Integer, Integer, Integer, Integer>
+            final @NotNull Function6<byte[], byte[], Integer, Integer, Integer, Integer, Integer>
                             calculator,
             final byte @NotNull [] array1,
             final byte @NotNull [] array2) {

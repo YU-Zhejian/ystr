@@ -2,8 +2,8 @@ package com.github.yu_zhejian.ystr;
 
 import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
-
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -17,11 +17,11 @@ import java.util.function.Predicate;
 
 /**
  * Various utility functions concerning {@link Iterator}, {@link Iterable} and
- * {@link java.util.Collections} to support other classes.
- * Classes supporting {@link com.github.yu_zhejian.ystr.IterUtils}.
+ * {@link java.util.Collections} to support other classes. Classes supporting
+ * {@link com.github.yu_zhejian.ystr.IterUtils}.
  *
- * <p>Warning, almost all generic methods inside this library could result in performance damage. Use with
- * care. For performance issues, prefer/implement methods that use FastUtils instead.
+ * <p>Warning, almost all generic methods inside this library could result in performance damage.
+ * Use with care. For performance issues, prefer/implement methods that use FastUtils instead.
  */
 public final class IterUtils {
 
