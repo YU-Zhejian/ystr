@@ -2,8 +2,8 @@ plugins {
 	id 'java'
 }
 
-group = findProperty("proj_group")
-version = findProperty("proj_version")
+group = proj_group
+version = proj_version
 
 dependencies {
 	// ---------------------------- UNIT TEST ----------------------------
@@ -14,13 +14,14 @@ dependencies {
 	implementation "it.unimi.dsi:fastutil:${FASTUTIL_VER}"
 	testImplementation "org.openjdk.jmh:jmh-core:${JMH_VER}"
 	testAnnotationProcessor "org.openjdk.jmh:jmh-generator-annprocess:${JMH_VER}"
-	// https://mvnrepository.com/artifact/org.eclipse.jgit/org.eclipse.jgit
-	testImplementation 'org.eclipse.jgit:org.eclipse.jgit:6.10.0.202406032230-r'
+	testImplementation "org.eclipse.jgit:org.eclipse.jgit:${JGIT_VER}"
 	testRuntimeOnly "ch.qos.logback:logback-classic:${LOGBACK_VER}"
-	// https://mvnrepository.com/artifact/org.apache.commons/commons-csv
-	testImplementation "org.apache.commons:commons-csv:1.11.0"
-	// https://mvnrepository.com/artifact/commons-codec/commons-codec
-	testImplementation 'commons-codec:commons-codec:1.17.0'
+	testImplementation "org.apache.commons:commons-csv:${COMMONS_CSV_VER}"
+}
+
+java{
+	withJavadocJar()
+	withSourcesJar()
 }
 
 test {

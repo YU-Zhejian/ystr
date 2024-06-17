@@ -1,0 +1,4 @@
+= TODO
+
+* Migrate the aaHash algorithm.
+* Support ntHash 2.2 and 2.3.
