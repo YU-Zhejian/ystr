@@ -7,7 +7,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.function.Supplier;
 
 /**
- * Representing checksum algorithms that generates checksums less than 64 bits.
+ * Representing checksum algorithms that generates checksums no longer than 64 bits.
  *
  * <p>Some checksums may be only 16 bit or 32 bit (e.g., {@link CRC32}). Cast them to corresponding
  * data types after {@link #getValue()}.

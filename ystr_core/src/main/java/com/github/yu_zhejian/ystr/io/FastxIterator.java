@@ -2,6 +2,7 @@ package com.github.yu_zhejian.ystr.io;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -19,11 +20,18 @@ import java.util.NoSuchElementException;
  * <p>Implemented with the help of TONGYI Lingma.
  */
 public final class FastxIterator implements Iterator<FastxRecord>, AutoCloseable {
+    /** Whitespace characters. */
     private static final String SPLIT_REGEX = "\\s+";
+    /** As described. */
     private final BufferedReader reader;
-    private FastxRecord currentRecord;
+    /** The current usable record. */
+    private @Nullable FastxRecord currentRecord;
+    /** Staged sequence ID for next possible record. */
     private String currentSeqID;
+    /** Whether the underlying stream is FASTQ. */
     private boolean isFASTQ = false;
+    /** As described. */
+    private final boolean trimSeqID;
 
     /** Wrapper for {@link RuntimeException} to make SonarLint silence. */
     public static class FastxIOException extends RuntimeException {
@@ -38,6 +46,12 @@ public final class FastxIterator implements Iterator<FastxRecord>, AutoCloseable
         }
     }
 
+    /**
+     * Move cursor to the sequence of first record while getting its ID. {@link #nextRecord()}
+     * should be immediately called otherwise {@link #currentRecord} will be {@code null}.
+     *
+     * @throws IOException As described.
+     */
     private void populateFirstSeqID() throws IOException {
         String line;
         while (currentSeqID == null && (line = reader.readLine()) != null) {
@@ -46,13 +60,23 @@ public final class FastxIterator implements Iterator<FastxRecord>, AutoCloseable
                 continue;
             }
             if (line.charAt(0) == '>') {
-                currentSeqID = line.substring(1).split(SPLIT_REGEX)[0].trim();
+                currentSeqID = performTrimSeqID(line);
                 isFASTQ = false;
             } else if (line.charAt(0) == '@') {
-                currentSeqID = line.substring(1).split(SPLIT_REGEX)[0].trim();
+                currentSeqID = performTrimSeqID(line);
                 isFASTQ = true;
             }
         }
+    }
+
+    /**
+     * Trim the sequence ID.
+     *
+     * @param line As described.
+     * @return As described.
+     */
+    private String performTrimSeqID(String line) {
+        return trimSeqID ? line.substring(1).split(SPLIT_REGEX)[0].trim() : line.substring(1);
     }
 
     /**
@@ -60,9 +84,12 @@ public final class FastxIterator implements Iterator<FastxRecord>, AutoCloseable
      *
      * @param reader A reader using (preferably) {@link StandardCharsets#UTF_8} encoding or
      *     {@link StandardCharsets#US_ASCII} encoding.
+     * @param trimSeqID Whether to trim {@link FastxRecord#seqid()} by removing all sequences after
+     *     its first whitespace.
      */
-    public FastxIterator(Reader reader) {
+    public FastxIterator(Reader reader, boolean trimSeqID) {
         this.reader = new BufferedReader(reader);
+        this.trimSeqID = trimSeqID;
         try {
             populateFirstSeqID();
             nextRecord();
@@ -80,7 +107,7 @@ public final class FastxIterator implements Iterator<FastxRecord>, AutoCloseable
      */
     @Contract("_ -> new")
     public static @NotNull FastxIterator read(File file) throws IOException {
-        return new FastxIterator(new FileReader(file, StandardCharsets.UTF_8));
+        return new FastxIterator(new FileReader(file, StandardCharsets.UTF_8), true);
     }
 
     /**
@@ -126,22 +153,15 @@ public final class FastxIterator implements Iterator<FastxRecord>, AutoCloseable
         String line;
         while ((line = reader.readLine()) != null) {
             line = line.trim();
-            if (line.isEmpty()) {
+            if (line.isEmpty() || (isFASTQ && line.charAt(0) == '+')) {
                 continue;
             }
             if ((!isFASTQ && line.charAt(0) == '>') || (isFASTQ && line.charAt(0) == '@')) {
                 // Beginning of next record
-                nextSeqID = line.substring(1).split(SPLIT_REGEX)[0].trim();
+                nextSeqID = performTrimSeqID(line);
                 break;
             } else if (isFASTQ) {
-                if (line.charAt(0) == '+') {
-                    continue;
-                }
-                if (currentSequence.isEmpty()) {
-                    currentSequence.append(line);
-                } else {
-                    currentQuality.append(line);
-                }
+                (currentSequence.isEmpty() ? currentSequence : currentQuality).append(line);
             } else {
                 // Quality of current record
                 currentSequence.append(line);

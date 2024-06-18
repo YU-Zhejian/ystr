@@ -88,7 +88,7 @@ public final class TwoBitParser implements AutoCloseable {
         var signature = ((long) raf.read() << 24)
                 | (((long) raf.read()) << 16)
                 | (((long) raf.read()) << 8)
-                | (((long) raf.read()));
+                | (raf.read());
         if (signature == SIGNATURE_BIG_ENDIAN) {
             byteOrderIsLittleEndian = false;
         } else if (signature == SIGNATURE_LITTLE_ENDIAN) {
@@ -196,10 +196,12 @@ public final class TwoBitParser implements AutoCloseable {
      */
     private long readEightBytes() throws IOException {
         long ret;
+        var i1 = readFourBytes();
+        var i2 = readFourBytes();
         if (byteOrderIsLittleEndian) {
-            ret = readFourBytes() | (readFourBytes() << 32);
+            ret = i1 | (i2 << 32);
         } else {
-            ret = (readFourBytes() << 32) | readFourBytes();
+            ret = (i1 << 32) | i2;
         }
         return ret;
     }
@@ -213,7 +215,7 @@ public final class TwoBitParser implements AutoCloseable {
     private long readFourBytes() throws IOException {
         long ret;
         if (byteOrderIsLittleEndian) {
-            ret = ((long) raf.read())
+            ret = (raf.read())
                     | (((long) raf.read()) << 8)
                     | (((long) raf.read()) << 16)
                     | (((long) raf.read()) << 24);
@@ -221,7 +223,7 @@ public final class TwoBitParser implements AutoCloseable {
             ret = (((long) raf.read()) << 24)
                     | (((long) raf.read()) << 16)
                     | (((long) raf.read()) << 8)
-                    | ((long) raf.read());
+                    | (raf.read());
         }
         return ret;
     }
@@ -317,12 +319,11 @@ public final class TwoBitParser implements AutoCloseable {
         final var curMask = new RoaringBitmap();
         curMask.add((long) start, end);
 
-        { // N is always dealt with otherwise it will be mistaken as probably T.
-            final var cm1 = curMask.clone();
-            cm1.and(nBlocks[seqID]);
-            for (int i : cm1.toArray()) {
-                retl[i - start] = 'N';
-            }
+        // N is always dealt with otherwise it will be mistaken as probably T.
+        final var cm1 = curMask.clone();
+        cm1.and(nBlocks[seqID]);
+        for (int i : cm1.toArray()) {
+            retl[i - start] = 'N';
         }
 
         if (parseMasks) {
