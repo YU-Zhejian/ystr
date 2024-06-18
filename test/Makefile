@@ -34,7 +34,7 @@ ce11.genomic.fna:
 	samtools faidx ce11.genomic.fna.gz
 
 ce11.genomic.2bit:
-	curl https://hgdownload.soe.ucsc.edu/goldenPath/ce11/bigZips/ce11.2bit -O ce11.genomic.2bit
+	curl https://hgdownload.soe.ucsc.edu/goldenPath/ce11/bigZips/ce11.2bit -o ce11.genomic.2bit
 
 c_elegans_minion_drna.fq:
 	curl ftp://ftp.sra.ebi.ac.uk/vol1/fastq/SRR892/005/SRR8929005/SRR8929005_1.fastq.gz | \
