@@ -77,6 +77,15 @@ public final class TwoBitParser implements AutoCloseable {
      */
     private static final byte[] BASES = new byte[] {'T', 'C', 'A', 'G'};
 
+    public static final byte[][] PRE_COMPUTED;
+
+    static {
+        PRE_COMPUTED = new byte[256][4];
+        for (int i = 0; i <= 0b11_11_11_11; i++) {
+            PRE_COMPUTED[i] = decode((byte) i);
+        }
+    }
+
     /**
      * Default constructor.
      *
@@ -236,13 +245,34 @@ public final class TwoBitParser implements AutoCloseable {
      * @throws IOException As described.
      */
     private byte @NotNull [] readNt() throws IOException {
-        var curByte = (byte) raf.read();
+        return decode((byte) raf.read());
+    }
+
+    /**
+     * Reference implementation.
+     *
+     * @param encodedByte As described.
+     * @return As described.
+     */
+    @Contract(value = "_ -> new", pure = true)
+    public static byte @NotNull [] decode(byte encodedByte) {
         return new byte[] {
-            BASES[curByte >> 6 & 0b11],
-            BASES[curByte >> 4 & 0b11],
-            BASES[curByte >> 2 & 0b11],
-            BASES[curByte & 0b11]
+            BASES[encodedByte >> 6 & 0b11],
+            BASES[encodedByte >> 4 & 0b11],
+            BASES[encodedByte >> 2 & 0b11],
+            BASES[encodedByte & 0b11]
         };
+    }
+
+    /**
+     * Decode using pre-computed table.
+     *
+     * @param encodedByte As described.
+     * @return As described.
+     */
+    @Contract(value = "_ -> new", pure = true)
+    public static byte @NotNull [] decodePrecomputed(byte encodedByte) {
+        return PRE_COMPUTED[encodedByte & 0xFF];
     }
 
     /**
@@ -261,12 +291,12 @@ public final class TwoBitParser implements AutoCloseable {
         fc.read(buffer);
         buffer.rewind();
         // The following 6 lines are the most time-consuming. Interesting.
-        for (var i=0; i < numByteToRead; i++) {
+        for (var i = 0; i < numByteToRead; i++) {
             var b = buffer.get();
-            outArr[curPos++] = BASES[b >> 6 & 0b11];
-            outArr[curPos++] = BASES[b >> 4 & 0b11];
-            outArr[curPos++] = BASES[b >> 2 & 0b11];
-            outArr[curPos++] = BASES[b & 0b11];
+            var decoded = PRE_COMPUTED[b & 0xFF];
+            // This is the fastest way of setting all bits.
+            System.arraycopy(decoded, 0, outArr, curPos, 4);
+            curPos += 4;
         }
     }
 
@@ -331,7 +361,8 @@ public final class TwoBitParser implements AutoCloseable {
         int[] buffer = new int[256];
         var it = cm1.getBatchIterator();
         while (it.hasNext()) {
-            // As suggested by https://richardstartin.github.io/posts/roaringbitmap-performance-tricks
+            // As suggested by
+            // https://richardstartin.github.io/posts/roaringbitmap-performance-tricks
             int batch = it.nextBatch(buffer);
             for (int i = 0; i < batch; ++i) {
                 retl[buffer[i] - start] = 'N';
@@ -345,7 +376,7 @@ public final class TwoBitParser implements AutoCloseable {
             while (it.hasNext()) {
                 int batch = it.nextBatch(buffer);
                 for (int i = 0; i < batch; ++i) {
-                    retl[buffer[i]]+=32;
+                    retl[buffer[i] - start] += 32;
                 }
             }
         }

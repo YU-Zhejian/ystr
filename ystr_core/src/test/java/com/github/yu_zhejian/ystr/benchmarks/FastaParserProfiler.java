@@ -20,7 +20,7 @@ public class FastaParserProfiler {
     private List<Tuple3<String, Integer, Integer>> coordinates;
     private Map<String, Integer> seqNameIDMap;
     private static final int NUM_RDN_INTERVALS = 200;
-    private static final int NUM_BENCH_ROUNDS = 100;
+    private static final int NUM_BENCH_ROUNDS = 5;
 
     public static void main(String[] args) throws IOException {
         var fastaParserProfiler = new FastaParserProfiler();
@@ -31,8 +31,9 @@ public class FastaParserProfiler {
     }
 
     public void setup() throws IOException {
-        twoBitParser = new TwoBitParser(
-                Path.of(GitUtils.getGitRoot(), "test", "ce11.2bit").toFile());
+        twoBitParser =
+                new TwoBitParser(Path.of(GitUtils.getGitRoot(), "test", "ref", "ce11.genomic.2bit")
+                        .toFile());
         coordinates = new ObjectArrayList<>();
         var seqNames = twoBitParser.getSeqNames();
         var seqLengths = twoBitParser.getSeqLengths();

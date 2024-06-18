@@ -19,10 +19,7 @@ class TwoBitParserTest {
     TwoBitParserTest() throws IOException {
         seqs = new Object2ObjectArrayMap<>();
         try (var parser = FastxIterator.read(
-                Path.of(GitUtils.getGitRoot(),
-                                "test",
-                                "small",
-                                "test_2bit", "simple.fa")
+                Path.of(GitUtils.getGitRoot(), "test", "small", "test_2bit", "simple.fa")
                         .toFile())) {
             while (parser.hasNext()) {
                 var n = parser.next();
@@ -33,13 +30,9 @@ class TwoBitParserTest {
 
     @Test
     void testLong() throws IOException {
-        try (var parser = new TwoBitParser(Path.of(
-                        GitUtils.getGitRoot(),
-                        "test",
-                        "small",
-                        "test_2bit",
-                        "simple_l.2bit")
-                .toFile())) {
+        try (var parser = new TwoBitParser(
+                Path.of(GitUtils.getGitRoot(), "test", "small", "test_2bit", "simple_l.2bit")
+                        .toFile())) {
             assertTrue(parser.isLittleEndian());
             assertTrue(parser.isSupportsLongSequences());
             test(parser);
@@ -86,13 +79,9 @@ class TwoBitParserTest {
 
     @Test
     void testShort() throws IOException {
-        try (var parser = new TwoBitParser(Path.of(
-                        GitUtils.getGitRoot(),
-                        "test",
-                        "small",
-                        "test_2bit",
-                        "simple.2bit")
-                .toFile())) {
+        try (var parser = new TwoBitParser(
+                Path.of(GitUtils.getGitRoot(), "test", "small", "test_2bit", "simple.2bit")
+                        .toFile())) {
             assertTrue(parser.isLittleEndian());
             assertFalse(parser.isSupportsLongSequences());
             test(parser);
@@ -102,15 +91,17 @@ class TwoBitParserTest {
     @Test
     void testCe11() throws IOException {
         var ce11seqs = new Object2ObjectArrayMap<String, byte[]>();
-        try (var parser = FastxIterator.read(
-                Path.of(GitUtils.getGitRoot(), "test", "ref", "ce11.genomic.fna").toFile())) {
+        try (var parser =
+                FastxIterator.read(Path.of(GitUtils.getGitRoot(), "test", "ref", "ce11.genomic.fna")
+                        .toFile())) {
             while (parser.hasNext()) {
                 var n = parser.next();
                 ce11seqs.put(n.seqid(), n.seq());
             }
         }
-        try (var parser = new TwoBitParser(
-                Path.of(GitUtils.getGitRoot(), "test", "ref", "ce11.genomic.2bit").toFile())) {
+        try (var parser =
+                new TwoBitParser(Path.of(GitUtils.getGitRoot(), "test", "ref", "ce11.genomic.2bit")
+                        .toFile())) {
             assertTrue(parser.isLittleEndian());
             assertFalse(parser.isSupportsLongSequences());
             assertEquals(7, parser.size());
@@ -125,6 +116,14 @@ class TwoBitParserTest {
                 var actual = parser.getSequence(i, 0, parser.getSeqLength(i), true);
                 assertArrayEquals(expected, actual, "Error at chr %s!".formatted(seqName));
             }
+        }
+    }
+
+    @Test
+    void decodePrecomputed() {
+        for (var i = 0; i < 256; i++) {
+            assertArrayEquals(
+                    TwoBitParser.decode((byte) i), TwoBitParser.decodePrecomputed((byte) i));
         }
     }
 }

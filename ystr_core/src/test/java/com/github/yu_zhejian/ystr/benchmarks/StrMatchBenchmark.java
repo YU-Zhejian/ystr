@@ -55,8 +55,8 @@ public class StrMatchBenchmark {
 
     @Setup
     public void setup() {
-        try (var reader =
-                FastxIterator.read(Path.of(GitUtils.getGitRoot(), "test", "e_coli.genomic.fna"))) {
+        try (var reader = FastxIterator.read(
+                Path.of(GitUtils.getGitRoot(), "test", "ref", "e_coli.genomic.fna"))) {
             TEST_CHR = reader.next().seq();
         } catch (IOException e) {
             throw new RuntimeException(e);

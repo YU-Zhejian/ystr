@@ -60,7 +60,7 @@ public class RollingHashBenchmark {
     @Setup
     public void setup() {
         try (var reader = FastxIterator.read(
-                Path.of(GitUtils.getGitRoot(), "test", "sars_cov2.genomic.fna"))) {
+                Path.of(GitUtils.getGitRoot(), "test", "ref", "sars_cov2.genomic.fna"))) {
             TEST_CHR = reader.next().seq();
         } catch (IOException e) {
             throw new RuntimeException(e);

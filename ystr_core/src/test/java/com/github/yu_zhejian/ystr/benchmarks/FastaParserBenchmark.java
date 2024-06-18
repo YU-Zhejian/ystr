@@ -33,8 +33,8 @@ import java.util.concurrent.TimeUnit;
 @State(Scope.Thread)
 @OutputTimeUnit(TimeUnit.MILLISECONDS)
 @BenchmarkMode(Mode.AverageTime)
-@Warmup(iterations = 3, time = 5)
-@Measurement(iterations = 5, time = 5)
+@Warmup(iterations = 3, time = 20)
+@Measurement(iterations = 5, time = 20)
 @Fork(1)
 public class FastaParserBenchmark {
     private static final Logger LH = LoggerFactory.getLogger(FastaParserBenchmark.class);
@@ -43,7 +43,7 @@ public class FastaParserBenchmark {
     private TwoBitParser twoBitParser;
     private List<Tuple3<String, Integer, Integer>> coordinates;
     private Map<String, Integer> seqNameIDMap;
-    private static final int NUM_RDN_INTERVALS = 1;
+    private static final int NUM_RDN_INTERVALS = 20;
 
     public static void main(String[] args) throws RunnerException, FileNotFoundException {
         var className = FastaParserBenchmark.class.getSimpleName();
@@ -59,11 +59,14 @@ public class FastaParserBenchmark {
     @Setup
     public void setup() throws IOException {
         htsJdkRef = ReferenceSequenceFileFactory.getReferenceSequenceFile(
-                Path.of(GitUtils.getGitRoot(), "test", "ce11.genomic.fna").toFile());
+                Path.of(GitUtils.getGitRoot(), "test", "ref", "ce11.genomic.fna")
+                        .toFile());
         compressedHtsJdkRef = ReferenceSequenceFileFactory.getReferenceSequenceFile(
-                Path.of(GitUtils.getGitRoot(), "test", "ce11.genomic.fna.gz").toFile());
-        twoBitParser = new TwoBitParser(
-                Path.of(GitUtils.getGitRoot(), "test", "ce11.2bit").toFile());
+                Path.of(GitUtils.getGitRoot(), "test", "ref", "ce11.genomic.fna.gz")
+                        .toFile());
+        twoBitParser =
+                new TwoBitParser(Path.of(GitUtils.getGitRoot(), "test", "ref", "ce11.genomic.2bit")
+                        .toFile());
         coordinates = new ObjectArrayList<>();
         var seqNames = twoBitParser.getSeqNames();
         var seqLengths = twoBitParser.getSeqLengths();
@@ -97,7 +100,7 @@ public class FastaParserBenchmark {
     public void benchTwoBitUnmasked(@NotNull Blackhole blackhole) throws IOException {
         for (var coordinate : coordinates) {
             blackhole.consume(twoBitParser.getSequence(
-                    seqNameIDMap.get(coordinate._1()), coordinate._2(), coordinate._3(), true));
+                    seqNameIDMap.get(coordinate._1()), coordinate._2(), coordinate._3(), false));
         }
     }
 
