@@ -13,6 +13,7 @@ import org.roaringbitmap.RoaringBitmap;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 
@@ -243,6 +244,7 @@ public final class TwoBitParser implements AutoCloseable {
             BASES[curByte & 0b11]
         };
     }
+
     /**
      * Helper function that read multiple bytes.
      *
@@ -253,11 +255,14 @@ public final class TwoBitParser implements AutoCloseable {
      */
     private void readNts(byte[] outArr, final int startPos, final int numByteToRead)
             throws IOException {
-        var buffer = new byte[numByteToRead];
+        var buffer = ByteBuffer.allocate(numByteToRead);
         var curPos = startPos;
-        raf.read(buffer);
+        var fc = raf.getChannel();
+        fc.read(buffer);
+        buffer.rewind();
         // The following 6 lines are the most time-consuming. Interesting.
-        for (byte b : buffer) {
+        for (var i=0; i < numByteToRead; i++) {
+            var b = buffer.get();
             outArr[curPos++] = BASES[b >> 6 & 0b11];
             outArr[curPos++] = BASES[b >> 4 & 0b11];
             outArr[curPos++] = BASES[b >> 2 & 0b11];
@@ -322,15 +327,26 @@ public final class TwoBitParser implements AutoCloseable {
         // N is always dealt with otherwise it will be mistaken as probably T.
         final var cm1 = curMask.clone();
         cm1.and(nBlocks[seqID]);
-        for (int i : cm1.toArray()) {
-            retl[i - start] = 'N';
+
+        int[] buffer = new int[256];
+        var it = cm1.getBatchIterator();
+        while (it.hasNext()) {
+            // As suggested by https://richardstartin.github.io/posts/roaringbitmap-performance-tricks
+            int batch = it.nextBatch(buffer);
+            for (int i = 0; i < batch; ++i) {
+                retl[buffer[i] - start] = 'N';
+            }
         }
 
         if (parseMasks) {
             final var cm2 = curMask.clone();
             cm2.and(maskBlocks[seqID]);
-            for (int i : cm2.toArray()) {
-                retl[i - start] += 32;
+            it = cm2.getBatchIterator();
+            while (it.hasNext()) {
+                int batch = it.nextBatch(buffer);
+                for (int i = 0; i < batch; ++i) {
+                    retl[buffer[i]]+=32;
+                }
             }
         }
         return retl;

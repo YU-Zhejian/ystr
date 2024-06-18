@@ -1,3 +1,8 @@
-*
-!.gitignore
-!Makefile
+*.fa
+*.f[an]a
+*.g[tf]f
+*.gff3
+*.fast[aq]
+*.txt
+*.2bit
+*.fai

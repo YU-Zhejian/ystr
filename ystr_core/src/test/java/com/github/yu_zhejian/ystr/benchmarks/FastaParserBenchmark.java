@@ -1,5 +1,6 @@
-package com.github.yu_zhejian.ystr.io;
+package com.github.yu_zhejian.ystr.benchmarks;
 
+import com.github.yu_zhejian.ystr.io.TwoBitParser;
 import com.github.yu_zhejian.ystr.test_utils.GitUtils;
 
 import htsjdk.samtools.reference.ReferenceSequenceFile;

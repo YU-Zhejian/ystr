@@ -19,7 +19,10 @@ class TwoBitParserTest {
     TwoBitParserTest() throws IOException {
         seqs = new Object2ObjectArrayMap<>();
         try (var parser = FastxIterator.read(
-                Path.of(GitUtils.getGitRoot(), "ystr_core", "src", "test", "resources", "simple.fa")
+                Path.of(GitUtils.getGitRoot(),
+                                "test",
+                                "small",
+                                "test_2bit", "simple.fa")
                         .toFile())) {
             while (parser.hasNext()) {
                 var n = parser.next();
@@ -32,10 +35,9 @@ class TwoBitParserTest {
     void testLong() throws IOException {
         try (var parser = new TwoBitParser(Path.of(
                         GitUtils.getGitRoot(),
-                        "ystr_core",
-                        "src",
                         "test",
-                        "resources",
+                        "small",
+                        "test_2bit",
                         "simple_l.2bit")
                 .toFile())) {
             assertTrue(parser.isLittleEndian());
@@ -86,10 +88,9 @@ class TwoBitParserTest {
     void testShort() throws IOException {
         try (var parser = new TwoBitParser(Path.of(
                         GitUtils.getGitRoot(),
-                        "ystr_core",
-                        "src",
                         "test",
-                        "resources",
+                        "small",
+                        "test_2bit",
                         "simple.2bit")
                 .toFile())) {
             assertTrue(parser.isLittleEndian());
@@ -102,14 +103,14 @@ class TwoBitParserTest {
     void testCe11() throws IOException {
         var ce11seqs = new Object2ObjectArrayMap<String, byte[]>();
         try (var parser = FastxIterator.read(
-                Path.of(GitUtils.getGitRoot(), "test", "ce11.genomic.fna").toFile())) {
+                Path.of(GitUtils.getGitRoot(), "test", "ref", "ce11.genomic.fna").toFile())) {
             while (parser.hasNext()) {
                 var n = parser.next();
                 ce11seqs.put(n.seqid(), n.seq());
             }
         }
         try (var parser = new TwoBitParser(
-                Path.of(GitUtils.getGitRoot(), "test", "ce11.2bit").toFile())) {
+                Path.of(GitUtils.getGitRoot(), "test", "ref", "ce11.genomic.2bit").toFile())) {
             assertTrue(parser.isLittleEndian());
             assertFalse(parser.isSupportsLongSequences());
             assertEquals(7, parser.size());
