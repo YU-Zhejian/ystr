@@ -96,26 +96,27 @@ public final class IterUtils {
         return retl;
     }
 
-//    /**
-//     * Optimized {@link #collect(Iterator)}
-//     * @param sourceIterator As described.
-//     * @return As described.
-//     */
-//    public static @NotNull LongArrayList collect(@NotNull LongIterator sourceIterator){
-//        var retl = new LongArrayList();
-//        while (sourceIterator.hasNext()) {
-//            retl.add(sourceIterator.nextLong());
-//        }
-//        return retl;
-//    }
-
-
     /**
      * Optimized {@link #collect(Iterator)}
+     *
      * @param sourceIterator As described.
      * @return As described.
      */
-    public static @NotNull DoubleArrayList collect(@NotNull DoubleIterator sourceIterator){
+    public static @NotNull LongArrayList collect(@NotNull LongIterator sourceIterator) {
+        var retl = new LongArrayList();
+        while (sourceIterator.hasNext()) {
+            retl.add(sourceIterator.nextLong());
+        }
+        return retl;
+    }
+
+    /**
+     * Optimized {@link #collect(Iterator)}
+     *
+     * @param sourceIterator As described.
+     * @return As described.
+     */
+    public static @NotNull DoubleArrayList collect(@NotNull DoubleIterator sourceIterator) {
         var retl = new DoubleArrayList();
         while (sourceIterator.hasNext()) {
             retl.add(sourceIterator.nextDouble());
@@ -123,29 +124,18 @@ public final class IterUtils {
         return retl;
     }
 
-
     /**
      * Optimized {@link #collect(Iterator)}
+     *
      * @param sourceIterator As described.
      * @return As described.
      */
-    public static @NotNull BooleanArrayList collect(@NotNull BooleanIterator sourceIterator){
+    public static @NotNull BooleanArrayList collect(@NotNull BooleanIterator sourceIterator) {
         var retl = new BooleanArrayList();
         while (sourceIterator.hasNext()) {
             retl.add(sourceIterator.nextBoolean());
         }
         return retl;
-    }
-
-    /**
-     * Consume the entire iterator.
-     *
-     * @param sourceIterator As described.
-     */
-    public static void exhaust(@NotNull Iterator<?> sourceIterator) {
-        while (sourceIterator.hasNext()) {
-            sourceIterator.next();
-        }
     }
 
     /**
@@ -188,6 +178,18 @@ public final class IterUtils {
         return retl;
     }
 
+    /**
+     * Split contents of an iterator into fixed-sized windows of {@link ObjectArrayList} of elements
+     * inside. The last window will be return unfilled if {@code sourceIterator.length % windowSize
+     * != 0}.
+     *
+     * <p>Warning, this method will impair performance. Avoid using when {@code T} is a primitive.
+     *
+     * @param sourceIterator As described.
+     * @param windowSize As described.
+     * @return As described.
+     * @param <T> As described.
+     */
     @Contract("_, _ -> new")
     public static <T> @NotNull Iterator<List<T>> window(
             @NotNull Iterator<T> sourceIterator, int windowSize) {
@@ -239,11 +241,11 @@ public final class IterUtils {
         }
 
         @Override
-        public @NotNull List<T> next() {
+        public @NotNull ObjectArrayList<T> next() {
             if (!hasNextBatch) {
                 throw new NoSuchElementException();
             }
-            List<T> windowCopy = new ArrayList<>(currentWindow);
+            var windowCopy = new ObjectArrayList<>(currentWindow);
             currentWindow.clear();
             populateCurrentWindow();
             return windowCopy;

@@ -34,10 +34,7 @@ public record FastxRecord(String seqid, byte[] seq, byte @Nullable [] qual) {
      * @throws IllegalArgumentException If {@link #qual} is noy {@code null} and length of
      *     {@link #qual} and {@link #seq} differs.
      */
-    public FastxRecord(String seqid, byte[] seq, byte @Nullable [] qual) {
-        this.seqid = seqid;
-        this.seq = seq;
-        this.qual = qual;
+    public FastxRecord {
         if (qual != null && qual.length != seq.length) {
             throw new IllegalArgumentException(
                     "Parsing FASTQ record exception: record '%s': seq and qual length differ. Actual: %d vs %d"

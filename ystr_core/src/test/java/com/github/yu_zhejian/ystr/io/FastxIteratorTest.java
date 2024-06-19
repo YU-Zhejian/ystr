@@ -47,6 +47,12 @@ class FastxIteratorTest {
                         FastxRecord.ofStrings("chr2", "CCCC")),
                 IterUtils.collect(
                         new FastxIterator(new StringReader(">chr1\nAAAA\n>chr2\nCCCC\n\n"), true)));
+        assertIterableEquals(
+                List.of(
+                        FastxRecord.ofStrings("chr1 aaaa", "AAAA"),
+                        FastxRecord.ofStrings("chr2", "CCCC")),
+                IterUtils.collect(new FastxIterator(
+                        new StringReader(">chr1 aaaa\nAAAA\n>chr2\nCCCC\n\n"), false)));
     }
 
     @Test

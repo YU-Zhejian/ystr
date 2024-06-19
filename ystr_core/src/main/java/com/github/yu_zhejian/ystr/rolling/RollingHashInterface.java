@@ -1,6 +1,5 @@
 package com.github.yu_zhejian.ystr.rolling;
 
-
 import it.unimi.dsi.fastutil.longs.LongIterator;
 
 /**
@@ -35,5 +34,4 @@ import it.unimi.dsi.fastutil.longs.LongIterator;
  * // Which should both be "AGCT"
  * }</pre>
  */
-public interface RollingHashInterface extends LongIterator {
-}
+public interface RollingHashInterface extends LongIterator {}

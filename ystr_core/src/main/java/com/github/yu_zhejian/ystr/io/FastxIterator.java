@@ -152,19 +152,18 @@ public final class FastxIterator implements Iterator<FastxRecord>, AutoCloseable
 
         String line;
         while ((line = reader.readLine()) != null) {
-            line = line.trim();
-            if (line.isEmpty() || (isFASTQ && line.charAt(0) == '+')) {
-                continue;
-            }
-            if ((!isFASTQ && line.charAt(0) == '>') || (isFASTQ && line.charAt(0) == '@')) {
-                // Beginning of next record
-                nextSeqID = performTrimSeqID(line);
-                break;
-            } else if (isFASTQ) {
-                (currentSequence.isEmpty() ? currentSequence : currentQuality).append(line);
-            } else {
-                // Quality of current record
-                currentSequence.append(line);
+            if (!(line.isEmpty() || (isFASTQ && line.charAt(0) == '+'))) {
+                line = line.trim();
+                if ((!isFASTQ && line.charAt(0) == '>') || (isFASTQ && line.charAt(0) == '@')) {
+                    // Beginning of next record
+                    nextSeqID = performTrimSeqID(line);
+                    break;
+                } else if (isFASTQ) {
+                    (currentSequence.isEmpty() ? currentSequence : currentQuality).append(line);
+                } else {
+                    // Quality of current record
+                    currentSequence.append(line);
+                }
             }
         }
         currentRecord = new FastxRecord(

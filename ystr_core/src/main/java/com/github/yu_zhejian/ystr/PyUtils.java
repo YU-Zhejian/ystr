@@ -18,7 +18,13 @@ public final class PyUtils {
      *     for standard output/error stream.
      * @param flush Whether to flush the stream after the entire string had been printed.
      */
+    @SuppressWarnings("java:S106")
     public record PrintParams(String sep, String end, OutputStream file, boolean flush) {
+        /**
+         * Default Python {@code print} parameters.
+         *
+         * @return As described.
+         */
         @Contract(" -> new")
         public static @NotNull PrintParams getDefault() {
             return new PrintParams(" ", "\n", System.out, false);

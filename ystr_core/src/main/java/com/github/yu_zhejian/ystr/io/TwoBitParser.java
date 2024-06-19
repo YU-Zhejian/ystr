@@ -15,7 +15,6 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
 
 /**
  * A UCSC 2bit file parser supporting version 1 of the 2bit format.
@@ -77,10 +76,7 @@ public final class TwoBitParser implements AutoCloseable {
      */
     private static final byte[] BASES = new byte[] {'T', 'C', 'A', 'G'};
 
-    /**
-     * Precomputed decode table,
-     * should be mapping between a byte to 4 bases.
-     */
+    /** Precomputed decode table, should be mapping between a byte to 4 bases. */
     private static final byte[][] PRE_COMPUTED;
 
     static {
@@ -309,8 +305,8 @@ public final class TwoBitParser implements AutoCloseable {
      * @param seqID As described.
      * @param start As described.
      * @param end As described.
-     * @param parseMasks Whether to parse masks, which is time-consuming.
-     *                   Note will parse {@code N} anyway.
+     * @param parseMasks Whether to parse masks, which is time-consuming. Note that this function
+     *     will parse {@code N} anyway, otherwise they will be mistaken as {@code T}s.
      * @return As described.
      * @throws IOException As described.
      */
@@ -370,12 +366,12 @@ public final class TwoBitParser implements AutoCloseable {
         final var cm1 = curMask.clone();
         cm1.and(nBlocks[seqID]);
 
-        int[] buffer = new int[256];
-        var it = cm1.getBatchIterator();
-        while (it.hasNext()) {
+        final int[] buffer = new int[256];
+        final var it1 = cm1.getBatchIterator();
+        while (it1.hasNext()) {
             // As suggested by
             // https://richardstartin.github.io/posts/roaringbitmap-performance-tricks
-            int batch = it.nextBatch(buffer);
+            int batch = it1.nextBatch(buffer);
             for (int i = 0; i < batch; ++i) {
                 retl[buffer[i] - start] = 'N';
             }
@@ -384,9 +380,9 @@ public final class TwoBitParser implements AutoCloseable {
         if (parseMasks) {
             final var cm2 = curMask.clone();
             cm2.and(maskBlocks[seqID]);
-            it = cm2.getBatchIterator();
-            while (it.hasNext()) {
-                int batch = it.nextBatch(buffer);
+            final var it2 = cm2.getBatchIterator();
+            while (it2.hasNext()) {
+                int batch = it2.nextBatch(buffer);
                 for (int i = 0; i < batch; ++i) {
                     retl[buffer[i] - start] += 32;
                 }
@@ -434,7 +430,7 @@ public final class TwoBitParser implements AutoCloseable {
      */
     public @NotNull ObjectArrayList<String> getSeqNames() {
         var retl = new ObjectArrayList<String>(this.sequenceCount);
-        retl.addAll(Arrays.asList(seqNames));
+        retl.addElements(0, seqNames);
         return retl;
     }
 

@@ -2,9 +2,7 @@ package com.github.yu_zhejian.ystr.rolling;
 
 import org.jetbrains.annotations.NotNull;
 
-/**
- * Pre-computed {@link NtHash} implementation.
- */
+/** Pre-computed {@link NtHash} implementation. */
 public final class PrecomputedNtHash extends PrecomputedBidirectionalNtHash {
     /**
      * Default constructor.

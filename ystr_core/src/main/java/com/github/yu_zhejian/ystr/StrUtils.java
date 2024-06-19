@@ -4,8 +4,6 @@ import io.vavr.Function6;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Objects;
-
 /** Various utility functions concerning strings to support other classes. */
 public final class StrUtils {
     /** Defunct constructor */
@@ -22,7 +20,7 @@ public final class StrUtils {
     }
 
     /**
-     * As described.
+     * Integer version of {@link #byteToUnsigned(byte)}.
      *
      * @param b As described.
      * @return As described.
@@ -118,13 +116,12 @@ public final class StrUtils {
      * @param array2 As described.
      */
     public static int strcmp(final byte @NotNull [] array1, final byte @NotNull [] array2) {
-        // FIXME: Negative byte values.
         final int minLength = Math.min(array1.length, array2.length);
         for (int i = 0; i < minLength; i++) {
-            if (!Objects.equals(array1[i], array2[i])) {
+            if (array1[i] != array2[i]) {
                 // If bytes are not equal, return the difference (this mimics the behavior of
                 // strcmp)
-                return Byte.compare(array1[i], array2[i]);
+                return Integer.compare(array1[i] & 0xFF, array2[i] & 0xFF);
             }
         }
         // If we didn't find any differences in the common prefix, the shorter array is

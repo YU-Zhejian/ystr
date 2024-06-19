@@ -14,9 +14,9 @@ import org.jetbrains.annotations.NotNull;
  *   <li>The nucleotide {@code T} and {@code U} will <b>NOT</b> be distinguished. The original
  *       implementation will render {@code U} as {@code N}.
  *   <li>Upper- and lower-cased bases will <b>NOT</b> be distinguished.
- *   <li>The {@link RollingHashInterface#nextLong()} method will return the canonical ntHash, which is the smaller
- *       one between {@link #getFwdHash()} and {@link #getRevHash()}. This is the default in ntHash1
- *       and ntHash2 {@code <= 2.3.0}, but is changed in ntHash2 2.3.0.
+ *   <li>The {@link RollingHashInterface#nextLong()} method will return the canonical ntHash, which
+ *       is the smaller one between {@link #getFwdHash()} and {@link #getRevHash()}. This is the
+ *       default in ntHash1 and ntHash2 {@code <= 2.3.0}, but is changed in ntHash2 2.3.0.
  *   <li>This implementation do not rely on a pre-computed hash table, so it amy be slower than
  *       those with one ({@link PrecomputedNtHash}).
  *   <li>This implementation would only generate 1 hash value for one k-mer. Use

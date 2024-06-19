@@ -90,8 +90,12 @@ spotless {
 		greclipse(ECLIPSE_JDT_VER)
 	}
 	format 'xml', {
-		target 'src/**/*.xml'
+		target "ystr_core/**/*.xml", "ystr_demo/**/*.xml"
 		eclipseWtp('xml')
+	}
+	yaml {
+		target '**/*.yml', "**/*.yaml"
+		jackson()
 	}
 }
 
@@ -120,4 +124,3 @@ tasks.register('antora', NpxTask) {
 	]
 	dependsOn antoraCopy
 }
-

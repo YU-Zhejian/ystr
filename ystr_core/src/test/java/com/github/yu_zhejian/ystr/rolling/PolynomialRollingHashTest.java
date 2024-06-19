@@ -11,8 +11,7 @@ import java.nio.charset.StandardCharsets;
 
 class PolynomialRollingHashTest {
     long getPolynomialRollinghPolynomialRollingHash1(@NotNull String input, int n, int k) {
-        return new PolynomialRollingHash(input.getBytes(StandardCharsets.UTF_8), k, n)
-                .nextLong();
+        return new PolynomialRollingHash(input.getBytes(StandardCharsets.UTF_8), k, n).nextLong();
     }
 
     long getPolynomialRollinghPolynomialRollingHash2(@NotNull String input, int n, int k) {
