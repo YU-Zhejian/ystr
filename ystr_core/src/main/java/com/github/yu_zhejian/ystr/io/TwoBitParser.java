@@ -77,6 +77,7 @@ public final class TwoBitParser implements AutoCloseable {
      */
     private static final byte[] BASES = new byte[] {'T', 'C', 'A', 'G'};
 
+    /** Pre-computed byte-to-bases table. */
     public static final byte[][] PRE_COMPUTED;
 
     static {
@@ -249,7 +250,7 @@ public final class TwoBitParser implements AutoCloseable {
     }
 
     /**
-     * Reference implementation.
+     * Reference implementation. Also used to bootstrap {@link #PRE_COMPUTED}.
      *
      * @param encodedByte As described.
      * @return As described.
