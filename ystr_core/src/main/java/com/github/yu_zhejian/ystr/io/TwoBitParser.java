@@ -305,11 +305,9 @@ public final class TwoBitParser implements AutoCloseable {
     public byte @NotNull [] getSequence(
             final int seqID, final int start, final int end, boolean parseMasks)
             throws IOException {
-        if (start == end) {
-            return new byte[0];
-        }
-        loadSeqInfo(seqID);
+        // Check whether `start == end` will impact performance, so
         StrUtils.ensureStartEndValid(start, end, dnaSizes[seqID]);
+        loadSeqInfo(seqID);
 
         // Number of bases to read at the end.
         var retLen = end - start;

@@ -29,7 +29,7 @@ ce11.genomic.fna:
 	samtools faidx ce11.genomic.fna
 
 ce11.genomic.fna.gz:
-	bgzip -l9 -@32 -i ce11.genomic.fna -o ce11.genomic.fna.gz
+	bgzip -l9 -@32 -c -f < ce11.genomic.fna > ce11.genomic.fna.gz
 	samtools faidx ce11.genomic.fna.gz
 
 c_elegans_ests.fa:
