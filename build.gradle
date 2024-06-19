@@ -100,6 +100,17 @@ node {
 	version = NODE_VER
 	nodeProjectDir = file("src/antora")
 }
+
+def adocAtProjRoot = copySpec {
+	from projectDir
+	include '*.adoc'
+}
+
+tasks.register('antoraCopy', Copy) {
+	into "src/antora/ROOT/modules/ROOT/pages/generated"
+	with adocAtProjRoot
+}
+
 tasks.register('antora', NpxTask) {
 	command = 'antora'
 	args = [
@@ -107,4 +118,6 @@ tasks.register('antora', NpxTask) {
 		'antora-playbook.yml',
 		'--stacktrace'
 	]
+	dependsOn antoraCopy
 }
+

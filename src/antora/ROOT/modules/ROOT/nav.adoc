@@ -1,0 +1,7 @@
+* xref:generated/Readme.adoc[Readme]
+* xref:intro.adoc[]
+* ystr-core
+** xref:ystr-core/index.adoc[]
+* xref:devel.adoc[]
+* xref:generated/License.adoc[License]
+* xref:generated/TODO.adoc[TODO]

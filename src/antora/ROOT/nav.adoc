@@ -1,4 +1,0 @@
-* xref:index.adoc[]
-* xref:intro.adoc[]
-* ystr-core
-** xref:ystr-core/index.adoc[]

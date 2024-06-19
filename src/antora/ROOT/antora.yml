@@ -1,5 +1,6 @@
 name: ROOT
 title: yStr
 version: ~
+start_page: generated/Readme.adoc
 nav:
-  - nav.adoc
+  - modules/ROOT/nav.adoc

@@ -165,7 +165,7 @@ public abstract class NtHashBase extends RollingHashBase {
             @NotNull NtHashBase ntHash, int estimatedLength) {
         var rett = Tuple.of(new LongArrayList(estimatedLength), new LongArrayList(estimatedLength));
         while (ntHash.hasNext()) {
-            ntHash.nextUnboxed();
+            ntHash.nextLong();
             rett._1().add(ntHash.getFwdHash());
             rett._2().add(ntHash.getRevHash());
         }

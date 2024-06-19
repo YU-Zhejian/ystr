@@ -4,7 +4,7 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * Pre-computed {@link NtHash} implementation without updating {@link #currentValueUnboxed}. Only
- * {@link #getFwdHash()} and {@link #getRevHash()} is working; {@link #nextUnboxed()} will always
+ * {@link #getFwdHash()} and {@link #getRevHash()} is working; {@link RollingHashInterface#nextLong()} will always
  * return 0.
  */
 public class PrecomputedBidirectionalNtHash extends NtHashBase {

@@ -4,8 +4,6 @@ import org.jetbrains.annotations.NotNull;
 
 /**
  * Pre-computed {@link NtHash} implementation.
- *
- * <p>This is a direct port of C++ version of ntHash 1.0.0.
  */
 public final class PrecomputedNtHash extends PrecomputedBidirectionalNtHash {
     /**

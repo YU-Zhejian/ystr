@@ -3,13 +3,11 @@ package com.github.yu_zhejian.ystr.rolling;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Iterator;
-import java.util.NoSuchElementException;
 
 /** A base implementation for all rolling algorithms. */
 abstract class RollingBase<T> implements Iterator<T> {
     /** The string you're rolling on. */
     protected final byte[] string;
-
     /**
      * The size of the sliding window. Also, the size of K-mer in biological sequence rolling hash
      * functions like {@link NtHash}.
@@ -20,13 +18,10 @@ abstract class RollingBase<T> implements Iterator<T> {
     /** Arbitrary starting position. */
     protected final int skipFirst;
 
-    /** The current value of some kind. */
-    protected T currentValue;
-
-    /** Populate {@link #currentValue} with value of the first window. */
+    /** Populate the initial state with value of the first window. */
     protected abstract void initCurrentValue();
 
-    /** Slide the window and update {@link #currentValue} */
+    /** Slide the window and update the initial state */
     protected abstract void updateCurrentValueToNextState();
 
     /**
@@ -68,18 +63,6 @@ abstract class RollingBase<T> implements Iterator<T> {
         this.k = k;
         this.skipFirst = skipFirst;
         curPos = skipFirst;
-    }
-
-    @Override
-    public T next() {
-        if (!this.hasNext()) {
-            throw new NoSuchElementException();
-        }
-        if (curPos != skipFirst) {
-            updateCurrentValueToNextState();
-        }
-        curPos++;
-        return currentValue;
     }
 
     @Override

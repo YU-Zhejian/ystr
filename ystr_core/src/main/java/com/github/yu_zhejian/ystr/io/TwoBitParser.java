@@ -77,7 +77,11 @@ public final class TwoBitParser implements AutoCloseable {
      */
     private static final byte[] BASES = new byte[] {'T', 'C', 'A', 'G'};
 
-    public static final byte[][] PRE_COMPUTED;
+    /**
+     * Precomputed decode table,
+     * should be mapping between a byte to 4 bases.
+     */
+    private static final byte[][] PRE_COMPUTED;
 
     static {
         PRE_COMPUTED = new byte[256][4];
@@ -279,7 +283,7 @@ public final class TwoBitParser implements AutoCloseable {
      * Helper function that read multiple bytes.
      *
      * @param outArr As described.
-     * @param startPos As described.
+     * @param startPos Start position in {@code outArr}.
      * @param numByteToRead As described.
      * @throws IOException As described.
      */
@@ -290,7 +294,6 @@ public final class TwoBitParser implements AutoCloseable {
         var fc = raf.getChannel();
         fc.read(buffer);
         buffer.rewind();
-        // The following 6 lines are the most time-consuming. Interesting.
         for (var i = 0; i < numByteToRead; i++) {
             var b = buffer.get();
             var decoded = PRE_COMPUTED[b & 0xFF];
@@ -300,6 +303,17 @@ public final class TwoBitParser implements AutoCloseable {
         }
     }
 
+    /**
+     * Get a sequence from the current file.
+     *
+     * @param seqID As described.
+     * @param start As described.
+     * @param end As described.
+     * @param parseMasks Whether to parse masks, which is time-consuming.
+     *                   Note will parse {@code N} anyway.
+     * @return As described.
+     * @throws IOException As described.
+     */
     @Contract("_, _, _, _ -> new")
     public byte @NotNull [] getSequence(
             final int seqID, final int start, final int end, boolean parseMasks)

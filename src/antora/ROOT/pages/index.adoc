@@ -1,5 +1,0 @@
-= Index
-
-The index page.
-
-See yStr on:

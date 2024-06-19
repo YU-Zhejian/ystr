@@ -15,17 +15,17 @@ import java.util.List;
 
 class PrecomputedNtHashTest {
     long getNthPrecomputedNtHash1(@NotNull String input, int n, int k) {
-        return new PrecomputedNtHash(input.getBytes(StandardCharsets.UTF_8), k, n).nextUnboxed();
+        return new PrecomputedNtHash(input.getBytes(StandardCharsets.UTF_8), k, n).nextLong();
     }
 
     long getNthPrecomputedNtHash2(@NotNull String input, int n, int k) {
         var nLeft = n;
         var nth = new PrecomputedNtHash(input.getBytes(StandardCharsets.UTF_8), k, 0);
         while (nLeft > 0) {
-            nth.nextUnboxed();
+            nth.nextLong();
             nLeft--;
         }
-        return nth.nextUnboxed();
+        return nth.nextLong();
     }
 
     void testPrecomputedNtHash(List<Long> expected, @NotNull String bases, int k) {

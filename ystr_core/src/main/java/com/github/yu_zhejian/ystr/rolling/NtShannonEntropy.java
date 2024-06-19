@@ -42,7 +42,7 @@ public final class NtShannonEntropy extends RollingEntropyBase {
     private final IntegerWrapper numT = new IntegerWrapper();
     private final IntegerWrapper numN = new IntegerWrapper();
 
-    private final IntegerWrapper[] MAPPING_TABLE = {
+    private final IntegerWrapper[] mappingTable = {
         numN, numN, numN, numN, numN, numN, numN, numN, // 0..7
         numN, numN, numN, numN, numN, numN, numN, numN, // 8..15
         numN, numN, numN, numN, numN, numN, numN, numN, // 16..23
@@ -107,7 +107,7 @@ public final class NtShannonEntropy extends RollingEntropyBase {
     @Override
     protected void initCurrentValue() {
         for (var i = 0; i < k; i++) {
-            MAPPING_TABLE[string[i]].increase();
+            mappingTable[string[i]].increase();
         }
         currentValueUnboxed = getEntropy();
     }
@@ -117,8 +117,8 @@ public final class NtShannonEntropy extends RollingEntropyBase {
         final var i = curPos - 1;
         final var seqi = string[i];
         final var seqk = string[i + k];
-        MAPPING_TABLE[seqi].reduce();
-        MAPPING_TABLE[seqk].increase();
+        mappingTable[seqi].reduce();
+        mappingTable[seqk].increase();
         currentValueUnboxed = getEntropy();
     }
 }

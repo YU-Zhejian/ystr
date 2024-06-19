@@ -1,6 +1,7 @@
 package com.github.yu_zhejian.ystr.rolling;
 
-import java.util.Iterator;
+
+import it.unimi.dsi.fastutil.longs.LongIterator;
 
 /**
  * Rabin-Karp-Compatible Rolling Hash Algorithm.
@@ -34,11 +35,5 @@ import java.util.Iterator;
  * // Which should both be "AGCT"
  * }</pre>
  */
-public interface RollingHashInterface extends Iterator<Long> {
-    /**
-     * Unboxed version of {@link #next()}
-     *
-     * @return As described.
-     */
-    long nextUnboxed();
+public interface RollingHashInterface extends LongIterator {
 }

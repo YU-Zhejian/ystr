@@ -99,7 +99,7 @@ public final class GenomeIndexer {
         var thisShannonEntropy = new DoubleArrayList();
         var nts = new NtShannonEntropy(string, config.kmerSize(), 0);
         while (nts.hasNext()) {
-            thisShannonEntropy.add(nts.nextUnboxed());
+            thisShannonEntropy.add(nts.nextDouble());
         }
         return thisShannonEntropy;
     }

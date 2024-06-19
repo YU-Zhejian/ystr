@@ -1,7 +1,12 @@
 package com.github.yu_zhejian.ystr;
 
+import it.unimi.dsi.fastutil.booleans.BooleanArrayList;
+import it.unimi.dsi.fastutil.booleans.BooleanIterator;
 import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
+import it.unimi.dsi.fastutil.doubles.DoubleIterator;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.longs.LongArrayList;
+import it.unimi.dsi.fastutil.longs.LongIterator;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
 import org.jetbrains.annotations.Contract;
@@ -83,10 +88,51 @@ public final class IterUtils {
      * @return As described.
      * @param <T> Type of elements inside the iterator.
      */
-    public static <T> @NotNull List<T> collect(@NotNull Iterator<T> sourceIterator) {
-        var retl = new ArrayList<T>();
+    public static <T> @NotNull ObjectArrayList<T> collect(@NotNull Iterator<T> sourceIterator) {
+        var retl = new ObjectArrayList<T>();
         while (sourceIterator.hasNext()) {
             retl.add(sourceIterator.next());
+        }
+        return retl;
+    }
+
+//    /**
+//     * Optimized {@link #collect(Iterator)}
+//     * @param sourceIterator As described.
+//     * @return As described.
+//     */
+//    public static @NotNull LongArrayList collect(@NotNull LongIterator sourceIterator){
+//        var retl = new LongArrayList();
+//        while (sourceIterator.hasNext()) {
+//            retl.add(sourceIterator.nextLong());
+//        }
+//        return retl;
+//    }
+
+
+    /**
+     * Optimized {@link #collect(Iterator)}
+     * @param sourceIterator As described.
+     * @return As described.
+     */
+    public static @NotNull DoubleArrayList collect(@NotNull DoubleIterator sourceIterator){
+        var retl = new DoubleArrayList();
+        while (sourceIterator.hasNext()) {
+            retl.add(sourceIterator.nextDouble());
+        }
+        return retl;
+    }
+
+
+    /**
+     * Optimized {@link #collect(Iterator)}
+     * @param sourceIterator As described.
+     * @return As described.
+     */
+    public static @NotNull BooleanArrayList collect(@NotNull BooleanIterator sourceIterator){
+        var retl = new BooleanArrayList();
+        while (sourceIterator.hasNext()) {
+            retl.add(sourceIterator.nextBoolean());
         }
         return retl;
     }

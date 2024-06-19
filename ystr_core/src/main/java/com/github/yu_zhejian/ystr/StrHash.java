@@ -26,7 +26,7 @@ public final class StrHash {
      * @return As described.
      */
     public static long polynomialRollingHash(final byte @NotNull [] string) {
-        return new PolynomialRollingHash(string, string.length, 0).nextUnboxed();
+        return new PolynomialRollingHash(string, string.length, 0).nextLong();
     }
 
     /**
@@ -36,7 +36,7 @@ public final class StrHash {
      * @return As described.
      */
     public static long ntHash(final byte[] string) {
-        return new PrecomputedNtHash(string, string.length, 0).nextUnboxed();
+        return new PrecomputedNtHash(string, string.length, 0).nextLong();
     }
 
     /**

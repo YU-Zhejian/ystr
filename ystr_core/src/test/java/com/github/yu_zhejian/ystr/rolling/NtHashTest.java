@@ -14,17 +14,17 @@ import java.util.List;
 
 class NtHashTest {
     long getNthNtHash1(@NotNull String input, int n, int k) {
-        return new NtHash(input.getBytes(StandardCharsets.UTF_8), k, n).nextUnboxed();
+        return new NtHash(input.getBytes(StandardCharsets.UTF_8), k, n).nextLong();
     }
 
     long getNthNtHash2(@NotNull String input, int n, int k) {
         var nLeft = n;
         var nth = new NtHash(input.getBytes(StandardCharsets.UTF_8), k, 0);
         while (nLeft > 0) {
-            nth.nextUnboxed();
+            nth.nextLong();
             nLeft--;
         }
-        return nth.nextUnboxed();
+        return nth.nextLong();
     }
 
     void testNtHash(List<Long> expected, @NotNull String bases, int k) {

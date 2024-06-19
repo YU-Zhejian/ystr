@@ -19,18 +19,9 @@ abstract class RollingHashBase extends RollingBase<Long> implements RollingHashI
 
     /** By setting type into unboxed form could increase speed. */
     protected long currentValueUnboxed;
-    /** @deprecated Disabled ever since. Use {@link #currentValueUnboxed} instead. */
-    @Deprecated
-    protected final Long currentValue = null;
 
-    /** @deprecated Unoptimized version; use {@link #nextUnboxed()} instead. */
     @Override
-    @Deprecated
-    public Long next() {
-        return nextUnboxed();
-    }
-
-    public long nextUnboxed() {
+    public long nextLong() {
         if (!this.hasNext()) {
             throw new NoSuchElementException();
         }

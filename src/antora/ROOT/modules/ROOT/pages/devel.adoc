@@ -1,0 +1,19 @@
+= Development Guide
+
+// TODO
+
+== Software Engineering
+
+== Performance
+
+=== Reduce Copy
+
+=== Reduce Creation of Small Objects
+
+=== Use Faster Alternatives while Processing Containers
+
+=== Get a Faster JVM
+
+If you're working under GNU/Linux, using https://docs.azul.com/prime/#azul-zing-builds-of-openjdk[Azul Zing Builds of OpenJDK] could get a considerable performance boost over conventional OpenJDK. It is free to download for developmental use.
+
+=== Resources on Enhanced Performance

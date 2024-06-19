@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public final class IsPolyARollingPredicate extends RollingPredicateBase {
     /** Whether the underlying base is Poly(A). */
-    public static final boolean[] PREDICATE = {
+    static final boolean[] PREDICATE = {
         false, false, false, false, false, false, false, false, // 0..7
         false, false, false, false, false, false, false, false, // 8..15
         false, false, false, false, false, false, false, false, // 16..23

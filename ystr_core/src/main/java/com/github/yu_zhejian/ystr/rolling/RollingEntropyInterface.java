@@ -1,13 +1,7 @@
 package com.github.yu_zhejian.ystr.rolling;
 
-import java.util.Iterator;
+import it.unimi.dsi.fastutil.doubles.DoubleIterator;
 
 /** Double-Precision Rolling Entropy for Exclusion of Repetitive Regions. */
-public interface RollingEntropyInterface extends Iterator<Double> {
-    /**
-     * Unboxed version of {@link #next()}
-     *
-     * @return As described.
-     */
-    double nextUnboxed();
+public interface RollingEntropyInterface extends DoubleIterator {
 }

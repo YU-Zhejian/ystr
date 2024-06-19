@@ -175,11 +175,11 @@ public final class StrMatch {
         var haystackPos = start;
         final var needleLen = needle.length;
         final var rhHaystack = supplier.apply(haystack, needleLen, start);
-        final var needleHash = supplier.apply(needle, needleLen, start).nextUnboxed();
+        final var needleHash = supplier.apply(needle, needleLen, start).nextLong();
 
         final var retl = new IntArrayList();
         while (haystackPos + needleLen <= end) {
-            final var nextHash = rhHaystack.nextUnboxed();
+            final var nextHash = rhHaystack.nextLong();
             if (nextHash == needleHash && isMatch(haystack, needle, haystackPos)) {
                 retl.add(haystackPos);
             }
