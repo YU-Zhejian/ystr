@@ -38,3 +38,6 @@ c_elegans_ests.fa:
 
 ce11.genomic.2bit:
 	curl https://hgdownload.soe.ucsc.edu/goldenPath/ce11/bigZips/ce11.2bit -o ce11.genomic.2bit
+
+validate:
+	sha256sum -c sha256sum

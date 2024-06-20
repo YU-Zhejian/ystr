@@ -11,3 +11,6 @@ simple_l.2bit:
 
 simple.fa.fai:
 	samtools faidx simple.fa
+
+validate:
+	sha256sum -c sha256sum

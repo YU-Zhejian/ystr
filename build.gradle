@@ -1,4 +1,5 @@
 import com.diffplug.spotless.LineEnding
+
 import java.nio.charset.StandardCharsets
 
 // ---------------------------- Plugins ----------------------------
@@ -120,7 +121,33 @@ tasks.register('antora', NpxTask) {
 	args = [
 		'--fetch',
 		'antora-playbook.yml',
-		'--stacktrace'
+		'--stacktrace',
+			"--log-format",
+			"pretty"
 	]
 	dependsOn antoraCopy
+}
+
+tasks.register('antoraCopyJavadoc', Copy) {
+	into "build/antora-site/placeholders/ystr-core-javadoc"
+	from "ystr_core/build/docs/javadoc"
+	dependsOn javadoc
+	dependsOn antora
+}
+tasks.register("antoraZip", Zip){
+	from "build/antora-site/"
+	archiveFileName = "antora-site.zip"
+	destinationDirectory = file("build")
+	dependsOn antoraCopyJavadoc
+}
+tasks.register("copyAntoraZip", Copy){
+	from "build/antora-site.zip"
+	into "build/antora-site/"
+	dependsOn antoraZip
+}
+
+tasks.register('serveAntora', NpxTask){
+	command = "http-server"
+	workingDir = file("build/antora-site")
+	dependsOn copyAntoraZip
 }

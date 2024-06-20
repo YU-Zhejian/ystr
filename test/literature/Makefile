@@ -11,3 +11,6 @@ shakespeare_gutenberg.txt:
 
 kjv_gutenberg.txt:
 	curl -L https://www.gutenberg.org/ebooks/10.txt.utf-8 > kjv_gutenberg.txt
+
+validate:
+	sha256sum -c sha256sum

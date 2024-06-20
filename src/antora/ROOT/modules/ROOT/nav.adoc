@@ -1,7 +1,8 @@
 * xref:generated/Readme.adoc[Readme]
 * xref:intro.adoc[]
-* ystr-core
-** xref:ystr-core/index.adoc[]
+* xref:ystr-core/index.adoc[ystr-core]
+** xref:ystr-core/online-pattern-matching.adoc[]
+* xref:placeholders/ystr-core-javadoc/index.adoc[Javadoc]
 * xref:devel.adoc[]
 * xref:generated/License.adoc[License]
 * xref:generated/TODO.adoc[TODO]

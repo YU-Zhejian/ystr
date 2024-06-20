@@ -1,8 +1,12 @@
 ---
 site:
-  title: "yStr"
+  title: "yStr Docs"
   robots: "allow"
+output:
+  dir: "../../build/antora-site"
+  clean: true
 content:
+  edit_url: ~
   sources:
   - url: "./../../"
     start_path: "src/antora/ROOT"
@@ -12,7 +16,11 @@ ui:
   bundle:
     url: "https://gitlab.com/antora/antora-ui-default/-/jobs/artifacts/HEAD/raw/build/ui-bundle.zip?job=bundle-stable"
     snapshot: true
+  supplemental_files: "./supplementary-ui"
 asciidoc:
   attributes:
     github-url: "https://github.com/YU-Zhejian/ystr"
     shfmt-ver: "v3.8.0"
+antora:
+  extensions:
+    - '@antora/lunr-extension'

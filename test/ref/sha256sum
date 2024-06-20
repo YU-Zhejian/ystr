@@ -1,0 +1,11 @@
+24e1dcc5c08b27a2efee782c35b72c9b02a8726cebea9ef98f12b69f09ae016f  ./c_elegans_ests.fa
+18de2f321a1324a00968154bb62dadc78ac6469f5ac4933ab28f10bf57733d7c  ./ce11.genomic.2bit
+e0b3aa8f5443773e1af99d8e0227cb1f10289981480a90ba11bae4f696bb1c85  ./ce11.genomic.fna
+e0f082a54003ee7c6aa8f7812b13430ecedc39edd7db0a4ed5de11634f65e29a  ./ce11.genomic.fna.fai
+f80db1e4fa261b833fce8a8a7c16d2e4d97ba48530e43169dbbf51ee24f1e1ea  ./ce11.genomic.fna.gz
+e0f082a54003ee7c6aa8f7812b13430ecedc39edd7db0a4ed5de11634f65e29a  ./ce11.genomic.fna.gz.fai
+adf66dd083d0ed010102561cb92bc94eeb0aa26795201d1675707996cc1b0fb2  ./ce11.ncbiRefSeq.gtf
+53bb6a51b6e92139ced1e38f74b7938781027c52200922ff03718c2237d23bb4  ./e_coli.genomic.fna
+f00a6ac16bdd1c3d70143fbc0d963de95e84da507f301ae1a87b9a1e08dfe19e  ./e_coli.genomic.fna.fai
+b0540238e8b48a5ce25dffafb94b1a9be507b161dea2a166d09a9565381f94eb  ./sars_cov2.genomic.fna
+702441515b3bf029f54a8a1795d0785ce5c10b65f258d6f4fc28e010b11e7733  ./sars_cov2.genomic.fna.fai

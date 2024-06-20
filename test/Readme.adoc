@@ -1,0 +1,17 @@
+= Test Data
+
+Here contains the test data of this project for both unit and integration tests. The test files are managed using https://www.gnu.org/software/make/[GNU Make] and files from remote sources will be downloaded using https://curl.se[Curl].
+
+== Organization
+
+* `small` stores small test files in text or binary. Binary files are base64-encoded (using `base64` utility) to allow version control using Git.
+* `literature` stores real literature from the Gutenberg Project and https://www.oxfordlearnersdictionaries.com/about/wordlists/oxford3000-5000[Oxford 3000 word list]. They should be UTF-8 encoded and may contain Non-ASCII characters.
+* `ref` stores reference genome, proteome, transcriptome and their annotations in various formats downloaded from the https://hgdownload.soe.ucsc.edu/[UCSC Genome Browser].
+
+== Fetching Files
+
+Execute `make all` on this folder or subfolders.
+
+== Validate File Integrity
+
+Execute `make validate` on this folder or subfolders. It will check SHA256 values of each downloaded/generated file with pre-recorded checksums. Requires `sha256` utility supporting `-c` switch.
