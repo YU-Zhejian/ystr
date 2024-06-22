@@ -6,7 +6,7 @@ output:
   dir: "../../build/antora-site"
   clean: true
 content:
-  edit_url: ~
+  edit_url: null
   sources:
   - url: "./../../"
     start_path: "src/antora/ROOT"
@@ -23,4 +23,4 @@ asciidoc:
     shfmt-ver: "v3.8.0"
 antora:
   extensions:
-    - '@antora/lunr-extension'
+  - "@antora/lunr-extension"

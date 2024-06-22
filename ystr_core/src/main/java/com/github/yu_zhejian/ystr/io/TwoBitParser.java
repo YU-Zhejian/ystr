@@ -1,6 +1,7 @@
 package com.github.yu_zhejian.ystr.io;
 
 import com.github.yu_zhejian.ystr.StrUtils;
+import com.github.yu_zhejian.ystr.codec.TwoBitCodec;
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
@@ -10,10 +11,13 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.roaringbitmap.RoaringBitmap;
 
+import java.io.EOFException;
 import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.nio.channels.FileChannel;
 import java.nio.charset.StandardCharsets;
 
 /**
@@ -24,6 +28,8 @@ import java.nio.charset.StandardCharsets;
 public final class TwoBitParser implements AutoCloseable {
     /** The random accessing engine. */
     private final RandomAccessFile raf;
+    /** Channel of {@link #raf} */
+    private final FileChannel fc;
     /** Whether the file is created under Little Endian byte order. */
     private final boolean byteOrderIsLittleEndian;
     /** Should be 0x0. Readers should abort if they see a version number higher than 0 */
@@ -68,23 +74,15 @@ public final class TwoBitParser implements AutoCloseable {
     private final RoaringBitmap[] nBlocks;
     /** The number of masked (lower-case) blocks */
     private final RoaringBitmap[] maskBlocks;
+    /** The codec * */
+    private final TwoBitCodec codec = new TwoBitCodec();
+    /** 4k alignment */
+    private static final int CHUNK_SIZE = 4096;
 
-    /**
-     * the DNA packed to two bits per base, represented as so: T - 00, C - 01, A - 10, G - 11. The
-     * first base is in the most significant 2-bit byte; the last base is in the least significant 2
-     * bits. For example, the sequence TCAG is represented as 00011011.
-     */
-    private static final byte[] BASES = new byte[] {'T', 'C', 'A', 'G'};
-
-    /** Precomputed decode table, should be mapping between a byte to 4 bases. */
-    private static final byte[][] PRE_COMPUTED;
-
-    static {
-        PRE_COMPUTED = new byte[256][4];
-        for (int i = 0; i <= 0b11_11_11_11; i++) {
-            PRE_COMPUTED[i] = decode((byte) i);
-        }
-    }
+    /** Buffer used in {@link #readFourBytes()}. */
+    private final ByteBuffer intBuffer = ByteBuffer.allocateDirect(4);
+    /** Buffer used in {@link #readEightBytes()}. */
+    private final ByteBuffer longBuffer = ByteBuffer.allocateDirect(8);
 
     /**
      * Default constructor.
@@ -95,14 +93,21 @@ public final class TwoBitParser implements AutoCloseable {
      */
     public TwoBitParser(File f) throws IOException {
         raf = new RandomAccessFile(f, "r");
-        var signature = ((long) raf.read() << 24)
-                | (((long) raf.read()) << 16)
-                | (((long) raf.read()) << 8)
-                | (raf.read());
+        fc = raf.getChannel();
+        var signatureBuffer = ByteBuffer.allocateDirect(4);
+        signatureBuffer.order(ByteOrder.BIG_ENDIAN);
+        fc.read(signatureBuffer);
+        signatureBuffer.rewind();
+
+        var signature = signatureBuffer.getInt();
         if (signature == SIGNATURE_BIG_ENDIAN) {
             byteOrderIsLittleEndian = false;
+            intBuffer.order(ByteOrder.BIG_ENDIAN);
+            longBuffer.order(ByteOrder.BIG_ENDIAN);
         } else if (signature == SIGNATURE_LITTLE_ENDIAN) {
             byteOrderIsLittleEndian = true;
+            intBuffer.order(ByteOrder.LITTLE_ENDIAN);
+            longBuffer.order(ByteOrder.LITTLE_ENDIAN);
         } else {
             throw new IllegalArgumentException(String.format(
                     "Wrong start signature in 2BIT format. Required: 0x1A412743 (Big Endian)/0x4327411A (Little Endian). Actual: 0x%s",
@@ -205,15 +210,10 @@ public final class TwoBitParser implements AutoCloseable {
      * @throws IOException As described.
      */
     private long readEightBytes() throws IOException {
-        long ret;
-        var i1 = readFourBytes();
-        var i2 = readFourBytes();
-        if (byteOrderIsLittleEndian) {
-            ret = i1 | (i2 << 32);
-        } else {
-            ret = (i1 << 32) | i2;
-        }
-        return ret;
+        longBuffer.clear();
+        fc.read(longBuffer);
+        longBuffer.rewind();
+        return longBuffer.getInt();
     }
 
     /**
@@ -223,19 +223,10 @@ public final class TwoBitParser implements AutoCloseable {
      * @throws IOException As described.
      */
     private long readFourBytes() throws IOException {
-        long ret;
-        if (byteOrderIsLittleEndian) {
-            ret = (raf.read())
-                    | (((long) raf.read()) << 8)
-                    | (((long) raf.read()) << 16)
-                    | (((long) raf.read()) << 24);
-        } else {
-            ret = (((long) raf.read()) << 24)
-                    | (((long) raf.read()) << 16)
-                    | (((long) raf.read()) << 8)
-                    | (raf.read());
-        }
-        return ret;
+        intBuffer.clear();
+        fc.read(intBuffer);
+        intBuffer.rewind();
+        return intBuffer.getInt();
     }
 
     /**
@@ -245,57 +236,41 @@ public final class TwoBitParser implements AutoCloseable {
      * @throws IOException As described.
      */
     private byte @NotNull [] readNt() throws IOException {
-        return decode((byte) raf.read());
-    }
-
-    /**
-     * Reference implementation. Also used to bootstrap {@link #PRE_COMPUTED}.
-     *
-     * @param encodedByte As described.
-     * @return As described.
-     */
-    @Contract(value = "_ -> new", pure = true)
-    public static byte @NotNull [] decode(byte encodedByte) {
-        return new byte[] {
-            BASES[encodedByte >> 6 & 0b11],
-            BASES[encodedByte >> 4 & 0b11],
-            BASES[encodedByte >> 2 & 0b11],
-            BASES[encodedByte & 0b11]
-        };
-    }
-
-    /**
-     * Decode using pre-computed table.
-     *
-     * @param encodedByte As described.
-     * @return As described.
-     */
-    @Contract(value = "_ -> new", pure = true)
-    public static byte @NotNull [] decodePrecomputed(byte encodedByte) {
-        return PRE_COMPUTED[encodedByte & 0xFF];
+        var buffer = new byte[1];
+        var decoded = new byte[4];
+        raf.read(buffer, 0, 1);
+        codec.decode(buffer, decoded, 0, 0, 1);
+        return decoded;
     }
 
     /**
      * Helper function that read multiple bytes.
      *
      * @param outArr As described.
-     * @param startPos Start position in {@code outArr}.
-     * @param numByteToRead As described.
+     * @param dstStart Start position in {@code outArr}.
+     * @param numBytesToRead As described.
      * @throws IOException As described.
      */
-    private void readNts(byte[] outArr, final int startPos, final int numByteToRead)
+    private void readNts(byte[] outArr, final int dstStart, final int numBytesToRead)
             throws IOException {
-        var buffer = ByteBuffer.allocate(numByteToRead);
-        var curPos = startPos;
-        var fc = raf.getChannel();
-        fc.read(buffer);
-        buffer.rewind();
-        for (var i = 0; i < numByteToRead; i++) {
-            var b = buffer.get();
-            var decoded = PRE_COMPUTED[b & 0xFF];
-            // This is the fastest way of setting all bits.
-            System.arraycopy(decoded, 0, outArr, curPos, 4);
-            curPos += 4;
+        var numBytesLeftToRead = numBytesToRead;
+        var buffer = new byte[numBytesLeftToRead];
+        int numBytesReadForThisChunk;
+        var dstPos = dstStart;
+        while (numBytesLeftToRead > CHUNK_SIZE) {
+            numBytesReadForThisChunk = raf.read(buffer, 0, CHUNK_SIZE);
+            if (numBytesReadForThisChunk == -1) {
+                throw new EOFException();
+            }
+            numBytesLeftToRead -= numBytesReadForThisChunk;
+            dstPos += codec.decode(buffer, outArr, 0, dstPos, numBytesReadForThisChunk);
+        }
+        if (numBytesLeftToRead > 0) {
+            numBytesReadForThisChunk = raf.read(buffer, 0, numBytesLeftToRead);
+            if (numBytesReadForThisChunk == -1) {
+                throw new EOFException();
+            }
+            codec.decode(buffer, outArr, 0, dstPos, numBytesReadForThisChunk);
         }
     }
 

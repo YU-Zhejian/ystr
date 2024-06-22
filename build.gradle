@@ -1,5 +1,4 @@
 import com.diffplug.spotless.LineEnding
-
 import java.nio.charset.StandardCharsets
 
 // ---------------------------- Plugins ----------------------------
@@ -125,8 +124,8 @@ tasks.register('antora', NpxTask) {
 		'--fetch',
 		'antora-playbook.yml',
 		'--stacktrace',
-			"--log-format",
-			"pretty"
+		"--log-format",
+		"pretty"
 	]
 	dependsOn antoraCopy
 }

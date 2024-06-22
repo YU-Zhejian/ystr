@@ -1,6 +1,8 @@
 package com.github.yu_zhejian.ystr;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;

@@ -12,7 +12,17 @@ import io.vavr.Tuple3;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
 import org.jetbrains.annotations.NotNull;
-import org.openjdk.jmh.annotations.*;
+import org.openjdk.jmh.annotations.Benchmark;
+import org.openjdk.jmh.annotations.BenchmarkMode;
+import org.openjdk.jmh.annotations.Fork;
+import org.openjdk.jmh.annotations.Measurement;
+import org.openjdk.jmh.annotations.Mode;
+import org.openjdk.jmh.annotations.OutputTimeUnit;
+import org.openjdk.jmh.annotations.Scope;
+import org.openjdk.jmh.annotations.Setup;
+import org.openjdk.jmh.annotations.State;
+import org.openjdk.jmh.annotations.TearDown;
+import org.openjdk.jmh.annotations.Warmup;
 import org.openjdk.jmh.infra.Blackhole;
 import org.openjdk.jmh.results.format.ResultFormatType;
 import org.openjdk.jmh.runner.Runner;
@@ -54,6 +64,13 @@ public class FastaParserBenchmark {
                 .resultFormat(ResultFormatType.JSON)
                 .build();
         new Runner(options).run();
+    }
+
+    @TearDown
+    public void tearDown() throws IOException {
+        htsJdkRef.close();
+        compressedHtsJdkRef.close();
+        twoBitParser.close();
     }
 
     @Setup

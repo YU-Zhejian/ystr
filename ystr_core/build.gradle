@@ -9,16 +9,21 @@ dependencies {
 	// ---------------------------- UNIT TEST ----------------------------
 	testImplementation platform("org.junit:junit-bom:${JUNIT_VER}")
 	testImplementation "org.junit.jupiter:junit-jupiter:${JUNIT_VER}"
+
 	implementation "io.vavr:vavr:${VAVR_VER}"
 	implementation "org.jetbrains:annotations:${JETBRAINS_ANNOTATION_VER}"
 	implementation "it.unimi.dsi:fastutil:${FASTUTIL_VER}"
 	implementation "org.roaringbitmap:RoaringBitmap:${ROARING_BITMAP_VER}"
+
+	runtimeOnly "ch.qos.logback:logback-classic:${LOGBACK_VER}"
+
 	testImplementation "com.github.samtools:htsjdk:${HTSJDK_VER}"
 	testImplementation "org.openjdk.jmh:jmh-core:${JMH_VER}"
-	testAnnotationProcessor "org.openjdk.jmh:jmh-generator-annprocess:${JMH_VER}"
 	testImplementation "org.eclipse.jgit:org.eclipse.jgit:${JGIT_VER}"
-	testRuntimeOnly "ch.qos.logback:logback-classic:${LOGBACK_VER}"
 	testImplementation "org.apache.commons:commons-csv:${COMMONS_CSV_VER}"
+	testImplementation "org.apache.commons:commons-compress:${COMMONS_COMPRESS_VER}"
+
+	testAnnotationProcessor "org.openjdk.jmh:jmh-generator-annprocess:${JMH_VER}"
 }
 
 java{
