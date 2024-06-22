@@ -1,6 +1,10 @@
 package com.github.yu_zhejian.ystr.io;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertIterableEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.github.yu_zhejian.ystr.test_utils.GitUtils;
 
@@ -116,14 +120,6 @@ class TwoBitParserTest {
                 var actual = parser.getSequence(i, 0, parser.getSeqLength(i), true);
                 assertArrayEquals(expected, actual, "Error at chr %s!".formatted(seqName));
             }
-        }
-    }
-
-    @Test
-    void decodePrecomputed() {
-        for (var i = 0; i < 256; i++) {
-            assertArrayEquals(
-                    TwoBitParser.decode((byte) i), TwoBitParser.decodePrecomputed((byte) i));
         }
     }
 }

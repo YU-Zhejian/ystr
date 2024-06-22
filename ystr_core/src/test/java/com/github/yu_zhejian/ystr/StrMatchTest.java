@@ -1,6 +1,9 @@
 package com.github.yu_zhejian.ystr;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertIterableEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.github.yu_zhejian.ystr.rolling.NtHash;
 import com.github.yu_zhejian.ystr.rolling.PolynomialRollingHash;

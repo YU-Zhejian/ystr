@@ -75,7 +75,7 @@ public final class StrUtils {
     }
 
     /**
-     * Ensure skipFirst and end is valid for some open-close interval.
+     * Ensure start and end are valid for some open-close interval.
      *
      * @param start As described.
      * @param end As described.
@@ -92,7 +92,7 @@ public final class StrUtils {
     }
 
     /**
-     * Ensure skipFirst and end is valid for some open-close interval within a string.
+     * Ensure start and end is valid for some open-close interval within a string.
      *
      * @param start As described.
      * @param end As described.
@@ -104,6 +104,19 @@ public final class StrUtils {
             throw new IllegalArgumentException(
                     "end must be less than strLen. Actual: %d vs %d".formatted(end, strLen));
         }
+    }
+
+    /**
+     * Ensure start and length are valid for some open-close interval within a string.
+     *
+     * @param start As described.
+     * @param numBytesToRead As described.
+     * @param strLen As described.
+     */
+    public static void ensureStartLengthValid(
+            final int start, final int numBytesToRead, final int strLen) {
+        int end = start + numBytesToRead;
+        ensureStartEndValid(start, end, strLen);
     }
 
     /**

@@ -20,7 +20,7 @@ public class FastaParserProfiler {
     private List<Tuple3<String, Integer, Integer>> coordinates;
     private Map<String, Integer> seqNameIDMap;
     private static final int NUM_RDN_INTERVALS = 200;
-    private static final int NUM_BENCH_ROUNDS = 5;
+    private static final int NUM_BENCH_ROUNDS = 100;
 
     public static void main(String[] args) throws IOException {
         var fastaParserProfiler = new FastaParserProfiler();
@@ -28,6 +28,11 @@ public class FastaParserProfiler {
         for (var i = 0; i < NUM_BENCH_ROUNDS; i++) {
             fastaParserProfiler.benchTwoBit();
         }
+        fastaParserProfiler.tearDown();
+    }
+
+    public void tearDown() throws IOException {
+        twoBitParser.close();
     }
 
     public void setup() throws IOException {

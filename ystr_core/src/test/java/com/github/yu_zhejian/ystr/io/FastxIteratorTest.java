@@ -1,6 +1,6 @@
 package com.github.yu_zhejian.ystr.io;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 
 import com.github.yu_zhejian.ystr.IterUtils;
 
