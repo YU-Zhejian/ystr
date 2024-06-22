@@ -32,6 +32,7 @@ allprojects {
 	java {
 		toolchain {
 			languageVersion.set(JavaLanguageVersion.of(17))
+			vendor = JvmVendorSpec.AZUL
 		}
 	}
 
@@ -100,6 +101,8 @@ spotless {
 	}
 }
 
+// ---------------------------- Antora Docs Site ----------------------------
+
 node {
 	download = true
 	version = NODE_VER
@@ -150,4 +153,22 @@ tasks.register('serveAntora', NpxTask){
 	command = "http-server"
 	workingDir = file("build/antora-site")
 	dependsOn copyAntoraZip
+}
+
+// ---------------------------- JVM Reporter ----------------------------
+
+tasks.register("info"){
+	var systemProperties = System.getProperties()
+	var osName = systemProperties.get("os.name")
+	var osArch = systemProperties.get("os.arch")
+
+	var osVer = systemProperties.get("os.version")
+	printf("OS: '%s' arch. %s ver. '%s'%n", osName, osArch, osVer)
+	printf(
+			"Java: '%s' ver. '%s' (Spec. ver. %s) by '%s' with JAVAHOME='%s'%n",
+			systemProperties.get("java.runtime.name"),
+			systemProperties.get("java.version"),
+			systemProperties.get("java.specification.version"),
+			 systemProperties.get("java.vendor"),
+			systemProperties.get("java.home"))
 }
