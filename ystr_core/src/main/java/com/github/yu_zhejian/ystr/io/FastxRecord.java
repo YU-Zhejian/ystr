@@ -4,6 +4,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.Serializable;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Objects;
@@ -23,7 +24,8 @@ import java.util.Objects;
  *     records. Please note that the sequence here should comfort {@link StandardCharsets#US_ASCII}
  *     encoding.
  */
-public record FastxRecord(String seqid, byte[] seq, byte @Nullable [] qual) {
+public record FastxRecord(String seqid, byte[] seq, byte @Nullable [] qual)
+        implements Serializable {
 
     /**
      * Default constructor.

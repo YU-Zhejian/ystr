@@ -168,6 +168,6 @@ tasks.register("info"){
 			systemProperties.get("java.runtime.name"),
 			systemProperties.get("java.version"),
 			systemProperties.get("java.specification.version"),
-			 systemProperties.get("java.vendor"),
+			systemProperties.get("java.vendor"),
 			systemProperties.get("java.home"))
 }

@@ -25,7 +25,8 @@ public final class StrMatch {
      * Test whether a substring on {@code haystack} from {@code skipFirst} with length
      * {@code needle.length} matches {@code needle}.
      *
-     * <p>This algorithm is brute-force.
+     * <p>This algorithm is brute-force. It will be extremely slow so do not use it in production
+     * environment except you're searching a needle that is small enough.
      *
      * <ul>
      *   <li>Time complexity: {@code O(n^2)}.
@@ -47,6 +48,16 @@ public final class StrMatch {
         return true;
     }
 
+    /**
+     * Ensure {@code start} and {@code end} is valid on {@code haystack}, and is longer than
+     * {@code needle}.
+     *
+     * @param haystack As described.
+     * @param needle As described.
+     * @param start As described.
+     * @param end As described.
+     * @throws IllegalArgumentException If otherwise.
+     */
     private static void ensureParametersValid(
             final byte @NotNull [] haystack,
             final byte @NotNull [] needle,
@@ -124,24 +135,27 @@ public final class StrMatch {
             return List.of();
         }
         final var needleLen = needle.length;
-        var haystackPos = start;
         final var retl = new IntArrayList();
+
+        var haystackPos = start;
+        int needlePos;
         while (true) {
             // Find first match
             while (haystackPos + needleLen <= end && haystack[haystackPos] != needle[0]) {
                 haystackPos += 1;
             }
+            // Boundary check.
             if (haystackPos + needleLen > end) {
                 break;
             }
-            int needlePos;
             // Start from 2nd position since 1st position is of course match.
-            for (needlePos = 1; needlePos < needleLen; needlePos++) {
-                if (haystack[haystackPos + needlePos] != needle[needlePos]) {
-                    break;
-                }
+            needlePos = 1;
+            while (needlePos < needleLen
+                    && haystack[haystackPos + needlePos] == needle[needlePos]) {
+                needlePos++;
             }
             if (needlePos == needleLen) {
+                // No mismatch occurred.
                 retl.add(haystackPos);
                 haystackPos++;
             } else {
@@ -402,6 +416,115 @@ public final class StrMatch {
             if (state < mask) { // TODO: Why?
                 retl.add(haystackPos - needle.length + 1);
             }
+        }
+        return retl;
+    }
+
+    /**
+     * Generate bad suffix rule for Boyer-Moore matching. Returned is the last occurrence for each
+     * character in needle. The array will be initialized with -1 by default.
+     *
+     * @param needle As described,
+     * @return As described,
+     */
+    public static int @NotNull [] bmBadCharacterRule(final byte @NotNull [] needle) {
+        var occ = new int[ASIZE];
+        Arrays.fill(occ, -1);
+
+        for (var needlePos = 0; needlePos < needle.length; needlePos++) {
+            occ[needle[needlePos] & 0xFF] = needlePos;
+        }
+        return occ;
+    }
+
+    /**
+     * Simplified Boyer-Moore algorithm that uses bad character rule only.
+     *
+     * @param haystack As described.
+     * @param needle As described.
+     * @param start As described.
+     * @param end As described.
+     * @return As described.
+     * @see <a
+     *     href="https://www.cs.emory.edu/~cheung/Courses/253/Syllabus/Text/Matching-Boyer-Moore2.html">Java
+     *     source</a>
+     */
+    public static @NotNull List<Integer> boyerMooreBadCharacterRuleOnly(
+            final byte @NotNull [] haystack,
+            final byte @NotNull [] needle,
+            final int start,
+            final int end) {
+        ensureParametersValid(haystack, needle, start, end);
+        if (haystack.length == 0 || needle.length == 0) {
+            return List.of();
+        }
+        final var retl = new IntArrayList();
+
+        // Establish the bad character rule table.
+        var occ = bmBadCharacterRule(needle);
+        var needleLen = needle.length;
+        var haystackPos = start;
+        int needlePos;
+        while (haystackPos <= (end - needleLen)) {
+            // Start at last position of the needle
+            needlePos = needleLen - 1;
+            while (needlePos >= 0 && haystack[haystackPos + needlePos] == needle[needlePos]) {
+                needlePos--; // Check previous character.
+            }
+            if (needlePos == -1) {
+                // Searched until the start of the needle, indicating a match.
+                retl.add(haystackPos);
+                haystackPos += 1;
+                continue;
+            }
+            haystackPos +=
+                    Integer.max(1, needlePos - occ[haystack[haystackPos + needlePos] & 0xFF]);
+        }
+        return retl;
+    }
+
+    /**
+     * Boyer-Moore-Horspool algorithm uses improved bad character rule, making it to having
+     * comparable performance wile not using good-character rule.
+     *
+     * @param haystack As described.
+     * @param needle As described.
+     * @param start As described.
+     * @param end As described.
+     * @return As described.
+     * @see <a
+     *     href="https://www.cs.emory.edu/~cheung/Courses/253/Syllabus/Text/Matching-Boyer-Moore2.html">Java
+     *     source</a>
+     */
+    public static @NotNull List<Integer> boyerMooreHorspool(
+            final byte @NotNull [] haystack,
+            final byte @NotNull [] needle,
+            final int start,
+            final int end) {
+        ensureParametersValid(haystack, needle, start, end);
+        if (haystack.length == 0 || needle.length == 0) {
+            return List.of();
+        }
+        final var retl = new IntArrayList();
+
+        // Establish the bad character rule table.
+        var occ = bmBadCharacterRule(needle);
+        var needleLen = needle.length;
+        var haystackPos = start;
+        int needlePos;
+        while (haystackPos <= (end - needleLen)) {
+            // Start at last position of neeedle
+            needlePos = needleLen - 1;
+            while (haystack[haystackPos + needlePos] == needle[needlePos]) {
+                needlePos--; // Check "next" (= previous) character
+                if (needlePos < 0) {
+                    retl.add(haystackPos);
+                    break;
+                }
+            }
+            haystackPos = haystackPos
+                    + (needleLen - 1)
+                    - occ[haystack[haystackPos + (needleLen - 1)] & 0xFF];
         }
         return retl;
     }

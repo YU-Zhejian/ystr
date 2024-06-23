@@ -115,3 +115,4 @@ runtime_wrapper.sh
 .idea/rSettings.xml
 *.json
 *Tmp*
+*.hprof

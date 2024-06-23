@@ -122,24 +122,74 @@ public final class StrUtils {
     /**
      * Similar function as is implemented in C standard libraries.
      *
+     * <p>Note, the string is compared unsigned!
+     *
      * <p>Implemented with the help of TONGYI Lingma.
      *
      * @return As described.
      * @param array1 As described.
      * @param array2 As described.
+     * @see <a href="https://en.cppreference.com/w/c/string/byte/strcmp">cppreference</a>
+     * @see <a href="https://www.man7.org/linux/man-pages/man3/strcmp.3.html">Linux Manual Pages</a>
+     * @see <a
+     *     href="https://pubs.opengroup.org/onlinepubs/9699919799/functions/strcmp.html">POSIX</a>
      */
     public static int strcmp(final byte @NotNull [] array1, final byte @NotNull [] array2) {
         final int minLength = Math.min(array1.length, array2.length);
-        for (int i = 0; i < minLength; i++) {
-            if (array1[i] != array2[i]) {
-                // If bytes are not equal, return the difference (this mimics the behavior of
-                // strcmp)
-                return Integer.compare(array1[i] & 0xFF, array2[i] & 0xFF);
+        final int strCmpMinLen = strncmp(array1, array2, minLength);
+        return strCmpMinLen != 0 ? strCmpMinLen : Integer.compare(array1.length, array2.length);
+    }
+
+    /**
+     * Similar function as is implemented in C standard libraries.
+     *
+     * <p>Note, the string is compared unsigned!
+     *
+     * @return As described.
+     * @param array1 As described.
+     * @param array2 As described.
+     * @param n As described.
+     * @see <a href="https://en.cppreference.com/w/c/string/byte/strncmp">cppreference</a>
+     * @see <a href="https://www.man7.org/linux/man-pages/man3/strncmp.3.html">Linux Manual
+     *     Pages</a>
+     * @see <a
+     *     href="https://pubs.opengroup.org/onlinepubs/9699919799/functions/strncmp.html">POSIX</a>
+     * @throws IndexOutOfBoundsException If {@code n} exceeds array boundaries.
+     */
+    public static int strncmp(
+            final byte @NotNull [] array1, final byte @NotNull [] array2, final int n) {
+        return strncmp(array1, array2, 0, 0, n);
+    }
+
+    /**
+     * {@link #strncmp(byte[], byte[], int)} allowing arbitrary starts.
+     *
+     * <p>Note, the string is compared unsigned!
+     *
+     * @return As described.
+     * @param array1 As described.
+     * @param array2 As described.
+     * @param start1 As described.
+     * @param start2 As described.
+     * @param n As described.
+     * @throws IndexOutOfBoundsException If {@code n} exceeds array boundaries.
+     */
+    public static int strncmp(
+            final byte @NotNull [] array1,
+            final byte @NotNull [] array2,
+            final int start1,
+            final int start2,
+            final int n) {
+        byte b1;
+        byte b2;
+        for (int i = 0; i < n; i++) {
+            b1 = array1[start1 + i];
+            b2 = array2[start2 + i];
+            if (b1 != b2) {
+                return Integer.compare(b1 & 0xFF, b2 & 0xFF);
             }
         }
-        // If we didn't find any differences in the common prefix, the shorter array is
-        // lexicographically less
-        return Integer.compare(array1.length, array2.length);
+        return 0;
     }
 
     /**

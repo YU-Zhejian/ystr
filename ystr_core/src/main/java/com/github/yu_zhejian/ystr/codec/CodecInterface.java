@@ -2,6 +2,7 @@ package com.github.yu_zhejian.ystr.codec;
 
 import com.github.yu_zhejian.ystr.StrUtils;
 
+/** Codec representing an encoder-decoder pair with unfixed encoded/decoded length. */
 public interface CodecInterface {
 
     /**
@@ -65,4 +66,24 @@ public interface CodecInterface {
             final int srcStart,
             final int dstStart,
             final int numBytesToRead);
+
+    /**
+     * Convenient version of {@link #encode(byte[], int, int)}.
+     *
+     * @param src As described.
+     * @return As described.
+     */
+    default byte[] encode(final byte[] src) {
+        return encode(src, 0, src.length);
+    }
+
+    /**
+     * Convenient version of {@link #decode(byte[], int, int)}.
+     *
+     * @param src As described.
+     * @return As described.
+     */
+    default byte[] decode(final byte[] src) {
+        return decode(src, 0, src.length);
+    }
 }

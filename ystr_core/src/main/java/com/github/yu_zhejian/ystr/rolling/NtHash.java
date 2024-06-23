@@ -95,23 +95,15 @@ public final class NtHash extends NtHashBase {
      * @return As described.
      */
     private long complSeedTableGet(final byte b) {
-        switch (b) {
-            case 'A', 'a' -> {
-                return SEED_T;
-            }
-            case 'G', 'g' -> {
-                return SEED_C;
-            }
-            case 'C', 'c' -> {
-                return SEED_G;
-            }
-            case 'T', 't', 'U', 'u' -> {
-                return SEED_A;
-            }
-            default -> {
-                return SEED_N;
-            }
-        }
+        byte bc =
+                switch (b) {
+                    case 'A', 'a' -> 'T';
+                    case 'G', 'g' -> 'C';
+                    case 'C', 'c' -> 'G';
+                    case 'T', 't', 'U', 'u' -> 'A';
+                    default -> 'N';
+                };
+        return seedTableGet(bc);
     }
 
     /**
@@ -121,22 +113,12 @@ public final class NtHash extends NtHashBase {
      * @return As described.
      */
     private long seedTableGet(final byte b) {
-        switch (b) {
-            case 'A', 'a' -> {
-                return SEED_A;
-            }
-            case 'G', 'g' -> {
-                return SEED_G;
-            }
-            case 'C', 'c' -> {
-                return SEED_C;
-            }
-            case 'T', 't', 'U', 'u' -> {
-                return SEED_T;
-            }
-            default -> {
-                return SEED_N;
-            }
-        }
+        return switch (b) {
+            case 'A', 'a' -> SEED_A;
+            case 'G', 'g' -> SEED_G;
+            case 'C', 'c' -> SEED_C;
+            case 'T', 't', 'U', 'u' -> SEED_T;
+            default -> SEED_N;
+        };
     }
 }

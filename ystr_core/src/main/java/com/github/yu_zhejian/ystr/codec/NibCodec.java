@@ -6,38 +6,25 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Encode data into UCSC 2bit format.
+ * Encode data into UCSC nib format.
  *
- * <p><b>Note</b
+ * <p>Note, this implementation deals only with sequences. It would not generate 2bit headers or
+ * masks. This implementation will only deal with {@code AGCTNagctn} nucleotides.
  *
- * <ol>
- *   <li>Note, this implementation deals only with sequences. It would not generate 2bit headers or
- *       masks. This implementation will only deal with {@code AGCTUagctu} nucleotides.
- *   <li>Note, all unknown bases will be converted to {@code T}.
- *   <li>Note, {@code T} will be padded if the src is not long enough. Always remember how long the
- *       src is before encoding!
- * </ol>
+ * <p>Note, all unknown bases will be converted to {@code N}.
  *
  * <p><b>References</b>
  *
  * <ol>
- *   <li><a href="https://genome.ucsc.edu/FAQ/FAQformat#format7">Offial description.</a>
- *   <li><a href="http://jcomeau.freeshell.org/www/genome/2bitformat.html">Some external
- *       introduction to the 2bit format.</a>
- *   <li><a href="https://github.com/weng-lab/TwoBit">An alternate implementation of 2bit
- *       reader/writer.</a>
- *   <li><a
- *       href="http://genome-source.soe.ucsc.edu/gitlist/kent.git/raw/master/src/inc/twoBit.h">Official
- *       C header file.</a>
+ *   <li><a href="https://genome.ucsc.edu/FAQ/FAQformat#format8">Official description</a>
  * </ol>
  */
-public final class TwoBitCodec implements CodecInterface {
-    /**
-     * the DNA packed to two bits per base, represented as so: T - 00, C - 01, A - 10, G - 11. The
-     * first base is in the most significant 2-bit byte; the last base is in the least significant 2
-     * bits. For example, the sequence TCAG is represented as 00011011.
-     */
-    private static final byte[] BYTE_TO_BASE = new byte[] {'T', 'C', 'A', 'G'};
+public final class NibCodec implements CodecInterface {
+    /** Numerical representation of the bases. */
+    private static final byte[] BYTE_TO_BASE = new byte[] {'T', 'C', 'A', 'G', 'N', 'N', 'N', 'N'};
+    /** Mask version of {@link #BYTE_TO_BASE} */
+    private static final byte[] BYTE_TO_BASE_MASKED =
+            new byte[] {'t', 'c', 'a', 'g', 'n', 'n', 'n', 'n'};
 
     /** Precomputed decode table, which should be mapping between a byte to 4 bases. */
     private static final byte[][] BYTE_TO_BASE_PRE_COMPUTED;
@@ -45,32 +32,33 @@ public final class TwoBitCodec implements CodecInterface {
     /** Precomputed encode table, which should be mapping between a base to a byte. */
     private static final int[] BASE_TO_BYTE_PRE_COMPUTED;
 
-    /**
-     * Decode one byte to four bases.
-     *
-     * @param encodedByte As described.
-     * @return As described.
-     */
     @Contract(value = "_ -> new", pure = true)
-    public static byte @NotNull [] decodeToFourBases(int encodedByte) {
+    public static byte @NotNull [] decodeToTwoBases(int encodedByte) {
+        var base1 = (encodedByte >> 4) & 0b1111;
+        var base2 = encodedByte & 0b1111;
         return new byte[] {
-            BYTE_TO_BASE[encodedByte >> 6 & 0b11],
-            BYTE_TO_BASE[encodedByte >> 4 & 0b11],
-            BYTE_TO_BASE[encodedByte >> 2 & 0b11],
-            BYTE_TO_BASE[encodedByte & 0b11]
+            ((base1 & 0b1000) == 0b1000 ? BYTE_TO_BASE_MASKED : BYTE_TO_BASE)[base1 & 0b0111],
+            ((base2 & 0b1000) == 0b1000 ? BYTE_TO_BASE_MASKED : BYTE_TO_BASE)[base2 & 0b0111]
         };
     }
 
     static {
-        BYTE_TO_BASE_PRE_COMPUTED = new byte[256][4];
+        BYTE_TO_BASE_PRE_COMPUTED = new byte[256][2];
         BASE_TO_BYTE_PRE_COMPUTED = new int[256];
         for (int i = 0; i <= 0b11_11_11_11; i++) {
-            BYTE_TO_BASE_PRE_COMPUTED[i] = decodeToFourBases(i);
+            BYTE_TO_BASE_PRE_COMPUTED[i] = decodeToTwoBases(i);
             BASE_TO_BYTE_PRE_COMPUTED[i] = switch (i) {
-                case 'A', 'a' -> 0b10;
-                case 'C', 'c' -> 0b01;
-                case 'G', 'g' -> 0b11;
-                default -> 0b00;
+                case 'T' -> 0x0000;
+                case 'C' -> 0x0001;
+                case 'A' -> 0x0010;
+                case 'G' -> 0x0011;
+                    // N becomes default
+                case 't' -> 0x1000;
+                case 'c' -> 0x1001;
+                case 'a' -> 0x1010;
+                case 'g' -> 0x1011;
+                case 'n' -> 0x1100;
+                default -> 0x0100;
             };
         }
     }
@@ -78,10 +66,10 @@ public final class TwoBitCodec implements CodecInterface {
     @Override
     public byte @NotNull [] encode(byte @NotNull [] src, int srcStart, int numBytesToRead) {
         StrUtils.ensureStartLengthValid(srcStart, numBytesToRead, src.length);
-        final var numFullBytes = (numBytesToRead >> 2);
-        // Number of bytes left. Should be [0, 4)
-        final var numBytesRemaining = numBytesToRead - (numFullBytes << 2);
-        final var outLen = numFullBytes + (numBytesRemaining == 0 ? 0 : 1);
+        final var numFullBytes = (numBytesToRead >> 1);
+        // Number of bytes left. Should be 0 or 1
+        final var numBytesRemaining = numBytesToRead - (numFullBytes << 1);
+        final var outLen = numFullBytes + numBytesRemaining;
         final var dst = new byte[outLen];
         encodeImpl(src, dst, srcStart, 0, numFullBytes, numBytesRemaining);
         return dst;
@@ -90,7 +78,7 @@ public final class TwoBitCodec implements CodecInterface {
     @Override
     public byte @NotNull [] decode(byte @NotNull [] src, int srcStart, int numBytesToRead) {
         StrUtils.ensureStartLengthValid(srcStart, numBytesToRead, src.length);
-        final var outLen = numBytesToRead << 2;
+        final var outLen = numBytesToRead << 1;
         final var dst = new byte[outLen];
         decodeImpl(src, dst, srcStart, 0, numBytesToRead);
         return dst;
@@ -104,9 +92,9 @@ public final class TwoBitCodec implements CodecInterface {
             int dstStart,
             int numBytesToRead) {
         StrUtils.ensureStartLengthValid(srcStart, numBytesToRead, src.length);
-        final var numFullBytes = (numBytesToRead >> 2);
+        final var numFullBytes = (numBytesToRead >> 1);
         // Number of bytes left. Should be [0, 4)
-        final var numBytesRemaining = numBytesToRead - (numFullBytes << 2);
+        final var numBytesRemaining = numBytesToRead - (numFullBytes << 1);
         return encodeImpl(src, dst, srcStart, dstStart, numFullBytes, numBytesRemaining);
     }
 
@@ -143,21 +131,12 @@ public final class TwoBitCodec implements CodecInterface {
         var srcPos = srcStart;
         var dstPos = dstStart;
         for (var i = 0; i < numFullBytes; i++) {
-            dst[dstPos++] = (byte) ((BASE_TO_BYTE_PRE_COMPUTED[src[srcPos++] & 0xFF] << 6)
-                    | (BASE_TO_BYTE_PRE_COMPUTED[src[srcPos++] & 0xFF] << 4)
-                    | (BASE_TO_BYTE_PRE_COMPUTED[src[srcPos++] & 0xFF] << 2)
-                    | BASE_TO_BYTE_PRE_COMPUTED[src[srcPos++] & 0xFF]);
+            dst[dstPos++] = (byte) ((BASE_TO_BYTE_PRE_COMPUTED[src[srcPos++] & 0xFF] << 4)
+                    | (BASE_TO_BYTE_PRE_COMPUTED[src[srcPos++] & 0xFF]));
         }
         if (numBytesRemaining != 0) {
             retl += 1;
-            final var numBlanksRemaining = 4 - numBytesRemaining;
-            byte lastb = 0;
-            for (var i = 0; i < numBytesRemaining; i++) {
-                lastb = (byte) (lastb << 2 | BASE_TO_BYTE_PRE_COMPUTED[src[srcPos++] & 0xFF]);
-            }
-            for (var i = 0; i < numBlanksRemaining; i++) {
-                lastb = (byte) (lastb << 2);
-            }
+            byte lastb = (byte) (BASE_TO_BYTE_PRE_COMPUTED[src[srcPos] & 0xFF] << 4);
             dst[dstPos] = lastb;
         }
         return retl;
@@ -180,13 +159,13 @@ public final class TwoBitCodec implements CodecInterface {
             final int numBytesToRead) {
         var srcPos = srcStart;
         var dstPos = dstStart;
-        final var retl = numBytesToRead << 2;
+        final var retl = numBytesToRead << 1;
         byte[] decoded;
         for (var i = 0; i < numBytesToRead; i++) {
             decoded = BYTE_TO_BASE_PRE_COMPUTED[src[srcPos++] & 0xFF];
             // This is the fastest way of setting all bits.
-            System.arraycopy(decoded, 0, dst, dstPos, 4);
-            dstPos += 4;
+            System.arraycopy(decoded, 0, dst, dstPos, 2);
+            dstPos += 2;
         }
         return retl;
     }

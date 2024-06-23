@@ -4,7 +4,10 @@ import com.github.yu_zhejian.ystr.StrUtils;
 
 import org.jetbrains.annotations.NotNull;
 
-/** The codec that does nothing. */
+/**
+ * The codec that does nothing. Bith encoder and decoder will use {@link System#arraycopy(Object,
+ * int, Object, int, int)} to copy desired number of bytes from {@code src} to {@code dst}.
+ */
 public class DumbCodec implements CodecInterface {
 
     @Override

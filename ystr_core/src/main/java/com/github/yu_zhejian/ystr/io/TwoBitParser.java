@@ -14,24 +14,18 @@ import org.roaringbitmap.RoaringBitmap;
 import java.io.EOFException;
 import java.io.File;
 import java.io.IOException;
-import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
-import java.nio.channels.FileChannel;
 import java.nio.charset.StandardCharsets;
 
 /**
  * A UCSC 2bit file parser supporting version 1 of the 2bit format.
  *
  * <p>TODO: Get a big endian testing file somewhere.
+ *
+ * @see TwoBitCodec
  */
-public final class TwoBitParser implements AutoCloseable {
-    /** The random accessing engine. */
-    private final RandomAccessFile raf;
-    /** Channel of {@link #raf} */
-    private final FileChannel fc;
-    /** Whether the file is created under Little Endian byte order. */
-    private final boolean byteOrderIsLittleEndian;
+public final class TwoBitParser extends BaseRandomBinaryFileParser {
     /** Should be 0x0. Readers should abort if they see a version number higher than 0 */
     public static final long VERSION = 0x0;
     /** Version for 2bit files that supports >= 4GB assembly. */
@@ -76,13 +70,6 @@ public final class TwoBitParser implements AutoCloseable {
     private final RoaringBitmap[] maskBlocks;
     /** The codec * */
     private final TwoBitCodec codec = new TwoBitCodec();
-    /** 4k alignment */
-    private static final int CHUNK_SIZE = 4096;
-
-    /** Buffer used in {@link #readFourBytes()}. */
-    private final ByteBuffer intBuffer = ByteBuffer.allocateDirect(4);
-    /** Buffer used in {@link #readEightBytes()}. */
-    private final ByteBuffer longBuffer = ByteBuffer.allocateDirect(8);
 
     /**
      * Default constructor.
@@ -92,8 +79,7 @@ public final class TwoBitParser implements AutoCloseable {
      * @throws IllegalArgumentException If file is of incorrect format.
      */
     public TwoBitParser(File f) throws IOException {
-        raf = new RandomAccessFile(f, "r");
-        fc = raf.getChannel();
+        super(f);
         var signatureBuffer = ByteBuffer.allocateDirect(4);
         signatureBuffer.order(ByteOrder.BIG_ENDIAN);
         fc.read(signatureBuffer);
@@ -101,13 +87,9 @@ public final class TwoBitParser implements AutoCloseable {
 
         var signature = signatureBuffer.getInt();
         if (signature == SIGNATURE_BIG_ENDIAN) {
-            byteOrderIsLittleEndian = false;
-            intBuffer.order(ByteOrder.BIG_ENDIAN);
-            longBuffer.order(ByteOrder.BIG_ENDIAN);
+            setByteOrder(ByteOrder.BIG_ENDIAN);
         } else if (signature == SIGNATURE_LITTLE_ENDIAN) {
-            byteOrderIsLittleEndian = true;
-            intBuffer.order(ByteOrder.LITTLE_ENDIAN);
-            longBuffer.order(ByteOrder.LITTLE_ENDIAN);
+            setByteOrder(ByteOrder.LITTLE_ENDIAN);
         } else {
             throw new IllegalArgumentException(String.format(
                     "Wrong start signature in 2BIT format. Required: 0x1A412743 (Big Endian)/0x4327411A (Little Endian). Actual: 0x%s",
@@ -137,7 +119,7 @@ public final class TwoBitParser implements AutoCloseable {
         nBlocks = new RoaringBitmap[sequenceCount];
         maskBlocks = new RoaringBitmap[sequenceCount];
         for (var seqID = 0; seqID < sequenceCount; seqID++) {
-            var nameSize = raf.readByte();
+            byte nameSize = raf.readByte();
             if (nameSize < 0) {
                 throw new IllegalArgumentException(String.format(
                         "Wrong nameSize in 2BIT format. Required: 0 <= nameSize <= %d. Actual: %d",
@@ -194,39 +176,12 @@ public final class TwoBitParser implements AutoCloseable {
         raf.seek(offsets[seqID]);
         // Interesting. It seems the latest 2bit format also lacks support of one chromosome >=
         // 4GiB.
-        // TODO: Check this.
         dnaSizes[seqID] = (int) readFourBytes();
         nBlocks[seqID] = populate();
         maskBlocks[seqID] = populate();
 
         // which is 4 * maskBlockCount * 2 + reserved
         seqOffsets[seqID] = raf.getFilePointer() + 4;
-    }
-
-    /**
-     * Read int64 in desired byte order.
-     *
-     * @return As described.
-     * @throws IOException As described.
-     */
-    private long readEightBytes() throws IOException {
-        longBuffer.clear();
-        fc.read(longBuffer);
-        longBuffer.rewind();
-        return longBuffer.getInt();
-    }
-
-    /**
-     * Read int32 in desired byte order.
-     *
-     * @return As described.
-     * @throws IOException As described.
-     */
-    private long readFourBytes() throws IOException {
-        intBuffer.clear();
-        fc.read(intBuffer);
-        intBuffer.rewind();
-        return intBuffer.getInt();
     }
 
     /**
@@ -366,11 +321,6 @@ public final class TwoBitParser implements AutoCloseable {
         return retl;
     }
 
-    @Override
-    public void close() throws IOException {
-        raf.close();
-    }
-
     /**
      * As described.
      *
@@ -378,15 +328,6 @@ public final class TwoBitParser implements AutoCloseable {
      */
     public long size() {
         return sequenceCount;
-    }
-
-    /**
-     * As described.
-     *
-     * @return As described.
-     */
-    public boolean isLittleEndian() {
-        return byteOrderIsLittleEndian;
     }
 
     /**
