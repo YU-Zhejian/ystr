@@ -6,6 +6,9 @@ import java.util.NoSuchElementException;
 
 /** A base implementation for all rolling entropy algorithms. */
 abstract class RollingEntropyBase extends RollingBase<Double> implements RollingEntropyInterface {
+
+    /** By setting type into unboxed form could increase speed. */
+    protected double currentValueUnboxed;
     /**
      * As described.
      *
@@ -16,9 +19,6 @@ abstract class RollingEntropyBase extends RollingBase<Double> implements Rolling
     protected RollingEntropyBase(byte @NotNull [] string, int k, int skipFirst) {
         super(string, k, skipFirst);
     }
-
-    /** By setting type into unboxed form could increase speed. */
-    protected double currentValueUnboxed;
 
     @Override
     public double nextDouble() {

@@ -10,6 +10,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -22,6 +23,8 @@ import java.util.NoSuchElementException;
 public final class FastxIterator implements Iterator<FastxRecord>, AutoCloseable {
     /** Whitespace characters. */
     private static final String SPLIT_REGEX = "\\s+";
+    private static final char FASTA_RECORD_NAME_START = '>';
+    private static final char FASTQ_RECORD_NAME_START = '@;;
     /** As described. */
     private final BufferedReader reader;
     /** The current usable record. */
@@ -29,7 +32,7 @@ public final class FastxIterator implements Iterator<FastxRecord>, AutoCloseable
     /** Staged sequence ID for next possible record. */
     private String currentSeqID;
     /** Whether the underlying stream is FASTQ. */
-    private boolean isFASTQ = false;
+    private boolean isFASTQ; // Default to false
     /** As described. */
     private final boolean trimSeqID;
 
@@ -59,10 +62,10 @@ public final class FastxIterator implements Iterator<FastxRecord>, AutoCloseable
             if (line.isEmpty()) {
                 continue;
             }
-            if (line.charAt(0) == '>') {
+            if (line.charAt(0) == FASTA_RECORD_NAME_START) {
                 currentSeqID = performTrimSeqID(line);
                 isFASTQ = false;
-            } else if (line.charAt(0) == '@') {
+            } else if (line.charAt(0) == FASTQ_RECORD_NAME_START) {
                 currentSeqID = performTrimSeqID(line);
                 isFASTQ = true;
             }
@@ -106,8 +109,8 @@ public final class FastxIterator implements Iterator<FastxRecord>, AutoCloseable
      * @throws IOException As described.
      */
     @Contract("_ -> new")
-    public static @NotNull FastxIterator read(File file) throws IOException {
-        return new FastxIterator(new FileReader(file, StandardCharsets.UTF_8), true);
+    public static @NotNull FastxIterator read(@NotNull File file) throws IOException {
+        return read(file.toPath());
     }
 
     /**
@@ -119,7 +122,7 @@ public final class FastxIterator implements Iterator<FastxRecord>, AutoCloseable
      */
     @Contract("_ -> new")
     public static @NotNull FastxIterator read(@NotNull Path path) throws IOException {
-        return read(path.toFile());
+        return new FastxIterator(Files.newBufferedReader(path, StandardCharsets.UTF_8), true);
     }
 
     /**
@@ -154,7 +157,7 @@ public final class FastxIterator implements Iterator<FastxRecord>, AutoCloseable
         while ((line = reader.readLine()) != null) {
             if (!(line.isEmpty() || (isFASTQ && line.charAt(0) == '+'))) {
                 line = line.trim();
-                if ((!isFASTQ && line.charAt(0) == '>') || (isFASTQ && line.charAt(0) == '@')) {
+                if ((!isFASTQ && line.charAt(0) == FASTA_RECORD_NAME_START) || (isFASTQ && line.charAt(0) == FASTQ_RECORD_NAME_START)) {
                     // Beginning of next record
                     nextSeqID = performTrimSeqID(line);
                     break;
@@ -180,7 +183,9 @@ public final class FastxIterator implements Iterator<FastxRecord>, AutoCloseable
 
     @Override
     public @NotNull FastxRecord next() {
-        if (currentRecord == null) throw new NoSuchElementException();
+        if (currentRecord == null) {
+            throw new NoSuchElementException();
+        }
         var retv = currentRecord;
         try {
             nextRecord(); // Prepare for the next record

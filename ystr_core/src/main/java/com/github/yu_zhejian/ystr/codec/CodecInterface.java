@@ -13,7 +13,7 @@ public interface CodecInterface {
      * @param numBytesToRead As described.
      * @throws IllegalArgumentException See {@link StrUtils#ensureStartLengthValid(int, int, int)}.
      */
-    byte[] encode(final byte[] src, final int srcStart, final int numBytesToRead);
+    byte[] encode(byte[] src, int srcStart, int numBytesToRead);
 
     /**
      * Decode one array
@@ -25,7 +25,7 @@ public interface CodecInterface {
      * @throws IllegalArgumentException As described.
      * @see #encode(byte[], int, int)
      */
-    byte[] decode(final byte[] src, final int srcStart, final int numBytesToRead);
+    byte[] decode(byte[] src, int srcStart, int numBytesToRead);
 
     /**
      * Encode from one array to another.
@@ -41,11 +41,11 @@ public interface CodecInterface {
      * @throws IllegalArgumentException See {@link StrUtils#ensureStartLengthValid(int, int, int)}.
      */
     int encode(
-            final byte[] src,
-            final byte[] dst,
-            final int srcStart,
-            final int dstStart,
-            final int numBytesToRead);
+            byte[] src,
+            byte[] dst,
+            int srcStart,
+            int dstStart,
+            int numBytesToRead);
 
     /**
      * Decode from one array to another.
@@ -61,11 +61,11 @@ public interface CodecInterface {
      * @see #encode(byte[], byte[], int, int, int)
      */
     int decode(
-            final byte[] src,
-            final byte[] dst,
-            final int srcStart,
-            final int dstStart,
-            final int numBytesToRead);
+            byte[] src,
+            byte[] dst,
+            int srcStart,
+            int dstStart,
+            int numBytesToRead);
 
     /**
      * Convenient version of {@link #encode(byte[], int, int)}.
@@ -73,7 +73,7 @@ public interface CodecInterface {
      * @param src As described.
      * @return As described.
      */
-    default byte[] encode(final byte[] src) {
+    default byte[] encode(byte[] src) {
         return encode(src, 0, src.length);
     }
 
@@ -83,7 +83,7 @@ public interface CodecInterface {
      * @param src As described.
      * @return As described.
      */
-    default byte[] decode(final byte[] src) {
+    default byte[] decode(byte[] src) {
         return decode(src, 0, src.length);
     }
 }

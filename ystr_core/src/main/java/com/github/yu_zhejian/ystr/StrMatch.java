@@ -20,6 +20,7 @@ import java.util.List;
 public final class StrMatch {
 
     public static final int ASIZE = 256;
+    public static final int LONG_SIZE = 64;
 
     /**
      * Test whether a substring on {@code haystack} from {@code skipFirst} with length
@@ -356,10 +357,10 @@ public final class StrMatch {
                 retl.add(haystackPos - needlePos);
                 needlePos = lpsNeedle[needlePos - 1];
             } else if (haystackPos < end && needle[needlePos] != haystack[haystackPos]) {
-                if (needlePos != 0) {
-                    needlePos = lpsNeedle[needlePos - 1];
-                } else {
+                if (needlePos == 0) {
                     haystackPos += 1;
+                } else {
+                    needlePos = lpsNeedle[needlePos - 1];
                 }
             }
         }
@@ -384,7 +385,7 @@ public final class StrMatch {
             final int start,
             final int end) {
         ensureParametersValid(haystack, needle, start, end);
-        if (needle.length > 64) {
+        if (needle.length > LONG_SIZE) {
             throw new IllegalArgumentException(
                     "Needle length should not exceed 64! Actual: %d".formatted(needle.length));
         }

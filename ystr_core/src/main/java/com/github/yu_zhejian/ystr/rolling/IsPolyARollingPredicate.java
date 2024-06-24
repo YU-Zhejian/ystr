@@ -51,6 +51,13 @@ public final class IsPolyARollingPredicate extends RollingPredicateBase {
     private int numA;
 
     /**
+     * Minumun number of {@link #numA} to consider a Poly(A). Should not be less than 1.
+     *
+     * <p>Default to {@code 0.75 * k}.
+     */
+    private final int numAThreshold;
+
+    /**
      * See {@link #numAThreshold}.
      *
      * @return As described.
@@ -58,13 +65,6 @@ public final class IsPolyARollingPredicate extends RollingPredicateBase {
     public int getNumAThreshold() {
         return numAThreshold;
     }
-
-    /**
-     * Minumun number of {@link #numA} to consider a Poly(A). Should not be less than 1.
-     *
-     * <p>Default to {@code 0.75 * k}.
-     */
-    private final int numAThreshold;
 
     /**
      * As described.

@@ -160,6 +160,7 @@ public abstract class NtHashBase extends RollingHashBase {
         return fwdHash;
     }
 
+    @SuppressWarnings("PMD.LooseCoupling")
     @Contract(value = "_, _ -> new", pure = true)
     public static @NotNull Tuple2<LongArrayList, LongArrayList> getAllBothHash(
             @NotNull NtHashBase ntHash, int estimatedLength) {

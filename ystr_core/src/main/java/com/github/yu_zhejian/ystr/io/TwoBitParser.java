@@ -118,6 +118,7 @@ public final class TwoBitParser extends BaseRandomBinaryFileParser {
         dnaSizes = new int[sequenceCount];
         nBlocks = new RoaringBitmap[sequenceCount];
         maskBlocks = new RoaringBitmap[sequenceCount];
+        byte[] name;
         for (var seqID = 0; seqID < sequenceCount; seqID++) {
             byte nameSize = raf.readByte();
             if (nameSize < 0) {
@@ -125,7 +126,7 @@ public final class TwoBitParser extends BaseRandomBinaryFileParser {
                         "Wrong nameSize in 2BIT format. Required: 0 <= nameSize <= %d. Actual: %d",
                         MAX_SEQ_NAME_LENGTH, nameSize));
             }
-            var name = new byte[nameSize];
+            name = new byte[nameSize];
             for (var i = 0; i < nameSize; i++) {
                 name[i] = raf.readByte();
             }
@@ -345,6 +346,7 @@ public final class TwoBitParser extends BaseRandomBinaryFileParser {
      *
      * @return As described.
      */
+    @SuppressWarnings("PMD.LooseCoupling")
     public @NotNull ObjectArrayList<String> getSeqNames() {
         var retl = new ObjectArrayList<String>(this.sequenceCount);
         retl.addElements(0, seqNames);
@@ -356,6 +358,7 @@ public final class TwoBitParser extends BaseRandomBinaryFileParser {
      *
      * @return As described.
      */
+    @SuppressWarnings("PMD.LooseCoupling")
     public @NotNull IntArrayList getSeqLengths() throws IOException {
         var retl = new IntArrayList(this.sequenceCount);
         for (var seqID = 0; seqID < sequenceCount; seqID++) {
@@ -379,6 +382,7 @@ public final class TwoBitParser extends BaseRandomBinaryFileParser {
      *
      * @return As described.
      */
+    @SuppressWarnings("PMD.LooseCoupling")
     public @NotNull Object2IntOpenHashMap<String> getSeqNameLengthMap() throws IOException {
         var retl = new Object2IntOpenHashMap<String>(this.sequenceCount);
         for (var seqID = 0; seqID < sequenceCount; seqID++) {

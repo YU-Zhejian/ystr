@@ -137,7 +137,7 @@ public final class StrUtils {
     public static int strcmp(final byte @NotNull [] array1, final byte @NotNull [] array2) {
         final int minLength = Math.min(array1.length, array2.length);
         final int strCmpMinLen = strncmp(array1, array2, minLength);
-        return strCmpMinLen != 0 ? strCmpMinLen : Integer.compare(array1.length, array2.length);
+        return strCmpMinLen == 0? Integer.compare(array1.length, array2.length) : strCmpMinLen;
     }
 
     /**

@@ -32,6 +32,13 @@ public final class NibCodec implements CodecInterface {
     /** Precomputed encode table, which should be mapping between a base to a byte. */
     private static final int[] BASE_TO_BYTE_PRE_COMPUTED;
 
+    /**
+     * Default constructor.
+     */
+    public NibCodec(){
+        // Does nothing!
+    }
+
     @Contract(value = "_ -> new", pure = true)
     public static byte @NotNull [] decodeToTwoBases(int encodedByte) {
         var base1 = (encodedByte >> 4) & 0b1111;

@@ -112,9 +112,9 @@ public final class MinimizerRingBuffer {
             if (i == curPos) {
                 sb.append('(');
             }
-            sb.append(contents[i] == MAX_ULONG ? "M" : Long.toHexString(contents[i]));
-            sb.append("/");
-            sb.append(pos[i]);
+            sb.append(contents[i] == MAX_ULONG ? "M" : Long.toHexString(contents[i]))
+                    .append('/')
+                    .append(pos[i]);
             if (i == curPos) {
                 sb.append(')');
             }

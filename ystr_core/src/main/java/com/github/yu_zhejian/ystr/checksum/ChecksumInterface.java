@@ -77,18 +77,18 @@ public interface ChecksumInterface {
      * @see java.util.zip.Checksum#update(ByteBuffer).
      */
     default void update(@NotNull ByteBuffer buffer) {
-        int pos = buffer.position();
-        int limit = buffer.limit();
-        int rem = limit - pos;
+        final int pos = buffer.position();
+        final int limit = buffer.limit();
+        final int rem = limit - pos;
         if (rem <= 0) {
             return;
         }
         if (buffer.hasArray()) {
             update(buffer.array(), pos + buffer.arrayOffset(), rem);
         } else {
-            byte[] b = new byte[Math.min(buffer.remaining(), 4096)];
+            final byte[] b = new byte[Math.min(buffer.remaining(), 4096)];
             while (buffer.hasRemaining()) {
-                int length = Integer.min(buffer.remaining(), b.length);
+                final int length = Integer.min(buffer.remaining(), b.length);
                 buffer.get(b, 0, length);
                 update(b, 0, length);
             }

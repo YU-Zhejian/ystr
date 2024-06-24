@@ -94,10 +94,10 @@ public final class NtShannonEntropy extends RollingEntropyBase {
         if (numN.getVal() != 0) {
             return 0.0;
         }
-        var aPi = numA.getVal() == 0 ? 1 : 1.0 * numA.getVal() / k;
-        var gPi = numG.getVal() == 0 ? 1 : 1.0 * numG.getVal() / k;
-        var cPi = numC.getVal() == 0 ? 1 : 1.0 * numC.getVal() / k;
-        var tPi = numT.getVal() == 0 ? 1 : 1.0 * numT.getVal() / k;
+        final var aPi = numA.getVal() == 0 ? 1 : 1.0 * numA.getVal() / k;
+        final var gPi = numG.getVal() == 0 ? 1 : 1.0 * numG.getVal() / k;
+        final var cPi = numC.getVal() == 0 ? 1 : 1.0 * numC.getVal() / k;
+        final var tPi = numT.getVal() == 0 ? 1 : 1.0 * numT.getVal() / k;
         return -(aPi * Math.log(aPi)
                 + gPi * Math.log(gPi)
                 + cPi * Math.log(cPi)

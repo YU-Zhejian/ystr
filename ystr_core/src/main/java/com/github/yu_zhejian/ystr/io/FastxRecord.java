@@ -46,8 +46,12 @@ public record FastxRecord(String seqid, byte[] seq, byte @Nullable [] qual)
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof FastxRecord that)) return false;
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof FastxRecord that)) {
+            return false;
+        }
         return Objects.deepEquals(seq, that.seq)
                 && Objects.deepEquals(qual, that.qual)
                 && Objects.equals(seqid, that.seqid);
@@ -87,7 +91,7 @@ public record FastxRecord(String seqid, byte[] seq, byte @Nullable [] qual)
      * @return A new FASTQ record.
      */
     public @NotNull FastxRecord toFastq(byte qual) {
-        var qualArr = new byte[seq.length];
+        final var qualArr = new byte[seq.length];
         Arrays.fill(qualArr, qual);
         return new FastxRecord(seqid, seq, qualArr);
     }

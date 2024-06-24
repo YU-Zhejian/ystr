@@ -8,10 +8,11 @@ import java.nio.ByteBuffer;
 
 public final class LongEncoder {
 
+    @SuppressWarnings("PMD.LooseCoupling")
     public static @NotNull ByteArrayList encodeLong(long @NotNull ... l) {
-        var bb = ByteBuffer.allocate(Long.BYTES * l.length);
+        final var bb = ByteBuffer.allocate(Long.BYTES * l.length);
         bb.clear();
-        for (var i : l) {
+        for (final var i : l) {
             bb.putLong(i);
         }
         bb.rewind();

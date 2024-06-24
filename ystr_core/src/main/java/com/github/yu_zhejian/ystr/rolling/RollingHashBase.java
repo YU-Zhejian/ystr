@@ -6,6 +6,10 @@ import java.util.NoSuchElementException;
 
 /** A base implementation for all rolling hash algorithms. */
 abstract class RollingHashBase extends RollingBase<Long> implements RollingHashInterface {
+
+    /** By setting type into unboxed form could increase speed. */
+    protected long currentValueUnboxed;
+
     /**
      * As described.
      *
@@ -16,9 +20,6 @@ abstract class RollingHashBase extends RollingBase<Long> implements RollingHashI
     protected RollingHashBase(byte @NotNull [] string, int k, int skipFirst) {
         super(string, k, skipFirst);
     }
-
-    /** By setting type into unboxed form could increase speed. */
-    protected long currentValueUnboxed;
 
     @Override
     public long nextLong() {

@@ -10,9 +10,16 @@ import org.jetbrains.annotations.NotNull;
  */
 public class DumbCodec implements CodecInterface {
 
+    /**
+     * Default constructor.
+     */
+    public DumbCodec(){
+        // Does nothing!
+    }
+
     @Override
     public byte[] encode(byte[] src, int srcStart, int numBytesToRead) {
-        var retb = new byte[numBytesToRead];
+        final var retb = new byte[numBytesToRead];
         System.arraycopy(src, srcStart, retb, 0, numBytesToRead);
         return retb;
     }

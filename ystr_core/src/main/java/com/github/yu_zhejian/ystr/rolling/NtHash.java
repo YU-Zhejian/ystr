@@ -95,7 +95,7 @@ public final class NtHash extends NtHashBase {
      * @return As described.
      */
     private long complSeedTableGet(final byte b) {
-        byte bc =
+        final byte bc =
                 switch (b) {
                     case 'A', 'a' -> 'T';
                     case 'G', 'g' -> 'C';

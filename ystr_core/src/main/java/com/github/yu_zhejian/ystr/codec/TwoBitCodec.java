@@ -46,6 +46,13 @@ public final class TwoBitCodec implements CodecInterface {
     private static final int[] BASE_TO_BYTE_PRE_COMPUTED;
 
     /**
+     * Default constructor.
+     */
+    public TwoBitCodec(){
+        // Does nothing!
+    }
+
+    /**
      * Decode one byte to four bases.
      *
      * @param encodedByte As described.

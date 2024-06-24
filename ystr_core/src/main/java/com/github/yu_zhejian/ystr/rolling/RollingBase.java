@@ -57,6 +57,7 @@ abstract class RollingBase<T> implements Iterator<T> {
      * @param k As described.
      * @param skipFirst As described.
      */
+    @SuppressWarnings("PMD.ArrayIsStoredDirectly")
     protected RollingBase(final byte @NotNull [] string, final int k, final int skipFirst) {
         checkInput(string, k, skipFirst);
         this.string = string;

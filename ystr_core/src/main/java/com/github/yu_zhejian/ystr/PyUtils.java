@@ -9,6 +9,9 @@ import java.nio.charset.StandardCharsets;
 
 /** Utilities mimicking Python functions. */
 public final class PyUtils {
+
+    private PyUtils() {}
+
     /**
      * Configuration for {@link #print(PrintParams, Object...)}.
      *
@@ -54,8 +57,8 @@ public final class PyUtils {
      */
     public static void print(@NotNull PrintParams pp, Object @NotNull ... args) {
         int i;
-        var sepBytes = pp.sep().getBytes(StandardCharsets.UTF_8);
-        var endBytes = pp.end().getBytes(StandardCharsets.UTF_8);
+        final var sepBytes = pp.sep().getBytes(StandardCharsets.UTF_8); // TODO: Move this to constructor!
+        final var endBytes = pp.end().getBytes(StandardCharsets.UTF_8);
         try {
             for (i = 0; i < args.length - 1; i++) {
                 pp.file()

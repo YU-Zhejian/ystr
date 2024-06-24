@@ -30,7 +30,7 @@ public final class MinimizerCalculator {
             final @NotNull List<Long> hashes, final int windowSize, final boolean endHash) {
         var hashFrom = -1;
         var hashTo = 0;
-        var hLen = hashes.size();
+        final var hLen = hashes.size();
         final var retl = new IntArrayList(hLen);
         if (!endHash && windowSize > hLen) {
             return retl;

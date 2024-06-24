@@ -62,6 +62,7 @@ public final class IterUtils {
      * @param list As described.
      * @return As described.
      */
+    @SuppressWarnings("PMD.LooseCoupling")
     public static @NotNull IntArrayList dedup(@NotNull IntArrayList list) {
         var result = new IntArrayList();
         if (list.isEmpty()) {
@@ -88,6 +89,7 @@ public final class IterUtils {
      * @return As described.
      * @param <T> Type of elements inside the iterator.
      */
+    @SuppressWarnings("PMD.LooseCoupling")
     public static <T> @NotNull ObjectArrayList<T> collect(@NotNull Iterator<T> sourceIterator) {
         var retl = new ObjectArrayList<T>();
         while (sourceIterator.hasNext()) {
@@ -102,6 +104,7 @@ public final class IterUtils {
      * @param sourceIterator As described.
      * @return As described.
      */
+    @SuppressWarnings("PMD.LooseCoupling")
     public static @NotNull LongArrayList collect(@NotNull LongIterator sourceIterator) {
         var retl = new LongArrayList();
         while (sourceIterator.hasNext()) {
@@ -116,6 +119,7 @@ public final class IterUtils {
      * @param sourceIterator As described.
      * @return As described.
      */
+    @SuppressWarnings("PMD.LooseCoupling")
     public static @NotNull DoubleArrayList collect(@NotNull DoubleIterator sourceIterator) {
         var retl = new DoubleArrayList();
         while (sourceIterator.hasNext()) {
@@ -130,6 +134,7 @@ public final class IterUtils {
      * @param sourceIterator As described.
      * @return As described.
      */
+    @SuppressWarnings("PMD.LooseCoupling")
     public static @NotNull BooleanArrayList collect(@NotNull BooleanIterator sourceIterator) {
         var retl = new BooleanArrayList();
         while (sourceIterator.hasNext()) {
@@ -147,6 +152,7 @@ public final class IterUtils {
      * @return As described.
      * @param <T> As described.
      */
+    @SuppressWarnings("PMD.LooseCoupling")
     public static <T> @NotNull IntArrayList where(
             @NotNull Iterator<T> sourceIterator, Predicate<T> predicate) {
         var retl = new IntArrayList();
@@ -167,6 +173,7 @@ public final class IterUtils {
      * @param predicate As described.
      * @return As described.
      */
+    @SuppressWarnings("PMD.LooseCoupling")
     public static @NotNull IntArrayList where(
             @NotNull DoubleArrayList list, DoublePredicate predicate) {
         var retl = new IntArrayList();
