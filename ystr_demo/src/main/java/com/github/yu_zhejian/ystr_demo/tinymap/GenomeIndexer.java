@@ -35,6 +35,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
@@ -63,14 +64,15 @@ public final class GenomeIndexer {
     private final SummaryStatistics shannonEntropy;
     private final AtomicLong minimizerSingletonNumber;
 
-    public GenomeIndexer(Path fnaPath, GenomeIndexerConfig config) {
+    public GenomeIndexer(Path fnaPath, GenomeIndexerConfig config, boolean recordStatistics) {
         this.fnaPath = fnaPath;
         this.config = config;
         numMinimizers = new AtomicLong(0);
-        numPositionsPerMinimizer = new SummaryStatistics();
         minimizerSingletonNumber = new AtomicLong(0);
-        minimizerDistances = new SummaryStatistics();
-        shannonEntropy = new SummaryStatistics();
+        minimizerDistances = recordStatistics ? new SummaryStatistics() : new DumbStatistics();
+        shannonEntropy = recordStatistics ? new SummaryStatistics() : new DumbStatistics();
+        numPositionsPerMinimizer =
+                recordStatistics ? new SummaryStatistics() : new DumbStatistics();
         fimalIndexSize = new AtomicLong(0);
         numAllKmers = new AtomicLong(0);
         numProcessedKmers = new AtomicLong(0);
@@ -243,8 +245,9 @@ public final class GenomeIndexer {
 
         fmtLogChrSplit(string.length, contigID, offsetOfFirst, nthPart, "Writing minimizers");
 
-        var out = Path.of("%s.%d.%s.idx.bin".formatted(fnaPath.toString(), nthPart, contigName))
-                .toFile();
+        var outd = fnaPath.toString().concat(".d");
+        Files.createDirectories(Path.of(outd));
+        var out = Path.of(outd, "%s.%d.idx.bin".formatted(contigName, nthPart)).toFile();
         try (var w = new FileOutputStream(out)) {
             numMinimizers.addAndGet(encodedHOffsetDict.size());
 
@@ -278,8 +281,9 @@ public final class GenomeIndexer {
             }
         }
         fmtLogUnifiedSplit(records, batchID, "Writing");
-        var out =
-                Path.of("%s.%d.idx.bin".formatted(fnaPath.toString(), batchID)).toFile();
+        var outd = fnaPath.toString().concat(".d");
+        Files.createDirectories(Path.of(outd));
+        var out = Path.of(outd, "%d.idx.bin".formatted(batchID)).toFile();
         numMinimizers.addAndGet(hashEncodedOffsetDict.size());
         try (var w = new FileOutputStream(out)) {
             for (var entry : hashEncodedOffsetDict.long2ObjectEntrySet()) {
@@ -381,18 +385,18 @@ public final class GenomeIndexer {
     }
 
     static void main1() {
-        var basePath = "F:\\home\\Documents\\ystr\\test";
+        var basePath = "F:\\home\\Documents\\ystr\\test\\ref";
         var fnaPath = Path.of(basePath, "c_elegans_ests.fa");
         var conf = GenomeIndexerConfig.blast();
-        var gi = new GenomeIndexer(fnaPath, conf);
+        var gi = new GenomeIndexer(fnaPath, conf, false);
         gi.index();
     }
 
     static void main2() {
-        var basePath = "F:\\home\\Documents\\ystr\\test";
+        var basePath = "F:\\home\\Documents\\ystr\\test\\ref";
         var fnaPath = Path.of(basePath, "ce11.genomic.fna");
         var conf = GenomeIndexerConfig.minimap2();
-        var gi = new GenomeIndexer(fnaPath, conf);
+        var gi = new GenomeIndexer(fnaPath, conf, false);
         gi.index();
     }
 

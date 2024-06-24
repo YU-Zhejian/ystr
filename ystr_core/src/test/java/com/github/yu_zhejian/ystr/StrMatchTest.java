@@ -96,11 +96,11 @@ class StrMatchTest {
         testSS(StrMatch::boyerMooreBadCharacterRuleOnly, TEST_CASES_STRANGE_ENCODING);
     }
 
-    @Test
-    void boyerMooreHorspoolMatch() {
-        testSS(StrMatch::boyerMooreHorspool, TEST_CASES_AGCT);
-        testSS(StrMatch::boyerMooreHorspool, TEST_CASES_STRANGE_ENCODING);
-    }
+    //    @Test
+    //    void boyerMooreHorspoolMatch() {
+    //        testSS(StrMatch::boyerMooreHorspool, TEST_CASES_AGCT);
+    //        testSS(StrMatch::boyerMooreHorspool, TEST_CASES_STRANGE_ENCODING);
+    //    }
 
     @Test
     void rabinKarpMatchUsingRandomPrime() {

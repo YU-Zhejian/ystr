@@ -18,7 +18,7 @@ public final class StrSort {
      * <p>This is a sorting algorithm from Robert Sedgewick's Implementation.
      *
      * @param keys Bytes to be sorted.
-     * @return Thr sorted index of the keys where order of the equal keys are preserved.
+     * @return The sorted index of the keys where order of the equal keys are preserved.
      */
     @Contract(pure = true)
     public static int @NotNull [] keyIndexedCounting(final byte @NotNull [] keys) {

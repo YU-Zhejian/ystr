@@ -308,11 +308,12 @@ public final class TwoBitParser extends BaseRandomBinaryFileParser {
         }
 
         if (parseMasks) {
+            int batch;
             final var cm2 = curMask.clone();
             cm2.and(maskBlocks[seqID]);
             final var it2 = cm2.getBatchIterator();
             while (it2.hasNext()) {
-                int batch = it2.nextBatch(buffer);
+                batch = it2.nextBatch(buffer);
                 for (int i = 0; i < batch; ++i) {
                     retl[buffer[i] - start] += 32;
                 }

@@ -31,12 +31,12 @@ public final class MinimizerCalculator {
         var hashFrom = -1;
         var hashTo = 0;
         var hLen = hashes.size();
-        var retl = new IntArrayList(hLen);
+        final var retl = new IntArrayList(hLen);
         if (!endHash && windowSize > hLen) {
             return retl;
         }
-        var finalWindowSize = Integer.min(windowSize, hLen);
-        var minimizerRingBuffer = new MinimizerRingBuffer(finalWindowSize);
+        final var finalWindowSize = Integer.min(windowSize, hLen);
+        final var minimizerRingBuffer = new MinimizerRingBuffer(finalWindowSize);
 
         // Populating the rolling buffer
         while (hashTo < finalWindowSize - 1 && hashTo < hLen) {

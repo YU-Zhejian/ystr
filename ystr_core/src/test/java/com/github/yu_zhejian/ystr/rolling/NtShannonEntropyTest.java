@@ -15,8 +15,8 @@ class NtShannonEntropyTest {
         var nth = new NtShannonEntropy(bases.getBytes(StandardCharsets.US_ASCII), k, 0);
         var result = IterUtils.collect(nth);
         assertEquals(expected.size(), result.size());
-        for (var i = 0; i < result.size(); i++) {
-            assertEquals(expected.get(i), result.get(i), 0.0, "");
+        for (int i = 0; i < result.size(); i++) {
+            assertEquals(expected.get(i), result.getDouble(i), 0.0, "");
         }
     }
 
