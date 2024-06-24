@@ -30,7 +30,7 @@ class StrSortTest {
             return;
         }
         for (int i = 0; i < strings.size() - 1; i++) {
-            if (StrUtils.strcmp(strings.get(i), strings.get(i + 1)) > 0) {
+            if (StrLibc.strcmp(strings.get(i), strings.get(i + 1)) > 0) {
                 fail("The array is not sorted between %d and %d!".formatted(i, i + 1));
             }
         }

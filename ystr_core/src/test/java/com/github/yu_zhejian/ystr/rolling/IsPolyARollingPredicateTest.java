@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.github.yu_zhejian.ystr.IterUtils;
+import com.github.yu_zhejian.ystr.utils.IterUtils;
 
 import org.junit.jupiter.api.Test;
 

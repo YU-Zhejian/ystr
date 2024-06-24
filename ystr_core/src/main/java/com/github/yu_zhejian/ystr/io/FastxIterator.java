@@ -6,7 +6,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.charset.StandardCharsets;
@@ -23,8 +22,10 @@ import java.util.NoSuchElementException;
 public final class FastxIterator implements Iterator<FastxRecord>, AutoCloseable {
     /** Whitespace characters. */
     private static final String SPLIT_REGEX = "\\s+";
+
     private static final char FASTA_RECORD_NAME_START = '>';
-    private static final char FASTQ_RECORD_NAME_START = '@;;
+    private static final char FASTQ_RECORD_NAME_START = '@';
+    private static final char FASTQ_QUAL_NAME_START = '+';
     /** As described. */
     private final BufferedReader reader;
     /** The current usable record. */
@@ -155,9 +156,10 @@ public final class FastxIterator implements Iterator<FastxRecord>, AutoCloseable
 
         String line;
         while ((line = reader.readLine()) != null) {
-            if (!(line.isEmpty() || (isFASTQ && line.charAt(0) == '+'))) {
+            if (!(line.isEmpty() || (isFASTQ && line.charAt(0) == FASTQ_QUAL_NAME_START))) {
                 line = line.trim();
-                if ((!isFASTQ && line.charAt(0) == FASTA_RECORD_NAME_START) || (isFASTQ && line.charAt(0) == FASTQ_RECORD_NAME_START)) {
+                if ((!isFASTQ && line.charAt(0) == FASTA_RECORD_NAME_START)
+                        || (isFASTQ && line.charAt(0) == FASTQ_RECORD_NAME_START)) {
                     // Beginning of next record
                     nextSeqID = performTrimSeqID(line);
                     break;
@@ -186,7 +188,7 @@ public final class FastxIterator implements Iterator<FastxRecord>, AutoCloseable
         if (currentRecord == null) {
             throw new NoSuchElementException();
         }
-        var retv = currentRecord;
+        final var retv = currentRecord;
         try {
             nextRecord(); // Prepare for the next record
         } catch (IOException e) {

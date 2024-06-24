@@ -1,13 +1,13 @@
 package com.github.yu_zhejian.ystr_demo.tinymap;
 
-import com.github.yu_zhejian.ystr.IterUtils;
 import com.github.yu_zhejian.ystr.io.FastxIterator;
 import com.github.yu_zhejian.ystr.io.FastxRecord;
 import com.github.yu_zhejian.ystr.io.LongEncoder;
+import com.github.yu_zhejian.ystr.minimizer.MinimizerCalculator;
 import com.github.yu_zhejian.ystr.rolling.NtHashBase;
 import com.github.yu_zhejian.ystr.rolling.NtShannonEntropy;
 import com.github.yu_zhejian.ystr.rolling.PrecomputedBidirectionalNtHash;
-import com.github.yu_zhejian.ystr.utils.MinimizerCalculator;
+import com.github.yu_zhejian.ystr.utils.IterUtils;
 import com.github.yu_zhejian.ystr_demo.FrontendUtils;
 import com.github.yu_zhejian.ystr_demo.LogUtils;
 

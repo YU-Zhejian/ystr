@@ -1,6 +1,6 @@
 package com.github.yu_zhejian.ystr.codec;
 
-import com.github.yu_zhejian.ystr.StrUtils;
+import com.github.yu_zhejian.ystr.utils.StrUtils;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -37,7 +37,7 @@ public final class TwoBitCodec implements CodecInterface {
      * first base is in the most significant 2-bit byte; the last base is in the least significant 2
      * bits. For example, the sequence TCAG is represented as 00011011.
      */
-    private static final byte[] BYTE_TO_BASE = new byte[] {'T', 'C', 'A', 'G'};
+    private static final byte[] BYTE_TO_BASE = {'T', 'C', 'A', 'G'};
 
     /** Precomputed decode table, which should be mapping between a byte to 4 bases. */
     private static final byte[][] BYTE_TO_BASE_PRE_COMPUTED;
@@ -45,10 +45,8 @@ public final class TwoBitCodec implements CodecInterface {
     /** Precomputed encode table, which should be mapping between a base to a byte. */
     private static final int[] BASE_TO_BYTE_PRE_COMPUTED;
 
-    /**
-     * Default constructor.
-     */
-    public TwoBitCodec(){
+    /** Default constructor. */
+    public TwoBitCodec() {
         // Does nothing!
     }
 

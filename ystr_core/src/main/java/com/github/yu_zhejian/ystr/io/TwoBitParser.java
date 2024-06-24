@@ -1,7 +1,7 @@
 package com.github.yu_zhejian.ystr.io;
 
-import com.github.yu_zhejian.ystr.StrUtils;
 import com.github.yu_zhejian.ystr.codec.TwoBitCodec;
+import com.github.yu_zhejian.ystr.utils.StrUtils;
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
@@ -80,12 +80,12 @@ public final class TwoBitParser extends BaseRandomBinaryFileParser {
      */
     public TwoBitParser(File f) throws IOException {
         super(f);
-        var signatureBuffer = ByteBuffer.allocateDirect(4);
+        final var signatureBuffer = ByteBuffer.allocateDirect(4);
         signatureBuffer.order(ByteOrder.BIG_ENDIAN);
-        fc.read(signatureBuffer);
+        fileChannel.read(signatureBuffer);
         signatureBuffer.rewind();
 
-        var signature = signatureBuffer.getInt();
+        final var signature = signatureBuffer.getInt();
         if (signature == SIGNATURE_BIG_ENDIAN) {
             setByteOrder(ByteOrder.BIG_ENDIAN);
         } else if (signature == SIGNATURE_LITTLE_ENDIAN) {
@@ -95,7 +95,7 @@ public final class TwoBitParser extends BaseRandomBinaryFileParser {
                     "Wrong start signature in 2BIT format. Required: 0x1A412743 (Big Endian)/0x4327411A (Little Endian). Actual: 0x%s",
                     Long.toHexString(signature)));
         }
-        var version = readFourBytes();
+        final var version = readFourBytes();
         if (version == VERSION) {
             supportsLongSequences = false;
         } else if (version == VERSION_LONG) {
@@ -111,26 +111,23 @@ public final class TwoBitParser extends BaseRandomBinaryFileParser {
                     "Wrong sequenceCount in 2BIT format. Required: >=0. Actual: %s",
                     sequenceCount));
         }
-        raf.skipBytes(4); // reserved - always zero for now
+        randomAccessFile.skipBytes(4); // reserved - always zero for now
         seqNames = new String[sequenceCount];
         offsets = new long[sequenceCount];
         seqOffsets = new long[sequenceCount];
         dnaSizes = new int[sequenceCount];
         nBlocks = new RoaringBitmap[sequenceCount];
         maskBlocks = new RoaringBitmap[sequenceCount];
-        byte[] name;
+        var name = new byte[MAX_SEQ_NAME_LENGTH];
         for (var seqID = 0; seqID < sequenceCount; seqID++) {
-            byte nameSize = raf.readByte();
+            final byte nameSize = randomAccessFile.readByte();
             if (nameSize < 0) {
                 throw new IllegalArgumentException(String.format(
                         "Wrong nameSize in 2BIT format. Required: 0 <= nameSize <= %d. Actual: %d",
                         MAX_SEQ_NAME_LENGTH, nameSize));
             }
-            name = new byte[nameSize];
-            for (var i = 0; i < nameSize; i++) {
-                name[i] = raf.readByte();
-            }
-            seqNames[seqID] = new String(name, StandardCharsets.US_ASCII);
+            randomAccessFile.read(name, 0, nameSize);
+            seqNames[seqID] = new String(name, 0, nameSize, StandardCharsets.US_ASCII);
             if (supportsLongSequences) {
                 offsets[seqID] = readEightBytes();
             } else {
@@ -146,10 +143,10 @@ public final class TwoBitParser extends BaseRandomBinaryFileParser {
      * @throws IOException As described.
      */
     private @NotNull RoaringBitmap populate() throws IOException {
-        var retv = new RoaringBitmap();
-        var count = (int) readFourBytes();
-        var starts = new long[count];
-        var sizes = new long[count];
+        final var retv = new RoaringBitmap();
+        final var count = (int) readFourBytes();
+        final var starts = new long[count];
+        final var sizes = new long[count];
         for (var i = 0; i < count; i++) {
             starts[i] = (int) readFourBytes();
         }
@@ -174,7 +171,7 @@ public final class TwoBitParser extends BaseRandomBinaryFileParser {
         if (dnaSizes[seqID] != 0) {
             return; // 2bit format does not allow empty DNA sequences.
         }
-        raf.seek(offsets[seqID]);
+        randomAccessFile.seek(offsets[seqID]);
         // Interesting. It seems the latest 2bit format also lacks support of one chromosome >=
         // 4GiB.
         dnaSizes[seqID] = (int) readFourBytes();
@@ -182,7 +179,7 @@ public final class TwoBitParser extends BaseRandomBinaryFileParser {
         maskBlocks[seqID] = populate();
 
         // which is 4 * maskBlockCount * 2 + reserved
-        seqOffsets[seqID] = raf.getFilePointer() + 4;
+        seqOffsets[seqID] = randomAccessFile.getFilePointer() + 4;
     }
 
     /**
@@ -192,9 +189,9 @@ public final class TwoBitParser extends BaseRandomBinaryFileParser {
      * @throws IOException As described.
      */
     private byte @NotNull [] readNt() throws IOException {
-        var buffer = new byte[1];
-        var decoded = new byte[4];
-        raf.read(buffer, 0, 1);
+        final var buffer = new byte[1];
+        final var decoded = new byte[4];
+        randomAccessFile.read(buffer, 0, 1);
         codec.decode(buffer, decoded, 0, 0, 1);
         return decoded;
     }
@@ -210,11 +207,11 @@ public final class TwoBitParser extends BaseRandomBinaryFileParser {
     private void readNts(byte[] outArr, final int dstStart, final int numBytesToRead)
             throws IOException {
         var numBytesLeftToRead = numBytesToRead;
-        var buffer = new byte[numBytesLeftToRead];
+        final var buffer = new byte[numBytesLeftToRead];
         int numBytesReadForThisChunk;
         var dstPos = dstStart;
         while (numBytesLeftToRead > CHUNK_SIZE) {
-            numBytesReadForThisChunk = raf.read(buffer, 0, CHUNK_SIZE);
+            numBytesReadForThisChunk = randomAccessFile.read(buffer, 0, CHUNK_SIZE);
             if (numBytesReadForThisChunk == -1) {
                 throw new EOFException();
             }
@@ -222,7 +219,7 @@ public final class TwoBitParser extends BaseRandomBinaryFileParser {
             dstPos += codec.decode(buffer, outArr, 0, dstPos, numBytesReadForThisChunk);
         }
         if (numBytesLeftToRead > 0) {
-            numBytesReadForThisChunk = raf.read(buffer, 0, numBytesLeftToRead);
+            numBytesReadForThisChunk = randomAccessFile.read(buffer, 0, numBytesLeftToRead);
             if (numBytesReadForThisChunk == -1) {
                 throw new EOFException();
             }
@@ -250,14 +247,14 @@ public final class TwoBitParser extends BaseRandomBinaryFileParser {
         loadSeqInfo(seqID);
 
         // Number of bases to read at the end.
-        var retLen = end - start;
-        var retl = new byte[retLen];
+        final var retLen = end - start;
+        final var dst = new byte[retLen];
 
         // Number of bytes to skip at start.
         var numSkippedBytes = start >>> 2;
 
         var numBasesToDiscard = start - (numSkippedBytes << 2);
-        raf.seek(numSkippedBytes + seqOffsets[seqID]);
+        randomAccessFile.seek(numSkippedBytes + seqOffsets[seqID]);
 
         // Read until we reach the first complete byte
         var posOnBuffer = 0;
@@ -269,14 +266,14 @@ public final class TwoBitParser extends BaseRandomBinaryFileParser {
                 numBasesToDiscard--;
             }
             while (posOnBuffer < 4 && curPosOnRetSeq < retLen) {
-                retl[curPosOnRetSeq] = firstBase[posOnBuffer];
+                dst[curPosOnRetSeq] = firstBase[posOnBuffer];
                 posOnBuffer++;
                 curPosOnRetSeq++;
             }
         }
 
         var numBytesToRead = (retLen - curPosOnRetSeq) >> 2;
-        readNts(retl, curPosOnRetSeq, numBytesToRead);
+        readNts(dst, curPosOnRetSeq, numBytesToRead);
         curPosOnRetSeq += numBytesToRead << 2;
 
         // Read the last byte
@@ -284,7 +281,7 @@ public final class TwoBitParser extends BaseRandomBinaryFileParser {
             posOnBuffer = 0;
             var firstBase = readNt();
             while (curPosOnRetSeq < retLen) {
-                retl[curPosOnRetSeq] = firstBase[posOnBuffer];
+                dst[curPosOnRetSeq] = firstBase[posOnBuffer];
                 posOnBuffer++;
                 curPosOnRetSeq++;
             }
@@ -304,7 +301,7 @@ public final class TwoBitParser extends BaseRandomBinaryFileParser {
             // https://richardstartin.github.io/posts/roaringbitmap-performance-tricks
             int batch = it1.nextBatch(buffer);
             for (int i = 0; i < batch; ++i) {
-                retl[buffer[i] - start] = 'N';
+                dst[buffer[i] - start] = 'N';
             }
         }
 
@@ -316,11 +313,11 @@ public final class TwoBitParser extends BaseRandomBinaryFileParser {
             while (it2.hasNext()) {
                 batch = it2.nextBatch(buffer);
                 for (int i = 0; i < batch; ++i) {
-                    retl[buffer[i] - start] += 32;
+                    dst[buffer[i] - start] += 32;
                 }
             }
         }
-        return retl;
+        return dst;
     }
 
     /**

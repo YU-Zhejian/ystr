@@ -10,9 +10,9 @@ import java.nio.channels.FileChannel;
 /** Basic random access binary file parser. */
 public abstract class BaseRandomBinaryFileParser implements AutoCloseable {
     /** The random accessing engine. */
-    protected final RandomAccessFile raf;
-    /** Channel of {@link #raf} */
-    protected final FileChannel fc;
+    protected final RandomAccessFile randomAccessFile;
+    /** Channel of {@link #randomAccessFile} */
+    protected final FileChannel fileChannel;
     /** Whether the file is created under Little Endian byte order. */
     protected boolean byteOrderIsLittleEndian;
     /** 4k alignment */
@@ -27,7 +27,7 @@ public abstract class BaseRandomBinaryFileParser implements AutoCloseable {
      *
      * @param byteOrder As described.
      */
-    protected void setByteOrder(ByteOrder byteOrder) {
+    protected void setByteOrder(final ByteOrder byteOrder) {
         byteOrderIsLittleEndian = byteOrder != ByteOrder.BIG_ENDIAN;
         intBuffer.order(byteOrder);
         longBuffer.order(byteOrder);
@@ -40,9 +40,9 @@ public abstract class BaseRandomBinaryFileParser implements AutoCloseable {
      * @throws IOException As described.
      * @throws IllegalArgumentException If file is of incorrect format.
      */
-    protected BaseRandomBinaryFileParser(File f) throws IOException {
-        raf = new RandomAccessFile(f, "r");
-        fc = raf.getChannel();
+    protected BaseRandomBinaryFileParser(final File f) throws IOException {
+        randomAccessFile = new RandomAccessFile(f, "r");
+        fileChannel = randomAccessFile.getChannel();
     }
 
     /**
@@ -53,7 +53,7 @@ public abstract class BaseRandomBinaryFileParser implements AutoCloseable {
      */
     protected long readEightBytes() throws IOException {
         longBuffer.clear();
-        fc.read(longBuffer);
+        fileChannel.read(longBuffer);
         longBuffer.rewind();
         return longBuffer.getInt();
     }
@@ -66,14 +66,14 @@ public abstract class BaseRandomBinaryFileParser implements AutoCloseable {
      */
     protected long readFourBytes() throws IOException {
         intBuffer.clear();
-        fc.read(intBuffer);
+        fileChannel.read(intBuffer);
         intBuffer.rewind();
         return intBuffer.getInt();
     }
 
     @Override
     public void close() throws IOException {
-        raf.close();
+        randomAccessFile.close();
     }
 
     /**

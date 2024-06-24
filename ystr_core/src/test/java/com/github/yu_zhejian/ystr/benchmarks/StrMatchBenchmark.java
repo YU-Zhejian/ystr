@@ -1,7 +1,13 @@
 package com.github.yu_zhejian.ystr.benchmarks;
 
-import com.github.yu_zhejian.ystr.StrMatch;
 import com.github.yu_zhejian.ystr.io.FastxIterator;
+import com.github.yu_zhejian.ystr.match.BoyerMooreBadCharactersOnlyMatch;
+import com.github.yu_zhejian.ystr.match.BruteForceMatch;
+import com.github.yu_zhejian.ystr.match.KnuthMorrisPrattMatch;
+import com.github.yu_zhejian.ystr.match.NaiveMatch;
+import com.github.yu_zhejian.ystr.match.RabinKarpMatch;
+import com.github.yu_zhejian.ystr.match.ShiftOrMatch;
+import com.github.yu_zhejian.ystr.match.StrMatchInterface;
 import com.github.yu_zhejian.ystr.rolling.PrecomputedNtHash;
 import com.github.yu_zhejian.ystr.test_utils.GitUtils;
 
@@ -65,41 +71,71 @@ public class StrMatchBenchmark {
 
     @Benchmark
     public void benchBruteForce(@NotNull Blackhole blackhole) {
-        blackhole.consume(StrMatch.bruteForceMatch(
-                TEST_CHR, needle.getBytes(StandardCharsets.UTF_8), 0, TEST_CHR.length));
+        blackhole.consume(StrMatchInterface.fastApply(
+                BruteForceMatch::new,
+                TEST_CHR,
+                needle.getBytes(StandardCharsets.UTF_8),
+                0,
+                TEST_CHR.length));
     }
 
     @Benchmark
     public void benchNaive(@NotNull Blackhole blackhole) {
-        blackhole.consume(StrMatch.naiveMatch(
-                TEST_CHR, needle.getBytes(StandardCharsets.UTF_8), 0, TEST_CHR.length));
+        blackhole.consume(StrMatchInterface.fastApply(
+                NaiveMatch::new,
+                TEST_CHR,
+                needle.getBytes(StandardCharsets.UTF_8),
+                0,
+                TEST_CHR.length));
     }
 
     @Benchmark
     public void benchRabinKarp(@NotNull Blackhole blackhole) {
-        blackhole.consume(StrMatch.rabinKarpMatch(
-                TEST_CHR, needle.getBytes(StandardCharsets.UTF_8), 0, TEST_CHR.length));
+        blackhole.consume(StrMatchInterface.fastApply(
+                RabinKarpMatch::new,
+                TEST_CHR,
+                needle.getBytes(StandardCharsets.UTF_8),
+                0,
+                TEST_CHR.length));
     }
 
     @Benchmark
     public void benchRabinKarpNtHash(@NotNull Blackhole blackhole) {
-        blackhole.consume(StrMatch.rabinKarpMatch(
+        blackhole.consume(StrMatchInterface.fastApply(
+                () -> new RabinKarpMatch(PrecomputedNtHash::new),
                 TEST_CHR,
                 needle.getBytes(StandardCharsets.UTF_8),
                 0,
-                TEST_CHR.length,
-                PrecomputedNtHash::new));
+                TEST_CHR.length));
     }
 
     @Benchmark
     public void benchKnuthMorrisPratt(@NotNull Blackhole blackhole) {
-        blackhole.consume(StrMatch.knuthMorrisPrattMatch(
-                TEST_CHR, needle.getBytes(StandardCharsets.UTF_8), 0, TEST_CHR.length));
+        blackhole.consume(StrMatchInterface.fastApply(
+                KnuthMorrisPrattMatch::new,
+                TEST_CHR,
+                needle.getBytes(StandardCharsets.UTF_8),
+                0,
+                TEST_CHR.length));
     }
 
     @Benchmark
     public void benchShiftOr(@NotNull Blackhole blackhole) {
-        blackhole.consume(StrMatch.shiftOrMatch(
-                TEST_CHR, needle.getBytes(StandardCharsets.UTF_8), 0, TEST_CHR.length));
+        blackhole.consume(StrMatchInterface.fastApply(
+                ShiftOrMatch::new,
+                TEST_CHR,
+                needle.getBytes(StandardCharsets.UTF_8),
+                0,
+                TEST_CHR.length));
+    }
+
+    @Benchmark
+    public void benchBoyerMooreBadCharactersOnly(@NotNull Blackhole blackhole) {
+        blackhole.consume(StrMatchInterface.fastApply(
+                BoyerMooreBadCharactersOnlyMatch::new,
+                TEST_CHR,
+                needle.getBytes(StandardCharsets.UTF_8),
+                0,
+                TEST_CHR.length));
     }
 }

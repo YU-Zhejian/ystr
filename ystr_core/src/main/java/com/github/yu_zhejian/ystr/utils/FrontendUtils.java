@@ -1,4 +1,4 @@
-package com.github.yu_zhejian.ystr.test_utils;
+package com.github.yu_zhejian.ystr.utils;
 
 import org.jetbrains.annotations.NotNull;
 

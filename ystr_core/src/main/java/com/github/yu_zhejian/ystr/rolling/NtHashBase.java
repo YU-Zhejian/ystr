@@ -164,7 +164,8 @@ public abstract class NtHashBase extends RollingHashBase {
     @Contract(value = "_, _ -> new", pure = true)
     public static @NotNull Tuple2<LongArrayList, LongArrayList> getAllBothHash(
             @NotNull NtHashBase ntHash, int estimatedLength) {
-        var rett = Tuple.of(new LongArrayList(estimatedLength), new LongArrayList(estimatedLength));
+        final var rett =
+                Tuple.of(new LongArrayList(estimatedLength), new LongArrayList(estimatedLength));
         while (ntHash.hasNext()) {
             ntHash.nextLong();
             rett._1().add(ntHash.getFwdHash());

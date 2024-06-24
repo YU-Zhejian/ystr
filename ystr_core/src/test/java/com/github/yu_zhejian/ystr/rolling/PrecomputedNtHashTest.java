@@ -3,8 +3,8 @@ package com.github.yu_zhejian.ystr.rolling;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 
-import com.github.yu_zhejian.ystr.IterUtils;
 import com.github.yu_zhejian.ystr.StrHash;
+import com.github.yu_zhejian.ystr.utils.IterUtils;
 
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Assertions;

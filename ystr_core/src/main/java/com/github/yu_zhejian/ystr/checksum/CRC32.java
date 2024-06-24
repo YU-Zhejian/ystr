@@ -1,11 +1,23 @@
 package com.github.yu_zhejian.ystr.checksum;
 
-import com.github.yu_zhejian.ystr.StrUtils;
+import com.github.yu_zhejian.ystr.utils.StrUtils;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-/** As described. */
+/**
+ * Generate the CRC32 checksum for a string.
+ *
+ * <p><b>Implementation</b> Traditional CRC32 algorithm. This implementation was modified from <a
+ * href="https://wiki.osdev.org/CRC32">here</a> with a pre-computed lookup table.
+ *
+ * <p>Note, this algorithm may give different results than {@link java.util.zip.CRC32}.
+ *
+ * <p>Note, this algorithm is a <b>CHECKSUM</b> algorithm instead of a <b>HASHING</b> algorithm.
+ *
+ * @see <a href="https://introcs.cs.princeton.edu/java/61data/CRC32.java.html">Princeton University
+ *     Implementyation of the CRC32 algorithm.</a>
+ */
 public final class CRC32 implements ChecksumInterface {
 
     private int crc;
@@ -113,7 +125,7 @@ public final class CRC32 implements ChecksumInterface {
      */
     @Contract(pure = true)
     public static int @NotNull [] generateCrcLookupTable() {
-        var table = new int[256];
+        final var table = new int[256];
         int index = 0;
         do {
             table[index] = index;

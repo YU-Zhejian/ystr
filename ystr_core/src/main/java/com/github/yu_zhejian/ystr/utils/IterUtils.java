@@ -1,4 +1,4 @@
-package com.github.yu_zhejian.ystr;
+package com.github.yu_zhejian.ystr.utils;
 
 import it.unimi.dsi.fastutil.booleans.BooleanArrayList;
 import it.unimi.dsi.fastutil.booleans.BooleanIterator;
@@ -22,8 +22,7 @@ import java.util.function.Predicate;
 
 /**
  * Various utility functions concerning {@link Iterator}, {@link Iterable} and
- * {@link java.util.Collections} to support other classes. Classes supporting
- * {@link com.github.yu_zhejian.ystr.IterUtils}.
+ * {@link java.util.Collections} to support other classes. Classes supporting {@link IterUtils}.
  *
  * <p>Warning, almost all generic methods inside this library could result in performance damage.
  * Use with care. For performance issues, prefer/implement methods that use FastUtils instead.
@@ -40,14 +39,14 @@ public final class IterUtils {
      * @param <T> As described.
      */
     public static <T> @NotNull List<T> dedup(@NotNull List<T> list) {
-        var result = new ArrayList<T>();
+        final var result = new ArrayList<T>();
         if (list.isEmpty()) {
             return result;
         }
         var prev = list.get(0);
         result.add(prev);
         for (int i = 1; i < list.size(); i++) {
-            var current = list.get(i);
+            final var current = list.get(i);
             if (!Objects.equals(prev, current)) {
                 result.add(current);
                 prev = current;
@@ -64,14 +63,14 @@ public final class IterUtils {
      */
     @SuppressWarnings("PMD.LooseCoupling")
     public static @NotNull IntArrayList dedup(@NotNull IntArrayList list) {
-        var result = new IntArrayList();
+        final var result = new IntArrayList();
         if (list.isEmpty()) {
             return result;
         }
         var prev = list.getInt(0);
         result.add(prev);
         for (int i = 1; i < list.size(); i++) {
-            var current = list.getInt(i);
+            final var current = list.getInt(i);
             if (prev != current) {
                 result.add(current);
                 prev = current;
@@ -91,7 +90,7 @@ public final class IterUtils {
      */
     @SuppressWarnings("PMD.LooseCoupling")
     public static <T> @NotNull ObjectArrayList<T> collect(@NotNull Iterator<T> sourceIterator) {
-        var retl = new ObjectArrayList<T>();
+        final var retl = new ObjectArrayList<T>();
         while (sourceIterator.hasNext()) {
             retl.add(sourceIterator.next());
         }
@@ -106,7 +105,7 @@ public final class IterUtils {
      */
     @SuppressWarnings("PMD.LooseCoupling")
     public static @NotNull LongArrayList collect(@NotNull LongIterator sourceIterator) {
-        var retl = new LongArrayList();
+        final var retl = new LongArrayList();
         while (sourceIterator.hasNext()) {
             retl.add(sourceIterator.nextLong());
         }
@@ -121,7 +120,7 @@ public final class IterUtils {
      */
     @SuppressWarnings("PMD.LooseCoupling")
     public static @NotNull DoubleArrayList collect(@NotNull DoubleIterator sourceIterator) {
-        var retl = new DoubleArrayList();
+        final var retl = new DoubleArrayList();
         while (sourceIterator.hasNext()) {
             retl.add(sourceIterator.nextDouble());
         }
@@ -136,7 +135,7 @@ public final class IterUtils {
      */
     @SuppressWarnings("PMD.LooseCoupling")
     public static @NotNull BooleanArrayList collect(@NotNull BooleanIterator sourceIterator) {
-        var retl = new BooleanArrayList();
+        final var retl = new BooleanArrayList();
         while (sourceIterator.hasNext()) {
             retl.add(sourceIterator.nextBoolean());
         }
@@ -155,7 +154,7 @@ public final class IterUtils {
     @SuppressWarnings("PMD.LooseCoupling")
     public static <T> @NotNull IntArrayList where(
             @NotNull Iterator<T> sourceIterator, Predicate<T> predicate) {
-        var retl = new IntArrayList();
+        final var retl = new IntArrayList();
         var i = 0;
         while (sourceIterator.hasNext()) {
             if (predicate.test(sourceIterator.next())) {
@@ -176,7 +175,7 @@ public final class IterUtils {
     @SuppressWarnings("PMD.LooseCoupling")
     public static @NotNull IntArrayList where(
             @NotNull DoubleArrayList list, DoublePredicate predicate) {
-        var retl = new IntArrayList();
+        final var retl = new IntArrayList();
         for (var i = 0; i < list.size(); i++) {
             if (predicate.test(list.getDouble(i))) {
                 retl.add(i);
@@ -252,7 +251,7 @@ public final class IterUtils {
             if (!hasNextBatch) {
                 throw new NoSuchElementException();
             }
-            var windowCopy = new ObjectArrayList<>(currentWindow);
+            final var windowCopy = new ObjectArrayList<>(currentWindow);
             currentWindow.clear();
             populateCurrentWindow();
             return windowCopy;

@@ -1,6 +1,6 @@
 package com.github.yu_zhejian.ystr.codec;
 
-import com.github.yu_zhejian.ystr.StrUtils;
+import com.github.yu_zhejian.ystr.utils.StrUtils;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -10,15 +10,13 @@ import org.jetbrains.annotations.NotNull;
  */
 public class DumbCodec implements CodecInterface {
 
-    /**
-     * Default constructor.
-     */
-    public DumbCodec(){
+    /** Default constructor. */
+    public DumbCodec() {
         // Does nothing!
     }
 
     @Override
-    public byte[] encode(byte[] src, int srcStart, int numBytesToRead) {
+    public byte[] encode(final byte[] src, final int srcStart, final int numBytesToRead) {
         final var retb = new byte[numBytesToRead];
         System.arraycopy(src, srcStart, retb, 0, numBytesToRead);
         return retb;

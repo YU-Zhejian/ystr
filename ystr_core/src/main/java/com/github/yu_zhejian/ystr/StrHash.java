@@ -19,9 +19,9 @@ public final class StrHash {
     private StrHash() {}
 
     /**
-     * Rabin-Karp Polynomial Rolling Hash algorithm. See {@link PolynomialRollingHash} for
-     * implementation.
+     * Rabin-Karp Polynomial Rolling Hash algorithm.
      *
+     * @see PolynomialRollingHash
      * @param string As described.
      * @return As described.
      */
@@ -30,8 +30,10 @@ public final class StrHash {
     }
 
     /**
-     * ntHash for the entire DNA string. See {@link NtHash} for more details.
+     * Pre-computed ntHash version 1 for the entire DNA string.
      *
+     * @see NtHash
+     * @see PrecomputedNtHash
      * @param string As described.
      * @return As described.
      */
@@ -40,19 +42,11 @@ public final class StrHash {
     }
 
     /**
-     * Generate the CRC32 checksum for a string.
-     *
-     * <p><b>Implementation</b> Traditional CRC32 algorithm. This implementation was modified from
-     * <a href="https://wiki.osdev.org/CRC32">here</a> with a pre-computed lookup table.
-     *
-     * <p>Note, this algorithm may give different results than {@link java.util.zip.CRC32}.
-     *
-     * <p>Note, this algorithm is a <b>CHECKSUM</b> algorithm instead of a <b>HASHING</b> algorithm.
+     * Canonical CRC32 checksum.
      *
      * @param string As described.
      * @return As described.
-     * @see <a href="https://introcs.cs.princeton.edu/java/61data/CRC32.java.html">Princeton
-     *     University Implementyation of the CRC32 algorithm.</a>
+     * @see CRC32
      */
     public static long crc32(final byte @NotNull [] string) {
         return ChecksumInterface.fastChecksum(CRC32::new, string);

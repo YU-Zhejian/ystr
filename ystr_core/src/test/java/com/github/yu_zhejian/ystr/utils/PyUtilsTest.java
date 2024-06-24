@@ -1,4 +1,4 @@
-package com.github.yu_zhejian.ystr;
+package com.github.yu_zhejian.ystr.utils;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 

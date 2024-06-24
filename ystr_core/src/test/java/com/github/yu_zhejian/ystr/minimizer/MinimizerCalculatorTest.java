@@ -1,4 +1,4 @@
-package com.github.yu_zhejian.ystr.utils;
+package com.github.yu_zhejian.ystr.minimizer;
 
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 

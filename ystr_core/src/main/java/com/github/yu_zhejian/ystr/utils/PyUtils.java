@@ -1,4 +1,4 @@
-package com.github.yu_zhejian.ystr;
+package com.github.yu_zhejian.ystr.utils;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -6,6 +6,8 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
+import java.util.Objects;
 
 /** Utilities mimicking Python functions. */
 public final class PyUtils {
@@ -22,7 +24,53 @@ public final class PyUtils {
      * @param flush Whether to flush the stream after the entire string had been printed.
      */
     @SuppressWarnings("java:S106")
-    public record PrintParams(String sep, String end, OutputStream file, boolean flush) {
+    public record PrintParams(byte[] sep, byte[] end, @NotNull OutputStream file, boolean flush) {
+
+        /**
+         * Constructor that uses strings.
+         *
+         * @param sep As described.
+         * @param end As described.
+         * @param file As described.
+         * @param flush As described.
+         */
+        public PrintParams(
+                @NotNull String sep, @NotNull String end, OutputStream file, boolean flush) {
+            this(
+                    sep.getBytes(StandardCharsets.UTF_8),
+                    end.getBytes(StandardCharsets.UTF_8),
+                    file,
+                    flush);
+        }
+
+        @Contract(pure = true)
+        @Override
+        public @NotNull String toString() {
+            return "PrintParams{sep=%s, end=%s, flush=%s}"
+                    .formatted(
+                            new String(sep, StandardCharsets.UTF_8),
+                            new String(end, StandardCharsets.UTF_8),
+                            flush);
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) {
+                return true;
+            }
+            if (!(o instanceof PrintParams that)) {
+                return false;
+            }
+            return flush == that.flush
+                    && Objects.deepEquals(sep, that.sep)
+                    && Objects.deepEquals(end, that.end);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(Arrays.hashCode(sep), Arrays.hashCode(end), flush);
+        }
+
         /**
          * Default Python {@code print} parameters.
          *
@@ -57,8 +105,8 @@ public final class PyUtils {
      */
     public static void print(@NotNull PrintParams pp, Object @NotNull ... args) {
         int i;
-        final var sepBytes = pp.sep().getBytes(StandardCharsets.UTF_8); // TODO: Move this to constructor!
-        final var endBytes = pp.end().getBytes(StandardCharsets.UTF_8);
+        final var sepBytes = pp.sep();
+        final var endBytes = pp.end();
         try {
             for (i = 0; i < args.length - 1; i++) {
                 pp.file()

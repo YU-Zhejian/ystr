@@ -1,6 +1,6 @@
 package com.github.yu_zhejian.ystr.codec;
 
-import com.github.yu_zhejian.ystr.StrUtils;
+import com.github.yu_zhejian.ystr.utils.StrUtils;
 
 /** Codec representing an encoder-decoder pair with unfixed encoded/decoded length. */
 public interface CodecInterface {
@@ -40,12 +40,7 @@ public interface CodecInterface {
      * @throws IndexOutOfBoundsException If the {@code dest} array is not large enough.
      * @throws IllegalArgumentException See {@link StrUtils#ensureStartLengthValid(int, int, int)}.
      */
-    int encode(
-            byte[] src,
-            byte[] dst,
-            int srcStart,
-            int dstStart,
-            int numBytesToRead);
+    int encode(byte[] src, byte[] dst, int srcStart, int dstStart, int numBytesToRead);
 
     /**
      * Decode from one array to another.
@@ -60,12 +55,7 @@ public interface CodecInterface {
      * @throws IllegalArgumentException As described.
      * @see #encode(byte[], byte[], int, int, int)
      */
-    int decode(
-            byte[] src,
-            byte[] dst,
-            int srcStart,
-            int dstStart,
-            int numBytesToRead);
+    int decode(byte[] src, byte[] dst, int srcStart, int dstStart, int numBytesToRead);
 
     /**
      * Convenient version of {@link #encode(byte[], int, int)}.
@@ -73,7 +63,7 @@ public interface CodecInterface {
      * @param src As described.
      * @return As described.
      */
-    default byte[] encode(byte[] src) {
+    default byte[] encode(final byte[] src) {
         return encode(src, 0, src.length);
     }
 
@@ -83,7 +73,7 @@ public interface CodecInterface {
      * @param src As described.
      * @return As described.
      */
-    default byte[] decode(byte[] src) {
+    default byte[] decode(final byte[] src) {
         return decode(src, 0, src.length);
     }
 }

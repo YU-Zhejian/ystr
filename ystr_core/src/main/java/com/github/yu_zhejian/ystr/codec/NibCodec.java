@@ -1,6 +1,6 @@
 package com.github.yu_zhejian.ystr.codec;
 
-import com.github.yu_zhejian.ystr.StrUtils;
+import com.github.yu_zhejian.ystr.utils.StrUtils;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -21,10 +21,9 @@ import org.jetbrains.annotations.NotNull;
  */
 public final class NibCodec implements CodecInterface {
     /** Numerical representation of the bases. */
-    private static final byte[] BYTE_TO_BASE = new byte[] {'T', 'C', 'A', 'G', 'N', 'N', 'N', 'N'};
+    private static final byte[] BYTE_TO_BASE = {'T', 'C', 'A', 'G', 'N', 'N', 'N', 'N'};
     /** Mask version of {@link #BYTE_TO_BASE} */
-    private static final byte[] BYTE_TO_BASE_MASKED =
-            new byte[] {'t', 'c', 'a', 'g', 'n', 'n', 'n', 'n'};
+    private static final byte[] BYTE_TO_BASE_MASKED = {'t', 'c', 'a', 'g', 'n', 'n', 'n', 'n'};
 
     /** Precomputed decode table, which should be mapping between a byte to 4 bases. */
     private static final byte[][] BYTE_TO_BASE_PRE_COMPUTED;
@@ -32,17 +31,15 @@ public final class NibCodec implements CodecInterface {
     /** Precomputed encode table, which should be mapping between a base to a byte. */
     private static final int[] BASE_TO_BYTE_PRE_COMPUTED;
 
-    /**
-     * Default constructor.
-     */
-    public NibCodec(){
+    /** Default constructor. */
+    public NibCodec() {
         // Does nothing!
     }
 
     @Contract(value = "_ -> new", pure = true)
     public static byte @NotNull [] decodeToTwoBases(int encodedByte) {
-        var base1 = (encodedByte >> 4) & 0b1111;
-        var base2 = encodedByte & 0b1111;
+        final var base1 = (encodedByte >> 4) & 0b1111;
+        final var base2 = encodedByte & 0b1111;
         return new byte[] {
             ((base1 & 0b1000) == 0b1000 ? BYTE_TO_BASE_MASKED : BYTE_TO_BASE)[base1 & 0b0111],
             ((base2 & 0b1000) == 0b1000 ? BYTE_TO_BASE_MASKED : BYTE_TO_BASE)[base2 & 0b0111]
@@ -143,8 +140,7 @@ public final class NibCodec implements CodecInterface {
         }
         if (numBytesRemaining != 0) {
             retl += 1;
-            byte lastb = (byte) (BASE_TO_BYTE_PRE_COMPUTED[src[srcPos] & 0xFF] << 4);
-            dst[dstPos] = lastb;
+            dst[dstPos] = (byte) (BASE_TO_BYTE_PRE_COMPUTED[src[srcPos] & 0xFF] << 4);
         }
         return retl;
     }
