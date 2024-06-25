@@ -1,4 +1,4 @@
-package com.github.yu_zhejian.ystr_demo.tinymap;
+package com.github.yu_zhejian.ystr_demo.utils;
 
 import org.apache.commons.math3.exception.MathIllegalStateException;
 import org.apache.commons.math3.exception.NullArgumentException;

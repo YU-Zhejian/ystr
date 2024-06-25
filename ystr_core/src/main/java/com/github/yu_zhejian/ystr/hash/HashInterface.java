@@ -42,6 +42,8 @@ public interface HashInterface extends UpdatableInterface {
     }
 
     static long fastHash(final @NotNull HashInterface instance, final byte[] string) {
-        return fastHash(instance, string, 0, string.length);
+        instance.reset();
+        instance.update(string);
+        return instance.getValue();
     }
 }

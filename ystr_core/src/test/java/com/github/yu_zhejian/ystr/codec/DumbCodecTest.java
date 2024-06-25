@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import com.github.yu_zhejian.ystr.test_utils.RngUtils;
+import com.github.yu_zhejian.ystr.utils.RngUtils;
 
 import org.junit.jupiter.api.Test;
 

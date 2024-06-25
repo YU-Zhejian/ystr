@@ -1,4 +1,4 @@
-package com.github.yu_zhejian.ystr.test_utils;
+package com.github.yu_zhejian.ystr.utils;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -7,6 +7,25 @@ import java.util.function.Supplier;
 
 public final class LogUtils {
     private LogUtils() {}
+
+    /**
+     * Return an lazy evaluated {@link #lazy(Supplier)}-compatible supplier for percentage
+     * calculation.
+     *
+     * @param current As described.
+     * @param total As described.
+     * @return As described.
+     */
+    @Contract(pure = true)
+    public static @NotNull Supplier<String> calcPctLazy(double current, double total) {
+        return () -> "%.2f%%".formatted(100.0 * current / total);
+    }
+
+    @Contract(pure = true)
+    public static @NotNull Supplier<String> calcPctLazy(
+            @NotNull final Number current, @NotNull final Number total) {
+        return calcPctLazy(current.doubleValue(), total.doubleValue());
+    }
 
     /**
      * Lazy evaluated logger. Inspired under <a

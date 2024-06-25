@@ -15,7 +15,7 @@ public interface UpdatableInterface {
      * @param b Signed byte, ranged {@code [-127, 128)}.
      */
     default void update(final byte b) {
-        update(StrUtils.byteToUnsigned(b));
+        update(b & 0xFF);
     }
 
     /**
@@ -30,8 +30,11 @@ public interface UpdatableInterface {
      *
      * @param string As described.
      */
-    default void update(final byte[] string) {
-        update(string, 0, string.length);
+    default void update(final byte @NotNull [] string) {
+        // Avoid boundary check.
+        for (byte b : string) {
+            update(b & 0xFF);
+        }
     }
 
     /**
@@ -45,7 +48,7 @@ public interface UpdatableInterface {
     default void update(final byte @NotNull [] string, final int start, final int end) {
         StrUtils.ensureStartEndValid(start, end, string.length);
         for (int i = start; i < end; i++) {
-            update(string[i]);
+            update(string[i] & 0xFF);
         }
     }
 

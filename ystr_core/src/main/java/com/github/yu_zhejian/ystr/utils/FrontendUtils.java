@@ -30,4 +30,8 @@ public final class FrontendUtils {
             return DF.format(n * 1.0) + suffix;
         }
     }
+
+    public static @NotNull String toHumanReadable(@NotNull Number n, String suffix) {
+        return toHumanReadable(n.doubleValue(), suffix);
+    }
 }

@@ -7,9 +7,11 @@ import com.github.yu_zhejian.ystr.minimizer.MinimizerCalculator;
 import com.github.yu_zhejian.ystr.rolling.NtHashBase;
 import com.github.yu_zhejian.ystr.rolling.NtShannonEntropy;
 import com.github.yu_zhejian.ystr.rolling.PrecomputedBidirectionalNtHash;
+import com.github.yu_zhejian.ystr.utils.FrontendUtils;
 import com.github.yu_zhejian.ystr.utils.IterUtils;
-import com.github.yu_zhejian.ystr_demo.FrontendUtils;
-import com.github.yu_zhejian.ystr_demo.LogUtils;
+import com.github.yu_zhejian.ystr.utils.LogUtils;
+import com.github.yu_zhejian.ystr_demo.utils.DumbStatistics;
+import com.github.yu_zhejian.ystr_demo.utils.SummaryStatisticsUtils;
 
 import htsjdk.samtools.reference.FastaSequenceIndex;
 import htsjdk.samtools.reference.ReferenceSequenceFileFactory;
@@ -358,8 +360,8 @@ public final class GenomeIndexer {
         LH.info(
                 "FINAL contig number: {}, sizes: {}",
                 LogUtils.lazy(() -> FrontendUtils.toHumanReadable(contigLens.size64(), "")),
-                LogUtils.lazy(
-                        LogUtils.summarizeStatisticsToHumanReadable(contigLensStatistics, "bp")));
+                LogUtils.lazy(SummaryStatisticsUtils.summarizeStatisticsToHumanReadable(
+                        contigLensStatistics, "bp")));
         LH.info(
                 "FINAL k-mers: all {} ; processed {} ({})",
                 FrontendUtils.toHumanReadable(numAllKmers, ""),
@@ -368,15 +370,16 @@ public final class GenomeIndexer {
         LH.info("FINAL index size: {}", FrontendUtils.toHumanReadable(fimalIndexSize, "B"));
         LH.info(
                 "FINAL NT entropy: {}",
-                LogUtils.lazy(LogUtils.summarizeStatisticsWithFormatStr(shannonEntropy, "%.4f")));
+                LogUtils.lazy(SummaryStatisticsUtils.summarizeStatisticsWithFormatStr(
+                        shannonEntropy, "%.4f")));
         LH.info(
                 "FINAL positions per minimizer: {}",
-                LogUtils.lazy(
-                        LogUtils.summarizeStatisticsToHumanReadable(numPositionsPerMinimizer, "")));
+                LogUtils.lazy(SummaryStatisticsUtils.summarizeStatisticsToHumanReadable(
+                        numPositionsPerMinimizer, "")));
         LH.info(
                 "FINAL minimizer distances: {}",
-                LogUtils.lazy(
-                        LogUtils.summarizeStatisticsToHumanReadable(minimizerDistances, "bp")));
+                LogUtils.lazy(SummaryStatisticsUtils.summarizeStatisticsToHumanReadable(
+                        minimizerDistances, "bp")));
         LH.info(
                 "FINAL distinct minimizers: {}, singletons: {} ({})",
                 FrontendUtils.toHumanReadable(numMinimizers, ""),

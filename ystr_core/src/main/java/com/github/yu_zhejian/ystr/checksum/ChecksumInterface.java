@@ -43,7 +43,9 @@ public interface ChecksumInterface extends UpdatableInterface {
     }
 
     static long fastChecksum(final @NotNull Checksum instance, final byte[] string) {
-        return fastChecksum(instance, string, 0, string.length);
+        instance.reset();
+        instance.update(string);
+        return instance.getValue();
     }
 
     /**
@@ -63,6 +65,8 @@ public interface ChecksumInterface extends UpdatableInterface {
     }
 
     static long fastChecksum(final @NotNull ChecksumInterface instance, final byte[] string) {
-        return fastChecksum(instance, string, 0, string.length);
+        instance.reset();
+        instance.update(string);
+        return instance.getValue();
     }
 }

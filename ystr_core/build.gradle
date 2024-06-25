@@ -22,6 +22,7 @@ dependencies {
 	testImplementation "org.eclipse.jgit:org.eclipse.jgit:${JGIT_VER}"
 	testImplementation "org.apache.commons:commons-csv:${COMMONS_CSV_VER}"
 	testImplementation "org.apache.commons:commons-compress:${COMMONS_COMPRESS_VER}"
+	testImplementation 'net.openhft:zero-allocation-hashing:0.16'
 
 	testAnnotationProcessor "org.openjdk.jmh:jmh-generator-annprocess:${JMH_VER}"
 }

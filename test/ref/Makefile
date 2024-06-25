@@ -6,7 +6,7 @@ all:\
 	ce11.genomic.fna.gz \
 	e_coli.genomic.fna \
 	sars_cov2.genomic.fna \
-
+	 uniprot_sprot.fa \
 
 
 e_coli.genomic.fna:
@@ -34,10 +34,15 @@ ce11.genomic.fna.gz:
 
 c_elegans_ests.fa:
 	curl https://hgdownload.soe.ucsc.edu/goldenPath/ce11/bigZips/est.fa.gz | \
-	pigz -cdf > c_elegans_ests.fa
+	gzip -cdf > c_elegans_ests.fa
 
 ce11.genomic.2bit:
 	curl https://hgdownload.soe.ucsc.edu/goldenPath/ce11/bigZips/ce11.2bit -o ce11.genomic.2bit
+
+# Should NOT be added to Checksum
+uniprot_sprot.fa:
+	curl https://ftp.ebi.ac.uk/pub/databases/uniprot/knowledgebase/uniprot_sprot.fasta.gz | \
+    gzip -cdf > uniprot_sprot.fa
 
 validate:
 	sha256sum -c sha256sum
