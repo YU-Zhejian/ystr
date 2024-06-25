@@ -21,21 +21,20 @@ class CRC32Test {
 
     @Test
     void crc32() {
+        var crc32 = new CRC32();
         assertEquals(
                 0x00000000,
-                ChecksumInterface.fastChecksum(CRC32::new, "".getBytes(StandardCharsets.US_ASCII)));
+                ChecksumInterface.fastChecksum(crc32, "".getBytes(StandardCharsets.US_ASCII)));
         assertEquals(
                 0x66a031a7,
-                ChecksumInterface.fastChecksum(
-                        CRC32::new, "AAA".getBytes(StandardCharsets.US_ASCII)));
+                ChecksumInterface.fastChecksum(crc32, "AAA".getBytes(StandardCharsets.US_ASCII)));
         assertEquals(
                 0x5AB5AEDD,
-                ChecksumInterface.fastChecksum(
-                        CRC32::new, "ATCG".getBytes(StandardCharsets.US_ASCII)));
-        assertEquals(0x41D912FF, ChecksumInterface.fastChecksum(CRC32::new, new byte[] {0, 0}));
+                ChecksumInterface.fastChecksum(crc32, "ATCG".getBytes(StandardCharsets.US_ASCII)));
+        assertEquals(0x41D912FF, ChecksumInterface.fastChecksum(crc32, new byte[] {0, 0}));
         assertEquals(
                 0x3B1C424C,
-                ChecksumInterface.fastChecksum(CRC32::new, new byte[] {(byte) 0xA9, (byte) 0xC7}));
-        assertEquals((long) 0x8A1C61A0, ChecksumInterface.fastChecksum(CRC32::new, x));
+                ChecksumInterface.fastChecksum(crc32, new byte[] {(byte) 0xA9, (byte) 0xC7}));
+        assertEquals((long) 0x8A1C61A0, ChecksumInterface.fastChecksum(crc32, x));
     }
 }

@@ -1,7 +1,9 @@
 all: \
 	oxford_3k.txt \
 	shakespeare_gutenberg.txt \
-	kjv_gutenberg.txt
+	kjv_gutenberg.txt \
+	wordlist.txt \
+
 
 oxford_3k.txt:
 	curl -L https://github.com/jnoodle/English-Vocabulary-Word-List/raw/master/Oxford%203000.txt > oxford_3k.txt

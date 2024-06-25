@@ -4,7 +4,6 @@ import com.github.yu_zhejian.ystr.base.UpdatableInterface;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.function.Supplier;
 import java.util.zip.Checksum;
 
 /**
@@ -30,59 +29,40 @@ public interface ChecksumInterface extends UpdatableInterface {
     /**
      * Compute checksum of part of the string.
      *
-     * @param supplier Supplier of {@link ChecksumInterface} implementations.
+     * @param instance As described
      * @param string As described.
      * @param start As described.
      * @param end As described.
      * @return As described.
      */
     static long fastChecksum(
-            final @NotNull Supplier<ChecksumInterface> supplier,
-            final byte[] string,
-            int start,
-            int end) {
-        final var digest = supplier.get();
-        digest.update(string, start, end);
-        return digest.getValue();
+            final @NotNull Checksum instance, final byte[] string, int start, int end) {
+        instance.reset();
+        instance.update(string, start, end);
+        return instance.getValue();
+    }
+
+    static long fastChecksum(final @NotNull Checksum instance, final byte[] string) {
+        return fastChecksum(instance, string, 0, string.length);
     }
 
     /**
-     * Compute checksum of the entire string.
+     * Compute checksum of part of the string.
      *
-     * @param supplier Supplier of {@link ChecksumInterface} implementations.
-     * @param string As described.
-     * @return As described.
-     */
-    static long fastChecksum(
-            final @NotNull Supplier<ChecksumInterface> supplier, final byte[] string) {
-        return fastChecksum(supplier, string, 0, string.length);
-    }
-
-    /**
-     * {@link #fastChecksum(Supplier, byte[], int, int)} on {@link Checksum}.
-     *
-     * @param supplier As described.
+     * @param instance As described
      * @param string As described.
      * @param start As described.
      * @param end As described.
      * @return As described.
      */
-    static long fastJULZipChecksum(
-            final @NotNull Supplier<Checksum> supplier, final byte[] string, int start, int end) {
-        final var digest = supplier.get();
-        digest.update(string, start, end);
-        return digest.getValue();
+    static long fastChecksum(
+            final @NotNull ChecksumInterface instance, final byte[] string, int start, int end) {
+        instance.reset();
+        instance.update(string, start, end);
+        return instance.getValue();
     }
 
-    /**
-     * {@link #fastChecksum(Supplier, byte[])} on {@link Checksum}.
-     *
-     * @param supplier As described.
-     * @param string As described.
-     * @return As described.
-     */
-    static long fastJULZipChecksum(
-            final @NotNull Supplier<Checksum> supplier, final byte[] string) {
-        return fastJULZipChecksum(supplier, string, 0, string.length);
+    static long fastChecksum(final @NotNull ChecksumInterface instance, final byte[] string) {
+        return fastChecksum(instance, string, 0, string.length);
     }
 }

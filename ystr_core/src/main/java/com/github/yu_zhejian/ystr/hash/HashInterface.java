@@ -5,8 +5,6 @@ import com.github.yu_zhejian.ystr.checksum.CRC32;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.function.Supplier;
-
 /**
  * Representing hash algorithms that generate checksums no longer than 64 bits.
  *
@@ -30,30 +28,20 @@ public interface HashInterface extends UpdatableInterface {
     /**
      * Compute checksum of part of the string.
      *
-     * @param supplier Supplier of {@link HashInterface} implementations.
+     * @param instance As described.
      * @param string As described.
      * @param start As described.
      * @param end As described.
      * @return As described.
      */
     static long fastHash(
-            final @NotNull Supplier<HashInterface> supplier,
-            final byte[] string,
-            int start,
-            int end) {
-        final var digest = supplier.get();
-        digest.update(string, start, end);
-        return digest.getValue();
+            final @NotNull HashInterface instance, final byte[] string, int start, int end) {
+        instance.reset();
+        instance.update(string, start, end);
+        return instance.getValue();
     }
 
-    /**
-     * Compute checksum of the entire string.
-     *
-     * @param supplier Supplier of {@link HashInterface} implementations.
-     * @param string As described.
-     * @return As described.
-     */
-    static long fastHash(final @NotNull Supplier<HashInterface> supplier, final byte[] string) {
-        return fastHash(supplier, string, 0, string.length);
+    static long fastHash(final @NotNull HashInterface instance, final byte[] string) {
+        return fastHash(instance, string, 0, string.length);
     }
 }

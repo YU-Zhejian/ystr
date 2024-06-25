@@ -110,7 +110,7 @@ public final class CRC32 implements ChecksumInterface {
 
     @Override
     public long getValue() {
-        return ~crc;
+        return ~crc & 0xFFFFFFFFL;
     }
 
     @Override
