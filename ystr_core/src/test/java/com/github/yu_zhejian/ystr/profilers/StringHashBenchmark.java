@@ -20,6 +20,7 @@ import com.github.yu_zhejian.ystr.hash.SDBMHash;
 import com.github.yu_zhejian.ystr.io.FastxIterator;
 import com.github.yu_zhejian.ystr.test_utils.CSVUtils;
 import com.github.yu_zhejian.ystr.test_utils.GitUtils;
+import com.github.yu_zhejian.ystr.utils.Alphabets;
 import com.github.yu_zhejian.ystr.utils.KmerGenerator;
 import com.github.yu_zhejian.ystr.utils.LogUtils;
 
@@ -139,7 +140,7 @@ public final class StringHashBenchmark {
                 @NotNull
                 @Override
                 public Iterator<byte[]> iterator() {
-                    return new KmerGenerator(KmerGenerator.DNA_ALPHABET, finalI);
+                    return new KmerGenerator(Alphabets.DNA_ALPHABET, finalI);
                 }
             });
         }
@@ -149,7 +150,7 @@ public final class StringHashBenchmark {
                 @NotNull
                 @Override
                 public Iterator<byte[]> iterator() {
-                    return new KmerGenerator(KmerGenerator.AA_ALPHABET, finalI);
+                    return new KmerGenerator(Alphabets.AA_ALPHABET, finalI);
                 }
             });
         }

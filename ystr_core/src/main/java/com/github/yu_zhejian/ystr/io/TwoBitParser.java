@@ -4,6 +4,7 @@ import com.github.yu_zhejian.ystr.codec.TwoBitCodec;
 import com.github.yu_zhejian.ystr.utils.StrUtils;
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntList;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
@@ -356,7 +357,7 @@ public final class TwoBitParser extends BaseRandomBinaryFileParser {
      * @return As described.
      */
     @SuppressWarnings("PMD.LooseCoupling")
-    public @NotNull IntArrayList getSeqLengths() throws IOException {
+    public @NotNull IntList getSeqLengths() throws IOException {
         var retl = new IntArrayList(this.sequenceCount);
         for (var seqID = 0; seqID < sequenceCount; seqID++) {
             retl.add(getSeqLength(seqID));

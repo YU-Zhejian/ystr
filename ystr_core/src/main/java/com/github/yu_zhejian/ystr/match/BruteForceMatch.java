@@ -1,6 +1,7 @@
 package com.github.yu_zhejian.ystr.match;
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntList;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -18,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
 public final class BruteForceMatch implements StrMatchInterface {
 
     @Override
-    public @NotNull IntArrayList apply(
+    public @NotNull IntList apply(
             final byte @NotNull [] haystack,
             final byte @NotNull [] needle,
             final int start,
