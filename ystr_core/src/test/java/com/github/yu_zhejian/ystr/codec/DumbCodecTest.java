@@ -28,10 +28,10 @@ class DumbCodecTest {
         assertArrayEquals(randArr, decoder.decode(randArr, 0, randArr.length));
         for (var coordinate :
                 RngUtils.generateRandomCoordinates(RAND_COORD_SIZE, 0, randArr.length)) {
-            var arrLen = coordinate._2() - coordinate._1();
+            var arrLen = coordinate.secondInt() - coordinate.firstInt();
             var trueArray = new byte[arrLen];
-            System.arraycopy(randArr, coordinate._1(), trueArray, 0, arrLen);
-            assertArrayEquals(trueArray, decoder.decode(randArr, coordinate._1(), arrLen));
+            System.arraycopy(randArr, coordinate.firstInt(), trueArray, 0, arrLen);
+            assertArrayEquals(trueArray, decoder.decode(randArr, coordinate.firstInt(), arrLen));
         }
     }
 
@@ -45,12 +45,12 @@ class DumbCodecTest {
 
         for (var coordinate :
                 RngUtils.generateRandomCoordinates(RAND_COORD_SIZE, 0, randArr.length)) {
-            var arrLen = coordinate._2() - coordinate._1();
+            var arrLen = coordinate.secondInt() - coordinate.firstInt();
             var trueArray = new byte[arrLen];
-            System.arraycopy(randArr, coordinate._1(), trueArray, 0, arrLen);
+            System.arraycopy(randArr, coordinate.firstInt(), trueArray, 0, arrLen);
 
             buffer = new byte[arrLen];
-            var decodedLen = decoder.decode(randArr, buffer, coordinate._1(), 0, arrLen);
+            var decodedLen = decoder.decode(randArr, buffer, coordinate.firstInt(), 0, arrLen);
             assertArrayEquals(trueArray, buffer);
             assertEquals(decodedLen, arrLen);
         }

@@ -35,6 +35,6 @@ class CRC32Test {
         assertEquals(
                 0x3B1C424C,
                 ChecksumInterface.convenientChecksum(crc32, new byte[] {(byte) 0xA9, (byte) 0xC7}));
-        assertEquals((long) 0x8A1C61A0, ChecksumInterface.convenientChecksum(crc32, x));
+        assertEquals(0x8A1C61A0L, ChecksumInterface.convenientChecksum(crc32, x));
     }
 }

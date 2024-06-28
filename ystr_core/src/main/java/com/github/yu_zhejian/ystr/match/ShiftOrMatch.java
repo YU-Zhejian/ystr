@@ -3,6 +3,7 @@ package com.github.yu_zhejian.ystr.match;
 import com.github.yu_zhejian.ystr.utils.StrUtils;
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntList;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -17,7 +18,7 @@ import java.util.Arrays;
  */
 public class ShiftOrMatch implements StrMatchInterface {
     @Override
-    public IntArrayList apply(
+    public IntList apply(
             final byte @NotNull [] haystack,
             final byte @NotNull [] needle,
             final int start,

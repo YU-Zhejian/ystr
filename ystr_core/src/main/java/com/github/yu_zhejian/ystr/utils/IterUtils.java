@@ -2,12 +2,17 @@ package com.github.yu_zhejian.ystr.utils;
 
 import it.unimi.dsi.fastutil.booleans.BooleanArrayList;
 import it.unimi.dsi.fastutil.booleans.BooleanIterator;
+import it.unimi.dsi.fastutil.booleans.BooleanList;
 import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
 import it.unimi.dsi.fastutil.doubles.DoubleIterator;
+import it.unimi.dsi.fastutil.doubles.DoubleList;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntList;
 import it.unimi.dsi.fastutil.longs.LongArrayList;
 import it.unimi.dsi.fastutil.longs.LongIterator;
+import it.unimi.dsi.fastutil.longs.LongList;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectList;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -62,7 +67,7 @@ public final class IterUtils {
      * @return As described.
      */
     @SuppressWarnings("PMD.LooseCoupling")
-    public static @NotNull IntArrayList dedup(@NotNull IntArrayList list) {
+    public static @NotNull IntList dedup(@NotNull IntList list) {
         final var result = new IntArrayList();
         if (list.isEmpty()) {
             return result;
@@ -89,7 +94,7 @@ public final class IterUtils {
      * @param <T> Type of elements inside the iterator.
      */
     @SuppressWarnings("PMD.LooseCoupling")
-    public static <T> @NotNull ObjectArrayList<T> collect(@NotNull Iterator<T> sourceIterator) {
+    public static <T> @NotNull ObjectList<T> collect(@NotNull Iterator<T> sourceIterator) {
         final var retl = new ObjectArrayList<T>();
         while (sourceIterator.hasNext()) {
             retl.add(sourceIterator.next());
@@ -104,7 +109,7 @@ public final class IterUtils {
      * @return As described.
      */
     @SuppressWarnings("PMD.LooseCoupling")
-    public static @NotNull LongArrayList collect(@NotNull LongIterator sourceIterator) {
+    public static @NotNull LongList collect(@NotNull LongIterator sourceIterator) {
         final var retl = new LongArrayList();
         while (sourceIterator.hasNext()) {
             retl.add(sourceIterator.nextLong());
@@ -119,7 +124,7 @@ public final class IterUtils {
      * @return As described.
      */
     @SuppressWarnings("PMD.LooseCoupling")
-    public static @NotNull DoubleArrayList collect(@NotNull DoubleIterator sourceIterator) {
+    public static @NotNull DoubleList collect(@NotNull DoubleIterator sourceIterator) {
         final var retl = new DoubleArrayList();
         while (sourceIterator.hasNext()) {
             retl.add(sourceIterator.nextDouble());
@@ -134,7 +139,7 @@ public final class IterUtils {
      * @return As described.
      */
     @SuppressWarnings("PMD.LooseCoupling")
-    public static @NotNull BooleanArrayList collect(@NotNull BooleanIterator sourceIterator) {
+    public static @NotNull BooleanList collect(@NotNull BooleanIterator sourceIterator) {
         final var retl = new BooleanArrayList();
         while (sourceIterator.hasNext()) {
             retl.add(sourceIterator.nextBoolean());
@@ -152,7 +157,7 @@ public final class IterUtils {
      * @param <T> As described.
      */
     @SuppressWarnings("PMD.LooseCoupling")
-    public static <T> @NotNull IntArrayList where(
+    public static <T> @NotNull IntList where(
             @NotNull Iterator<T> sourceIterator, Predicate<T> predicate) {
         final var retl = new IntArrayList();
         var i = 0;
@@ -173,8 +178,7 @@ public final class IterUtils {
      * @return As described.
      */
     @SuppressWarnings("PMD.LooseCoupling")
-    public static @NotNull IntArrayList where(
-            @NotNull DoubleArrayList list, DoublePredicate predicate) {
+    public static @NotNull IntList where(@NotNull DoubleList list, DoublePredicate predicate) {
         final var retl = new IntArrayList();
         for (var i = 0; i < list.size(); i++) {
             if (predicate.test(list.getDouble(i))) {

@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;
 
+/** Lazy-evaluation support for logger implementations that do not support such. */
 public final class LogUtils {
     private LogUtils() {}
 
@@ -21,6 +22,13 @@ public final class LogUtils {
         return () -> "%.2f%%".formatted(100.0 * current / total);
     }
 
+    /**
+     * {@link #calcPctLazy(double, double)} with {@link Number}.
+     *
+     * @param current As described.
+     * @param total As described.
+     * @return As described.
+     */
     @Contract(pure = true)
     public static @NotNull Supplier<String> calcPctLazy(
             @NotNull final Number current, @NotNull final Number total) {

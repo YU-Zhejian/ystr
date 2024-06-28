@@ -1,10 +1,10 @@
 package com.github.yu_zhejian.ystr.minimizer;
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntList;
+import it.unimi.dsi.fastutil.longs.LongList;
 
 import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
 
 /**
  * <b>References</b>
@@ -26,8 +26,8 @@ public final class MinimizerCalculator {
      *     endHash enables "overlapping matches".
      * @return As described.
      */
-    public static @NotNull List<Integer> getMinimizerPositions(
-            final @NotNull List<Long> hashes, final int windowSize, final boolean endHash) {
+    public static @NotNull IntList getMinimizerPositions(
+            final @NotNull LongList hashes, final int windowSize, final boolean endHash) {
         var hashFrom = -1;
         var hashTo = 0;
         final var hLen = hashes.size();
@@ -40,7 +40,7 @@ public final class MinimizerCalculator {
 
         // Populating the rolling buffer
         while (hashTo < finalWindowSize - 1 && hashTo < hLen) {
-            minimizerRingBuffer.add(hashes.get(hashTo), hashTo);
+            minimizerRingBuffer.add(hashes.getLong(hashTo), hashTo);
             if (endHash) {
                 retl.add(minimizerRingBuffer.getCurrentMinimizer());
             }
@@ -48,7 +48,7 @@ public final class MinimizerCalculator {
             hashTo++;
         }
         while (hashTo < hLen) {
-            minimizerRingBuffer.add(hashes.get(hashTo), hashTo);
+            minimizerRingBuffer.add(hashes.getLong(hashTo), hashTo);
             retl.add(minimizerRingBuffer.getCurrentMinimizer());
             // System.out.printf("%d %d -- %s%n", hashFrom, hashTo, minimizerRingBuffer);
             hashTo++;
