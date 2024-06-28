@@ -23,7 +23,7 @@ public abstract class BaseRandomBinaryFileParser implements AutoCloseable {
     protected final ByteBuffer longBuffer = ByteBuffer.allocateDirect(8);
 
     /**
-     * Set byte order. Should not be uised by external methods.
+     * Set byte order. Should not be used by external methods.
      *
      * @param byteOrder As described.
      */

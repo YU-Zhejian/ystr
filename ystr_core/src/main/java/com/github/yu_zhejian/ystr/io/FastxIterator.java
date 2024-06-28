@@ -39,8 +39,10 @@ public final class FastxIterator implements Iterator<FastxRecord>, AutoCloseable
 
     /** Wrapper for {@link RuntimeException} to make SonarLint silence. */
     public static class FastxIOException extends RuntimeException {
-        /**
-         * Conbvenient constructor.
+        private static final long serialVersionUID = 1L;
+
+		/**
+         * Convenient constructor.
          *
          * @param description As described.
          * @param e As described.

@@ -35,14 +35,21 @@ public interface ChecksumInterface extends UpdatableInterface {
      * @param end As described.
      * @return As described.
      */
-    static long fastChecksum(
+    static long convenientChecksum(
             final @NotNull Checksum instance, final byte[] string, int start, int end) {
         instance.reset();
         instance.update(string, start, end);
         return instance.getValue();
     }
 
-    static long fastChecksum(final @NotNull Checksum instance, final byte[] string) {
+    /**
+     * Compute checksum of the entire string.
+     *
+     * @param instance As described
+     * @param string As described.
+     * @return As described.
+     */
+    static long convenientChecksum(final @NotNull Checksum instance, final byte[] string) {
         instance.reset();
         instance.update(string);
         return instance.getValue();
@@ -57,14 +64,21 @@ public interface ChecksumInterface extends UpdatableInterface {
      * @param end As described.
      * @return As described.
      */
-    static long fastChecksum(
+    static long convenientChecksum(
             final @NotNull ChecksumInterface instance, final byte[] string, int start, int end) {
         instance.reset();
         instance.update(string, start, end);
         return instance.getValue();
     }
 
-    static long fastChecksum(final @NotNull ChecksumInterface instance, final byte[] string) {
+    /**
+     * Compute checksum of the entire string.
+     *
+     * @param instance As described
+     * @param string As described.
+     * @return As described.
+     */
+    static long convenientChecksum(final @NotNull ChecksumInterface instance, final byte[] string) {
         instance.reset();
         instance.update(string);
         return instance.getValue();

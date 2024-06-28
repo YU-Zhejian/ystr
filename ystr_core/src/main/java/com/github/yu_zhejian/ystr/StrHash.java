@@ -49,6 +49,6 @@ public final class StrHash {
      * @see CRC32
      */
     public static long crc32(final byte @NotNull [] string) {
-        return ChecksumInterface.fastChecksum(new CRC32(), string, 0, string.length);
+        return ChecksumInterface.convenientChecksum(new CRC32(), string, 0, string.length);
     }
 }

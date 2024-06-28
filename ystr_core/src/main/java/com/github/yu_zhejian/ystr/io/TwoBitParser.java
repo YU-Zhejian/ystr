@@ -199,12 +199,12 @@ public final class TwoBitParser extends BaseRandomBinaryFileParser {
     /**
      * Helper function that read multiple bytes.
      *
-     * @param outArr As described.
+     * @param dst As described.
      * @param dstStart Start position in {@code outArr}.
      * @param numBytesToRead As described.
      * @throws IOException As described.
      */
-    private void readNts(byte[] outArr, final int dstStart, final int numBytesToRead)
+    private void readNts(final byte[] dst, final int dstStart, final int numBytesToRead)
             throws IOException {
         var numBytesLeftToRead = numBytesToRead;
         final var buffer = new byte[numBytesLeftToRead];
@@ -216,14 +216,14 @@ public final class TwoBitParser extends BaseRandomBinaryFileParser {
                 throw new EOFException();
             }
             numBytesLeftToRead -= numBytesReadForThisChunk;
-            dstPos += codec.decode(buffer, outArr, 0, dstPos, numBytesReadForThisChunk);
+            dstPos += codec.decode(buffer, dst, 0, dstPos, numBytesReadForThisChunk);
         }
         if (numBytesLeftToRead > 0) {
             numBytesReadForThisChunk = randomAccessFile.read(buffer, 0, numBytesLeftToRead);
             if (numBytesReadForThisChunk == -1) {
                 throw new EOFException();
             }
-            codec.decode(buffer, outArr, 0, dstPos, numBytesReadForThisChunk);
+            codec.decode(buffer, dst, 0, dstPos, numBytesReadForThisChunk);
         }
     }
 

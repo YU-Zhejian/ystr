@@ -34,6 +34,7 @@ import org.slf4j.LoggerFactory;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.security.SecureRandom;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -92,7 +93,7 @@ public class FastaParserBenchmark {
         for (var i = 0; i < seqNames.size(); i++) {
             seqNameIDMap.put(seqNames.get(i), i);
         }
-        var rng = new Random();
+        var rng = new SecureRandom();
         for (var i = 0; i < NUM_RDN_INTERVALS; i++) {
             var seqID = rng.nextInt(seqNames.size());
             var selectedChrom = seqNames.get(seqID);

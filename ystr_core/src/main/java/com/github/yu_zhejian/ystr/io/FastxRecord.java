@@ -33,7 +33,7 @@ public record FastxRecord(String seqid, byte[] seq, byte @Nullable [] qual)
      * @param seqid As described.
      * @param seq As described.
      * @param qual As described.
-     * @throws IllegalArgumentException If {@link #qual} is noy {@code null} and length of
+     * @throws IllegalArgumentException If {@link #qual} is not {@code null} and length of
      *     {@link #qual} and {@link #seq} differs.
      */
     public FastxRecord {

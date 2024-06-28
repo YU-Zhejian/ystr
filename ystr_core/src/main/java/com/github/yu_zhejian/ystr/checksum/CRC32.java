@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
  * <p>Note, this algorithm is a <b>CHECKSUM</b> algorithm instead of a <b>HASHING</b> algorithm.
  *
  * @see <a href="https://introcs.cs.princeton.edu/java/61data/CRC32.java.html">Princeton University
- *     Implementyation of the CRC32 algorithm.</a>
+ *     Implementation of the CRC32 algorithm.</a>
  */
 public final class CRC32 implements ChecksumInterface {
 
@@ -95,12 +95,12 @@ public final class CRC32 implements ChecksumInterface {
 
     @Override
     public void update(final int b) {
-        crc = CRC_POLY8_LOOKUP_TABLE[StrUtils.byteToUnsigned(crc ^ b)] ^ (crc >>> 8);
+        crc = CRC_POLY8_LOOKUP_TABLE[(crc ^ b) & 0xFF] ^ (crc >>> 8);
     }
 
     @Override
     public void update(final byte b) {
-        crc = CRC_POLY8_LOOKUP_TABLE[StrUtils.byteToUnsigned(crc ^ b)] ^ (crc >>> 8);
+        crc = CRC_POLY8_LOOKUP_TABLE[(crc ^ b) & 0xFF] ^ (crc >>> 8);
     }
 
     /** Default constructor. */

@@ -216,10 +216,10 @@ public final class StringHashBenchmark {
     }
 
     public static void main(String[] args) throws IOException {
-        testSpeed((word) -> ChecksumInterface.fastChecksum(crc32, word), "crc32");
-        testSpeed((word) -> ChecksumInterface.fastChecksum(julCrc32C, word), "julCrc32C");
-        testSpeed((word) -> ChecksumInterface.fastChecksum(julCrc32, word), "julCrc32");
-        testSpeed((word) -> ChecksumInterface.fastChecksum(julAlder32, word), "julAlder32");
+        testSpeed((word) -> ChecksumInterface.convenientChecksum(crc32, word), "crc32");
+        testSpeed((word) -> ChecksumInterface.convenientChecksum(julCrc32C, word), "julCrc32C");
+        testSpeed((word) -> ChecksumInterface.convenientChecksum(julCrc32, word), "julCrc32");
+        testSpeed((word) -> ChecksumInterface.convenientChecksum(julAlder32, word), "julAlder32");
         testSpeed((word) -> HashInterface.fastHash(bitwiseFNV1a32, word), "bitwiseFNV1a32");
         testSpeed((word) -> HashInterface.fastHash(bitwiseFNV1a64, word), "bitwiseFNV1a64");
         testSpeed((word) -> HashInterface.fastHash(multiplyFNV1a32, word), "multiplyFNV1a32");
@@ -246,10 +246,10 @@ public final class StringHashBenchmark {
         testSpeed((word) -> LongHashFunction.farmNa().hashBytes(word), "farmNa");
         testSpeed((word) -> LongHashFunction.farmUo().hashBytes(word), "farmUo");
 
-        testCollisions((word) -> ChecksumInterface.fastChecksum(crc32, word), "crc32");
-        testCollisions((word) -> ChecksumInterface.fastChecksum(julCrc32C, word), "julCrc32C");
-        testCollisions((word) -> ChecksumInterface.fastChecksum(julCrc32, word), "julCrc32");
-        testCollisions((word) -> ChecksumInterface.fastChecksum(julAlder32, word), "julAlder32");
+        testCollisions((word) -> ChecksumInterface.convenientChecksum(crc32, word), "crc32");
+        testCollisions((word) -> ChecksumInterface.convenientChecksum(julCrc32C, word), "julCrc32C");
+        testCollisions((word) -> ChecksumInterface.convenientChecksum(julCrc32, word), "julCrc32");
+        testCollisions((word) -> ChecksumInterface.convenientChecksum(julAlder32, word), "julAlder32");
         testCollisions((word) -> HashInterface.fastHash(bitwiseFNV1a32, word), "bitwiseFNV1a32");
         testCollisions((word) -> HashInterface.fastHash(bitwiseFNV1a64, word), "bitwiseFNV1a64");
         testCollisions((word) -> HashInterface.fastHash(multiplyFNV1a32, word), "multiplyFNV1a32");
