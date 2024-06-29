@@ -667,10 +667,11 @@ class FNV1BaseTest {
     void testIntFnv1a() {
         for (int i = 0; i < TEST_SOURCE.length; i++) {
             assertEquals(
-                    INT_FNV1A_RES[i], HashInterface.fastHash(new BitwiseFNV1a32(), TEST_SOURCE[i]));
+                    INT_FNV1A_RES[i],
+                    HashInterface.convenientHash(new BitwiseFNV1a32(), TEST_SOURCE[i]));
             assertEquals(
                     INT_FNV1A_RES[i],
-                    HashInterface.fastHash(new MultiplyFNV1a32(), TEST_SOURCE[i]));
+                    HashInterface.convenientHash(new MultiplyFNV1a32(), TEST_SOURCE[i]));
         }
     }
 
@@ -679,10 +680,10 @@ class FNV1BaseTest {
         for (int i = 0; i < TEST_SOURCE.length; i++) {
             assertEquals(
                     LONG_FNV1A_RES[i],
-                    HashInterface.fastHash(new BitwiseFNV1a64(), TEST_SOURCE[i]));
+                    HashInterface.convenientHash(new BitwiseFNV1a64(), TEST_SOURCE[i]));
             assertEquals(
                     LONG_FNV1A_RES[i],
-                    HashInterface.fastHash(new MultiplyFNV1a64(), TEST_SOURCE[i]));
+                    HashInterface.convenientHash(new MultiplyFNV1a64(), TEST_SOURCE[i]));
         }
     }
 }

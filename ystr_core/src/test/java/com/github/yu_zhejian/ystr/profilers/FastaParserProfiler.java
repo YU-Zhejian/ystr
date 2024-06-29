@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
-public class FastaParserProfiler {
+public final class FastaParserProfiler {
     private TwoBitParser twoBitParser;
     private List<Tuple3<String, Integer, Integer>> coordinates;
     private Map<String, Integer> seqNameIDMap;

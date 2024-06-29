@@ -1,6 +1,4 @@
-package com.github.yu_zhejian.ystr.checksum;
-
-import com.github.yu_zhejian.ystr.utils.StrUtils;
+package com.github.yu_zhejian.ystr.hash;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -18,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
  * @see <a href="https://introcs.cs.princeton.edu/java/61data/CRC32.java.html">Princeton University
  *     Implementation of the CRC32 algorithm.</a>
  */
-public final class CRC32 implements ChecksumInterface {
+public final class CRC32Hash implements HashInterface {
 
     private int crc;
 
@@ -104,7 +102,7 @@ public final class CRC32 implements ChecksumInterface {
     }
 
     /** Default constructor. */
-    public CRC32() {
+    public CRC32Hash() {
         reset();
     }
 

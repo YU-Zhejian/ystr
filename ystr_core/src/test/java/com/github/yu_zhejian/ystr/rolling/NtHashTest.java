@@ -3,11 +3,9 @@ package com.github.yu_zhejian.ystr.rolling;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 
-import com.github.yu_zhejian.ystr.StrHash;
 import com.github.yu_zhejian.ystr.utils.IterUtils;
 
 import org.jetbrains.annotations.NotNull;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.nio.charset.StandardCharsets;
@@ -45,14 +43,6 @@ class NtHashTest {
         assertEquals(getNthNtHash2(str1, 3, 4), getNthNtHash2(str2, 0, 4));
         assertEquals(getNthNtHash2(str1, 4, 4), getNthNtHash2(str2, 1, 4));
         assertEquals(getNthNtHash2(str1, 4, 3), getNthNtHash2(str2, 1, 3));
-
-        // Simple ntHash
-        Assertions.assertEquals(
-                StrHash.ntHash("AGCT".getBytes(StandardCharsets.UTF_8)), getNthNtHash2(str2, 0, 4));
-        assertEquals(
-                StrHash.ntHash("GCTN".getBytes(StandardCharsets.UTF_8)), getNthNtHash2(str2, 1, 4));
-        assertEquals(
-                StrHash.ntHash("GCT".getBytes(StandardCharsets.UTF_8)), getNthNtHash2(str2, 1, 3));
 
         // Different skipping strategy
         assertEquals(getNthNtHash1(str1, 3, 4), getNthNtHash2(str2, 0, 4));

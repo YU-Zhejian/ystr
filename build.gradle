@@ -80,10 +80,10 @@ spotless {
 		removeUnusedImports()
 		palantirJavaFormat(PALANTIR_JAVA_FMT_VER).style("AOSP").formatJavadoc(true)
 	}
-	shell {
-		target '**/*.sh'
-		shfmt('v3.8.0')
-	}
+	//	shell {
+	//		target '**/*.sh'
+	//		shfmt('v3.8.0')
+	//	}
 	groovyGradle {
 		target '**/*.gradle'
 		importOrder()

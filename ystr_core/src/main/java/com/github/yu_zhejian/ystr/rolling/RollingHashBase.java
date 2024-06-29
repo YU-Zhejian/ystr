@@ -11,7 +11,7 @@ abstract class RollingHashBase extends RollingBase<Long> implements RollingHashI
     protected long currentValueUnboxed;
 
     /**
-     * As described.
+     * Default constructor.
      *
      * @param string As described.
      * @param k As described.

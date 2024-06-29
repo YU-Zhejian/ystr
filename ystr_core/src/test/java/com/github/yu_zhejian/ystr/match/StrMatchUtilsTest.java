@@ -1,6 +1,6 @@
 package com.github.yu_zhejian.ystr.match;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import io.vavr.Tuple;
 import io.vavr.Tuple2;

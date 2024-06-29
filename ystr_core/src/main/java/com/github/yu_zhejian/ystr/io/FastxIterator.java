@@ -41,7 +41,7 @@ public final class FastxIterator implements Iterator<FastxRecord>, AutoCloseable
     public static class FastxIOException extends RuntimeException {
         private static final long serialVersionUID = 1L;
 
-		/**
+        /**
          * Convenient constructor.
          *
          * @param description As described.

@@ -1,22 +1,7 @@
 package com.github.yu_zhejian.ystr.profilers;
 
 import com.github.yu_zhejian.ystr.StrHash;
-import com.github.yu_zhejian.ystr.checksum.CRC32;
-import com.github.yu_zhejian.ystr.checksum.ChecksumInterface;
-import com.github.yu_zhejian.ystr.hash.APHash;
-import com.github.yu_zhejian.ystr.hash.BKDRHash;
-import com.github.yu_zhejian.ystr.hash.BPHash;
-import com.github.yu_zhejian.ystr.hash.BitwiseFNV1a32;
-import com.github.yu_zhejian.ystr.hash.BitwiseFNV1a64;
-import com.github.yu_zhejian.ystr.hash.DJBHash;
-import com.github.yu_zhejian.ystr.hash.ELFHash;
 import com.github.yu_zhejian.ystr.hash.HashInterface;
-import com.github.yu_zhejian.ystr.hash.JSHash;
-import com.github.yu_zhejian.ystr.hash.MultiplyFNV1a32;
-import com.github.yu_zhejian.ystr.hash.MultiplyFNV1a64;
-import com.github.yu_zhejian.ystr.hash.PJWHash;
-import com.github.yu_zhejian.ystr.hash.RSHash;
-import com.github.yu_zhejian.ystr.hash.SDBMHash;
 import com.github.yu_zhejian.ystr.io.FastxIterator;
 import com.github.yu_zhejian.ystr.test_utils.CSVUtils;
 import com.github.yu_zhejian.ystr.test_utils.GitUtils;
@@ -44,8 +29,6 @@ import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.function.ToLongFunction;
-import java.util.zip.Adler32;
-import java.util.zip.CRC32C;
 
 public final class StringHashBenchmark {
     private static final Logger LH = LoggerFactory.getLogger(StringHashBenchmark.class);
@@ -54,23 +37,6 @@ public final class StringHashBenchmark {
     private static final ObjectArrayList<byte[]> TEST_SWISSPROT;
     private static final Object2ObjectArrayMap<String, Iterable<byte[]>> COLLISION_TEST_CASES;
     private static final Object2ObjectArrayMap<String, Iterable<byte[]>> SPEED_TEST_CASES;
-    private static final BitwiseFNV1a64 bitwiseFNV1a64 = new BitwiseFNV1a64();
-    private static final CRC32 crc32 = new CRC32();
-    private static final BitwiseFNV1a32 bitwiseFNV1a32 = new BitwiseFNV1a32();
-    private static final MultiplyFNV1a32 multiplyFNV1a32 = new MultiplyFNV1a32();
-    private static final MultiplyFNV1a64 multiplyFNV1a64 = new MultiplyFNV1a64();
-    private static final APHash apHash = new APHash();
-    private static final BKDRHash bkdrHash = new BKDRHash();
-    private static final BPHash bpHash = new BPHash();
-    private static final DJBHash djbHash = new DJBHash();
-    private static final ELFHash elfHash = new ELFHash();
-    private static final JSHash jsHash = new JSHash();
-    private static final PJWHash pjwHash = new PJWHash();
-    private static final RSHash rsHash = new RSHash();
-    private static final SDBMHash sdbmHash = new SDBMHash();
-    private static final java.util.zip.CRC32 julCrc32 = new java.util.zip.CRC32();
-    private static final CRC32C julCrc32C = new CRC32C();
-    private static final Adler32 julAlder32 = new Adler32();
 
     private static final CSVPrinter SPEED_CSVP;
     private static final CSVPrinter COLLISIONS_CSVP;
@@ -217,65 +183,100 @@ public final class StringHashBenchmark {
     }
 
     public static void main(String[] args) throws IOException {
-        testSpeed((word) -> ChecksumInterface.convenientChecksum(crc32, word), "crc32");
-        testSpeed((word) -> ChecksumInterface.convenientChecksum(julCrc32C, word), "julCrc32C");
-        testSpeed((word) -> ChecksumInterface.convenientChecksum(julCrc32, word), "julCrc32");
-        testSpeed((word) -> ChecksumInterface.convenientChecksum(julAlder32, word), "julAlder32");
-        testSpeed((word) -> HashInterface.fastHash(bitwiseFNV1a32, word), "bitwiseFNV1a32");
-        testSpeed((word) -> HashInterface.fastHash(bitwiseFNV1a64, word), "bitwiseFNV1a64");
-        testSpeed((word) -> HashInterface.fastHash(multiplyFNV1a32, word), "multiplyFNV1a32");
-        testSpeed((word) -> HashInterface.fastHash(multiplyFNV1a64, word), "multiplyFNV1a64");
+        testSpeed(word -> HashInterface.convenientHash(HashInterface.CRC32_HASH, word), "crc32");
+        testSpeed(
+                word -> HashInterface.convenientHash(HashInterface.JUL_CRC32_CHECKSUM, word),
+                "julCrc32C");
+        testSpeed(
+                word -> HashInterface.convenientHash(HashInterface.JUL_CRC32C_CHECKSUM, word),
+                "julCrc32");
+        testSpeed(
+                word -> HashInterface.convenientHash(HashInterface.JUL_ALDER32_CHECKSUM, word),
+                "julAlder32");
+        testSpeed(
+                word -> HashInterface.convenientHash(HashInterface.BITWISE_FNV1A_32, word),
+                "bitwiseFNV1a32");
+        testSpeed(
+                word -> HashInterface.convenientHash(HashInterface.BITWISE_FNV1A_64, word),
+                "bitwiseFNV1a64");
+        testSpeed(
+                word -> HashInterface.convenientHash(HashInterface.MULTIPLY_FNV1A_32, word),
+                "multiplyFNV1a32");
+        testSpeed(
+                word -> HashInterface.convenientHash(HashInterface.MULTIPLY_FNV1A_64, word),
+                "multiplyFNV1a64");
         testSpeed(StrHash::ntHash, "ntHash");
-        testSpeed((word) -> (long) Arrays.hashCode(word), "javaHash");
+        testSpeed(word -> (long) Arrays.hashCode(word), "javaHash");
 
-        testSpeed((word) -> HashInterface.fastHash(apHash, word), "apHash");
-        testSpeed((word) -> HashInterface.fastHash(bkdrHash, word), "bkdrHash");
-        testSpeed((word) -> HashInterface.fastHash(bpHash, word), "bpHash");
-        testSpeed((word) -> HashInterface.fastHash(djbHash, word), "djbHash");
-        testSpeed((word) -> HashInterface.fastHash(elfHash, word), "elfHash");
-        testSpeed((word) -> HashInterface.fastHash(jsHash, word), "jsHash");
-        testSpeed((word) -> HashInterface.fastHash(pjwHash, word), "pjwHash");
-        testSpeed((word) -> HashInterface.fastHash(rsHash, word), "rsHash");
-        testSpeed((word) -> HashInterface.fastHash(sdbmHash, word), "sdbmHash");
+        testSpeed(word -> HashInterface.convenientHash(HashInterface.AP_HASH, word), "apHash");
+        testSpeed(word -> HashInterface.convenientHash(HashInterface.BKDR_HASH, word), "bkdrHash");
+        testSpeed(word -> HashInterface.convenientHash(HashInterface.BPH_HASH, word), "bpHash");
+        testSpeed(word -> HashInterface.convenientHash(HashInterface.DJB_HASH, word), "djbHash");
+        testSpeed(word -> HashInterface.convenientHash(HashInterface.ELF_HASH, word), "elfHash");
+        testSpeed(word -> HashInterface.convenientHash(HashInterface.JS_HASH, word), "jsHash");
+        testSpeed(word -> HashInterface.convenientHash(HashInterface.PJW_HASH, word), "pjwHash");
+        testSpeed(word -> HashInterface.convenientHash(HashInterface.RS_HASH, word), "rsHash");
+        testSpeed(word -> HashInterface.convenientHash(HashInterface.SDBM_HASH, word), "sdbmHash");
 
-        testSpeed((word) -> LongHashFunction.xx3().hashBytes(word), "xx3");
-        testSpeed((word) -> LongHashFunction.xx().hashBytes(word), "xx");
-        testSpeed((word) -> LongHashFunction.murmur_3().hashBytes(word), "murmur_3");
-        testSpeed((word) -> LongHashFunction.city_1_1().hashBytes(word), "city_1_1");
-        testSpeed((word) -> LongHashFunction.metro().hashBytes(word), "metro");
-        testSpeed((word) -> LongHashFunction.wy_3().hashBytes(word), "wy_3");
-        testSpeed((word) -> LongHashFunction.farmNa().hashBytes(word), "farmNa");
-        testSpeed((word) -> LongHashFunction.farmUo().hashBytes(word), "farmUo");
+        testSpeed(word -> LongHashFunction.xx3().hashBytes(word), "xx3");
+        testSpeed(word -> LongHashFunction.xx().hashBytes(word), "xx");
+        testSpeed(word -> LongHashFunction.murmur_3().hashBytes(word), "murmur_3");
+        testSpeed(word -> LongHashFunction.city_1_1().hashBytes(word), "city_1_1");
+        testSpeed(word -> LongHashFunction.metro().hashBytes(word), "metro");
+        testSpeed(word -> LongHashFunction.wy_3().hashBytes(word), "wy_3");
+        testSpeed(word -> LongHashFunction.farmNa().hashBytes(word), "farmNa");
+        testSpeed(word -> LongHashFunction.farmUo().hashBytes(word), "farmUo");
 
-        testCollisions((word) -> ChecksumInterface.convenientChecksum(crc32, word), "crc32");
-        testCollisions((word) -> ChecksumInterface.convenientChecksum(julCrc32C, word), "julCrc32C");
-        testCollisions((word) -> ChecksumInterface.convenientChecksum(julCrc32, word), "julCrc32");
-        testCollisions((word) -> ChecksumInterface.convenientChecksum(julAlder32, word), "julAlder32");
-        testCollisions((word) -> HashInterface.fastHash(bitwiseFNV1a32, word), "bitwiseFNV1a32");
-        testCollisions((word) -> HashInterface.fastHash(bitwiseFNV1a64, word), "bitwiseFNV1a64");
-        testCollisions((word) -> HashInterface.fastHash(multiplyFNV1a32, word), "multiplyFNV1a32");
-        testCollisions((word) -> HashInterface.fastHash(multiplyFNV1a64, word), "multiplyFNV1a64");
+        testCollisions(
+                word -> HashInterface.convenientHash(HashInterface.CRC32_HASH, word), "crc32");
+        testCollisions(
+                word -> HashInterface.convenientHash(HashInterface.JUL_CRC32_CHECKSUM, word),
+                "julCrc32C");
+        testCollisions(
+                word -> HashInterface.convenientHash(HashInterface.JUL_CRC32C_CHECKSUM, word),
+                "julCrc32");
+        testCollisions(
+                word -> HashInterface.convenientHash(HashInterface.JUL_ALDER32_CHECKSUM, word),
+                "julAlder32");
+        testCollisions(
+                word -> HashInterface.convenientHash(HashInterface.BITWISE_FNV1A_32, word),
+                "bitwiseFNV1a32");
+        testCollisions(
+                word -> HashInterface.convenientHash(HashInterface.BITWISE_FNV1A_64, word),
+                "bitwiseFNV1a64");
+        testCollisions(
+                word -> HashInterface.convenientHash(HashInterface.MULTIPLY_FNV1A_32, word),
+                "multiplyFNV1a32");
+        testCollisions(
+                word -> HashInterface.convenientHash(HashInterface.MULTIPLY_FNV1A_64, word),
+                "multiplyFNV1a64");
         testCollisions(StrHash::ntHash, "ntHash");
-        testCollisions((word) -> (long) Arrays.hashCode(word), "javaHash");
+        testCollisions(word -> (long) Arrays.hashCode(word), "javaHash");
 
-        testCollisions((word) -> HashInterface.fastHash(apHash, word), "apHash");
-        testCollisions((word) -> HashInterface.fastHash(bkdrHash, word), "bkdrHash");
-        testCollisions((word) -> HashInterface.fastHash(bpHash, word), "bpHash");
-        testCollisions((word) -> HashInterface.fastHash(djbHash, word), "djbHash");
-        testCollisions((word) -> HashInterface.fastHash(elfHash, word), "elfHash");
-        testCollisions((word) -> HashInterface.fastHash(jsHash, word), "jsHash");
-        testCollisions((word) -> HashInterface.fastHash(pjwHash, word), "pjwHash");
-        testCollisions((word) -> HashInterface.fastHash(rsHash, word), "rsHash");
-        testCollisions((word) -> HashInterface.fastHash(sdbmHash, word), "sdbmHash");
+        testCollisions(word -> HashInterface.convenientHash(HashInterface.AP_HASH, word), "apHash");
+        testCollisions(
+                word -> HashInterface.convenientHash(HashInterface.BKDR_HASH, word), "bkdrHash");
+        testCollisions(
+                word -> HashInterface.convenientHash(HashInterface.BPH_HASH, word), "bpHash");
+        testCollisions(
+                word -> HashInterface.convenientHash(HashInterface.DJB_HASH, word), "djbHash");
+        testCollisions(
+                word -> HashInterface.convenientHash(HashInterface.ELF_HASH, word), "elfHash");
+        testCollisions(word -> HashInterface.convenientHash(HashInterface.JS_HASH, word), "jsHash");
+        testCollisions(
+                word -> HashInterface.convenientHash(HashInterface.PJW_HASH, word), "pjwHash");
+        testCollisions(word -> HashInterface.convenientHash(HashInterface.RS_HASH, word), "rsHash");
+        testCollisions(
+                word -> HashInterface.convenientHash(HashInterface.SDBM_HASH, word), "sdbmHash");
 
-        testCollisions((word) -> LongHashFunction.xx3().hashBytes(word), "xx3");
-        testCollisions((word) -> LongHashFunction.xx().hashBytes(word), "xx");
-        testCollisions((word) -> LongHashFunction.murmur_3().hashBytes(word), "murmur_3");
-        testCollisions((word) -> LongHashFunction.city_1_1().hashBytes(word), "city_1_1");
-        testCollisions((word) -> LongHashFunction.metro().hashBytes(word), "metro");
-        testCollisions((word) -> LongHashFunction.wy_3().hashBytes(word), "wy_3");
-        testCollisions((word) -> LongHashFunction.farmNa().hashBytes(word), "farmNa");
-        testCollisions((word) -> LongHashFunction.farmUo().hashBytes(word), "farmUo");
+        testCollisions(word -> LongHashFunction.xx3().hashBytes(word), "xx3");
+        testCollisions(word -> LongHashFunction.xx().hashBytes(word), "xx");
+        testCollisions(word -> LongHashFunction.murmur_3().hashBytes(word), "murmur_3");
+        testCollisions(word -> LongHashFunction.city_1_1().hashBytes(word), "city_1_1");
+        testCollisions(word -> LongHashFunction.metro().hashBytes(word), "metro");
+        testCollisions(word -> LongHashFunction.wy_3().hashBytes(word), "wy_3");
+        testCollisions(word -> LongHashFunction.farmNa().hashBytes(word), "farmNa");
+        testCollisions(word -> LongHashFunction.farmUo().hashBytes(word), "farmUo");
 
         SPEED_CSVP.flush();
         SPEED_CSVP.close();

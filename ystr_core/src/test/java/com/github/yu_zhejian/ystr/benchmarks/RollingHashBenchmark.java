@@ -1,11 +1,14 @@
 package com.github.yu_zhejian.ystr.benchmarks;
 
+import com.github.yu_zhejian.ystr.hash.HashInterface;
 import com.github.yu_zhejian.ystr.io.FastxIterator;
 import com.github.yu_zhejian.ystr.rolling.NtHash;
 import com.github.yu_zhejian.ystr.rolling.PolynomialRollingHash;
 import com.github.yu_zhejian.ystr.rolling.PrecomputedNtHash;
+import com.github.yu_zhejian.ystr.rolling.RollingHashAdaptor;
 import com.github.yu_zhejian.ystr.test_utils.GitUtils;
 
+import org.jetbrains.annotations.NotNull;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Fork;
@@ -29,7 +32,7 @@ import java.nio.file.Path;
 import java.util.concurrent.TimeUnit;
 
 @State(Scope.Thread)
-@OutputTimeUnit(TimeUnit.MICROSECONDS)
+@OutputTimeUnit(TimeUnit.NANOSECONDS)
 @BenchmarkMode(Mode.AverageTime)
 @Warmup(iterations = 5, time = 1)
 @Measurement(iterations = 5, time = 1)
@@ -42,7 +45,9 @@ public class RollingHashBenchmark {
             value = {
                 "6", // Commonly used for BLAST
                 "12", // Commonly used for LR alignment
-                "20" // Commonly used for assembly
+                "20", // Commonly used for assembly
+                "256", // Some unrealistic value
+                "1024" // Some unrealistic value
             })
     private int k;
 
@@ -60,7 +65,7 @@ public class RollingHashBenchmark {
     @Setup
     public void setup() {
         try (var reader = FastxIterator.read(
-                Path.of(GitUtils.getGitRoot(), "test", "ref", "sars_cov2.genomic.fna"))) {
+                Path.of(GitUtils.getGitRoot(), "test", "ref", "e_coli.genomic.fna"))) {
             TEST_CHR = reader.next().seq();
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -68,17 +73,23 @@ public class RollingHashBenchmark {
     }
 
     @Benchmark
-    public void benchPrecomputedNtHash(Blackhole blackhole) {
+    public void benchPrecomputedNtHash(@NotNull Blackhole blackhole) {
         blackhole.consume(new PrecomputedNtHash(TEST_CHR, k, 0));
     }
 
     @Benchmark
-    public void benchNtHash(Blackhole blackhole) {
+    public void benchNtHash(@NotNull Blackhole blackhole) {
         blackhole.consume(new NtHash(TEST_CHR, k, 0));
     }
 
     @Benchmark
-    public void benchPolynomialRollingHash(Blackhole blackhole) {
+    public void benchPolynomialRollingHash(@NotNull Blackhole blackhole) {
         blackhole.consume(new PolynomialRollingHash(TEST_CHR, k, 0));
+    }
+
+    @Benchmark
+    public void benchRollingHashAdaptor(@NotNull Blackhole blackhole) {
+        blackhole.consume(
+                RollingHashAdaptor.supply(HashInterface.JUL_CRC32_CHECKSUM).apply(TEST_CHR, k, 0));
     }
 }
