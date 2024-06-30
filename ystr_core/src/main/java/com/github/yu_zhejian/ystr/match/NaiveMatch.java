@@ -18,15 +18,11 @@ import org.jetbrains.annotations.NotNull;
  */
 public class NaiveMatch implements StrMatchInterface {
     @Override
-    public IntList apply(
+    public IntList applyUnchecked(
             final byte @NotNull [] haystack,
             final byte @NotNull [] needle,
             final int start,
             final int end) {
-        StrMatchUtils.ensureParametersValid(haystack, needle, start, end);
-        if (haystack.length == 0 || needle.length == 0) {
-            return new IntArrayList();
-        }
         final var needleLen = needle.length;
         final var retl = new IntArrayList();
 

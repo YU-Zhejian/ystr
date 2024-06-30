@@ -31,7 +31,6 @@ public interface UpdatableInterface {
      * @param string As described.
      */
     default void update(final byte @NotNull [] string) {
-        // Avoid boundary check.
         for (byte b : string) {
             update(b & 0xFF);
         }
@@ -47,6 +46,18 @@ public interface UpdatableInterface {
      */
     default void update(final byte @NotNull [] string, final int start, final int end) {
         StrUtils.ensureStartEndValid(start, end, string.length);
+        updateUnchecked(string, start, end);
+    }
+
+    /**
+     * Add selected bytes inside the given string without boundary checks.
+     *
+     * @param string As described.
+     * @param start As described.
+     * @param end As described.
+     * @see #update(byte[], int, int)
+     */
+    default void updateUnchecked(final byte @NotNull [] string, final int start, final int end) {
         for (int i = start; i < end; i++) {
             update(string[i] & 0xFF);
         }
@@ -62,7 +73,7 @@ public interface UpdatableInterface {
      * have been changed.
      *
      * @param buffer the ByteBuffer to update the checksum with
-     * @see java.util.zip.Checksum#update(ByteBuffer).
+     * @see java.util.zip.Checksum#update(ByteBuffer)
      */
     default void update(@NotNull ByteBuffer buffer) {
         final int pos = buffer.position();

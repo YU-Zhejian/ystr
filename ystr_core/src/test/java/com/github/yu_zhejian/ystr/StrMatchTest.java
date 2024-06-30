@@ -14,6 +14,7 @@ import com.github.yu_zhejian.ystr.match.StrMatchInterface;
 import com.github.yu_zhejian.ystr.match.StrMatchUtilsTest;
 import com.github.yu_zhejian.ystr.rolling.PolynomialRollingHash;
 import com.github.yu_zhejian.ystr.rolling.PrecomputedNtHash;
+import com.github.yu_zhejian.ystr.utils.StrUtils;
 
 import io.vavr.Tuple2;
 
@@ -33,17 +34,17 @@ class StrMatchTest {
         // Test edge cases and illegal inputs
         assertThrows(
                 IllegalArgumentException.class,
-                () -> function.apply(new byte[0], new byte[0], 1, 0));
+                () -> function.applyUnchecked(new byte[0], new byte[0], 1, 0));
         assertThrows(
                 IllegalArgumentException.class,
-                () -> function.apply(new byte[0], new byte[0], -1, 0));
+                () -> function.applyUnchecked(new byte[0], new byte[0], -1, 0));
         // Test real strings
         testCases.forEach((key, value) -> {
             var hayStack = key._1().getBytes(StandardCharsets.UTF_8);
             var needle = key._2().getBytes(StandardCharsets.UTF_8);
             assertIterableEquals(
                     value,
-                    function.apply(hayStack, needle, 0, hayStack.length),
+                    function.applyUnchecked(hayStack, needle, 0, hayStack.length),
                     "Error at case %s in %s".formatted(key._2(), key._1()));
         });
     }
@@ -70,8 +71,7 @@ class StrMatchTest {
     void rabinKarpMatchUsingRandomPrime() {
         testSS(
                 new RabinKarpMatch(PolynomialRollingHash.supply(
-                        PolynomialRollingHash.longRandomPrime(),
-                        PolynomialRollingHash.DEFAULT_POLYNOMIAL_ROLLING_HASH_RADIX_P)),
+                        PolynomialRollingHash.longRandomPrime(), StrUtils.ALPHABET_SIZE)),
                 StrMatchUtilsTest.TEST_CASES_AGCT);
     }
 

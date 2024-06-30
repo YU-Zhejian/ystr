@@ -1,19 +1,25 @@
 package com.github.yu_zhejian.ystr.hash;
 
 /**
- * <b>Copy Right</b>
+ * Justin Sobel Hash.
+ *
+ * <p><b>Description</b>
+ *
+ * <p>A bitwise hash function written by Justin Sobel.
+ *
+ * <p><b>Copyright</b>
  *
  * <p>General Purpose Hash Function Algorithms Library
  *
  * <p>Free use of the General Purpose Hash Function Algorithms Library is permitted under the
  * guidelines and in accordance with the MIT License.
  *
- * @author Arash Partow <a href="http://www.partow.net>...</a>
+ * @author Arash Partow <a href="http://www.partow.net">...</a>
  * @see <a href="http://www.partow.net/programming/hashfunctions/index.html">...</a>
  */
 public final class JSHash implements HashInterface {
     private long hash;
-
+    /** Default constructor. */
     public JSHash() {
         reset();
     }

@@ -18,24 +18,34 @@ import java.util.Arrays;
  */
 public class ShiftOrMatch implements StrMatchInterface {
     @Override
-    public IntList apply(
+    public IntList apply(byte @NotNull [] haystack, byte @NotNull [] needle, int start, int end) {
+        if (needle.length > StrUtils.LONG_SIZE) {
+            throw new IllegalArgumentException(
+                    "Needle length should not exceed 64! Actual: %d".formatted(needle.length));
+        }
+        return StrMatchInterface.super.apply(haystack, needle, start, end);
+    }
+
+    @Override
+    public IntList apply(byte @NotNull [] haystack, byte @NotNull [] needle) {
+        if (needle.length > StrUtils.LONG_SIZE) {
+            throw new IllegalArgumentException(
+                    "Needle length should not exceed 64! Actual: %d".formatted(needle.length));
+        }
+        return StrMatchInterface.super.apply(haystack, needle);
+    }
+
+    @Override
+    public IntList applyUnchecked(
             final byte @NotNull [] haystack,
             final byte @NotNull [] needle,
             final int start,
             final int end) {
-        StrMatchUtils.ensureParametersValid(haystack, needle, start, end);
-        if (needle.length > StrMatchUtils.LONG_SIZE) {
-            throw new IllegalArgumentException(
-                    "Needle length should not exceed 64! Actual: %d".formatted(needle.length));
-        }
-        if (haystack.length == 0 || needle.length == 0) {
-            return new IntArrayList(0);
-        }
         final var retl = new IntArrayList();
 
         // Pre-processing
         long mask = 0L;
-        final var positionOfEachByteOnNeedle = new long[StrMatchUtils.ALPHABET_SIZE];
+        final var positionOfEachByteOnNeedle = new long[StrUtils.ALPHABET_SIZE];
         Arrays.fill(positionOfEachByteOnNeedle, ~0L);
 
         // The `shift` variable will be an unsigned long where only one position will be set 1.

@@ -1,8 +1,13 @@
 package com.github.yu_zhejian.ystr.hash;
 
+/**
+ * 64-bit Fowler-Noll-Vo 1 hash, alternate implementation, using bitwise operations.
+ *
+ * @see FNV1Base
+ */
 public final class BitwiseFNV1a64 extends FNV1Base {
     private long hval;
-
+    /** Default constructor. */
     public BitwiseFNV1a64() {
         reset();
     }

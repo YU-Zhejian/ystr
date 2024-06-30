@@ -71,7 +71,7 @@ public class StrMatchBenchmark {
 
     @Benchmark
     public void benchBruteForce(@NotNull Blackhole blackhole) {
-        blackhole.consume(StrMatchInterface.fastApply(
+        blackhole.consume(StrMatchInterface.convenientApply(
                 BruteForceMatch::new,
                 TEST_CHR,
                 needle.getBytes(StandardCharsets.UTF_8),
@@ -81,7 +81,7 @@ public class StrMatchBenchmark {
 
     @Benchmark
     public void benchNaive(@NotNull Blackhole blackhole) {
-        blackhole.consume(StrMatchInterface.fastApply(
+        blackhole.consume(StrMatchInterface.convenientApply(
                 NaiveMatch::new,
                 TEST_CHR,
                 needle.getBytes(StandardCharsets.UTF_8),
@@ -91,7 +91,7 @@ public class StrMatchBenchmark {
 
     @Benchmark
     public void benchRabinKarp(@NotNull Blackhole blackhole) {
-        blackhole.consume(StrMatchInterface.fastApply(
+        blackhole.consume(StrMatchInterface.convenientApply(
                 RabinKarpMatch::new,
                 TEST_CHR,
                 needle.getBytes(StandardCharsets.UTF_8),
@@ -101,7 +101,7 @@ public class StrMatchBenchmark {
 
     @Benchmark
     public void benchRabinKarpNtHash(@NotNull Blackhole blackhole) {
-        blackhole.consume(StrMatchInterface.fastApply(
+        blackhole.consume(StrMatchInterface.convenientApply(
                 () -> new RabinKarpMatch(PrecomputedNtHash::new),
                 TEST_CHR,
                 needle.getBytes(StandardCharsets.UTF_8),
@@ -111,7 +111,7 @@ public class StrMatchBenchmark {
 
     @Benchmark
     public void benchKnuthMorrisPratt(@NotNull Blackhole blackhole) {
-        blackhole.consume(StrMatchInterface.fastApply(
+        blackhole.consume(StrMatchInterface.convenientApply(
                 KnuthMorrisPrattMatch::new,
                 TEST_CHR,
                 needle.getBytes(StandardCharsets.UTF_8),
@@ -121,7 +121,7 @@ public class StrMatchBenchmark {
 
     @Benchmark
     public void benchShiftOr(@NotNull Blackhole blackhole) {
-        blackhole.consume(StrMatchInterface.fastApply(
+        blackhole.consume(StrMatchInterface.convenientApply(
                 ShiftOrMatch::new,
                 TEST_CHR,
                 needle.getBytes(StandardCharsets.UTF_8),
@@ -131,7 +131,7 @@ public class StrMatchBenchmark {
 
     @Benchmark
     public void benchBoyerMooreBadCharactersOnly(@NotNull Blackhole blackhole) {
-        blackhole.consume(StrMatchInterface.fastApply(
+        blackhole.consume(StrMatchInterface.convenientApply(
                 BoyerMooreBadCharactersOnlyMatch::new,
                 TEST_CHR,
                 needle.getBytes(StandardCharsets.UTF_8),

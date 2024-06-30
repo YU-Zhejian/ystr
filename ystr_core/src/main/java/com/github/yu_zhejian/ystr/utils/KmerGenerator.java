@@ -4,16 +4,36 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 
+/**
+ * Generating all k-mers over some alphabet.
+ *
+ * @see Alphabets
+ */
 public final class KmerGenerator implements Iterator<byte[]> {
 
+    /** As described. */
     private final byte[] alphabet;
-    private final int alphabetMax;
+    /** Maximum index inside {@link #alphabet}, which is {@code len(alphabet) - 1}. */
+    private final int alphabetMaxIdx;
+    /** As described. */
     public final int k;
+    /** Current positions over {@link #alphabet}. */
     private final int[] pos;
+
+    /** The final position, which is all zero. */
     private final int[] finalPos;
+    /** Indicator whether the iteration has started. */
     private boolean hasStarted;
 
+    /**
+     * Default constructor.
+     *
+     * @param alphabet As described.
+     * @param k As described.
+     * @throws IllegalArgumentException If {@link #k} is negative or {@link #alphabet} is empty.
+     */
     public KmerGenerator(byte @NotNull [] alphabet, int k) {
         if (alphabet.length == 0) {
             throw new IllegalArgumentException("alphabet must contain at least one character");
@@ -23,15 +43,15 @@ public final class KmerGenerator implements Iterator<byte[]> {
         }
         this.alphabet = alphabet;
         this.k = k;
-        alphabetMax = alphabet.length - 1;
+        alphabetMaxIdx = alphabet.length - 1;
         pos = new int[k];
         finalPos = new int[k];
         Arrays.fill(finalPos, 0);
     }
 
-    public void advPos() {
+    private void advPos() {
         for (int i = k - 1; i >= 0; i--) {
-            if (pos[i] == alphabetMax) {
+            if (pos[i] == alphabetMaxIdx) {
                 pos[i] = 0;
             } else {
                 pos[i]++;
@@ -48,6 +68,9 @@ public final class KmerGenerator implements Iterator<byte[]> {
     @Override
     public byte @NotNull [] next() {
         hasStarted = true;
+        if (!hasNext()) {
+            throw new NoSuchElementException();
+        }
         var state = new byte[k];
         for (int i = 0; i < k; i++) {
             state[i] = alphabet[pos[i]];

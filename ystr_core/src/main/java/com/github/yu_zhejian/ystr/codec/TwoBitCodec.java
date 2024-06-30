@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Encode data into UCSC 2bit format.
  *
- * <p><b>Note</b
+ * <p><b>Note</b>
  *
  * <ol>
  *   <li>Note, this implementation deals only with sequences. It would not generate 2bit headers or
@@ -67,8 +67,8 @@ public final class TwoBitCodec implements CodecInterface {
     }
 
     static {
-        BYTE_TO_BASE_PRE_COMPUTED = new byte[256][4];
-        BASE_TO_BYTE_PRE_COMPUTED = new int[256];
+        BYTE_TO_BASE_PRE_COMPUTED = new byte[StrUtils.ALPHABET_SIZE][4];
+        BASE_TO_BYTE_PRE_COMPUTED = new int[StrUtils.ALPHABET_SIZE];
         for (int i = 0; i <= 0b11_11_11_11; i++) {
             BYTE_TO_BASE_PRE_COMPUTED[i] = decodeToFourBases(i);
             BASE_TO_BYTE_PRE_COMPUTED[i] = switch (i) {

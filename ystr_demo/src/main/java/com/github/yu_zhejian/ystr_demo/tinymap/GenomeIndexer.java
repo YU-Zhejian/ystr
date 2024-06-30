@@ -22,10 +22,13 @@ import io.vavr.Tuple2;
 import it.unimi.dsi.fastutil.BigList;
 import it.unimi.dsi.fastutil.bytes.ByteArrayList;
 import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
+import it.unimi.dsi.fastutil.doubles.DoubleList;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntList;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.longs.LongArrayList;
 import it.unimi.dsi.fastutil.longs.LongBigArrayBigList;
+import it.unimi.dsi.fastutil.longs.LongList;
 import it.unimi.dsi.fastutil.objects.ObjectBigArrayBigList;
 
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
@@ -98,7 +101,7 @@ public final class GenomeIndexer {
         return wlen;
     }
 
-    private static @NotNull DoubleArrayList calcShannonEntropy(
+    private static @NotNull DoubleList calcShannonEntropy(
             byte[] string, @NotNull GenomeIndexerConfig config) {
         var thisShannonEntropy = new DoubleArrayList();
         var nts = new NtShannonEntropy(string, config.kmerSize(), 0);
@@ -109,8 +112,8 @@ public final class GenomeIndexer {
     }
 
     private static @NotNull Tuple2<LongArrayList, LongArrayList> calcMinimizers(
-            @NotNull Tuple2<LongArrayList, LongArrayList> hashes,
-            @NotNull IntArrayList passingIdx,
+            @NotNull Tuple2<LongList, LongList> hashes,
+            @NotNull IntList passingIdx,
             long offsetOfFirst,
             GenomeIndexerConfig config) {
         var fwdHashes = hashes._1();

@@ -1,8 +1,13 @@
 package com.github.yu_zhejian.ystr.hash;
 
+/**
+ * 32-bit Fowler-Noll-Vo 1 hash, alternate implementation, using bitwise operations.
+ *
+ * @see FNV1Base
+ */
 public final class BitwiseFNV1a32 extends FNV1Base {
     private int hval;
-
+    /** Default constructor. */
     public BitwiseFNV1a32() {
         reset();
     }

@@ -15,15 +15,11 @@ import org.jetbrains.annotations.NotNull;
  */
 public class BoyerMooreHorspool extends BaseBoyerMoore {
     @Override
-    public IntList apply(
+    public IntList applyUnchecked(
             final byte @NotNull [] haystack,
             final byte @NotNull [] needle,
             final int start,
             final int end) {
-        StrMatchUtils.ensureParametersValid(haystack, needle, start, end);
-        if (haystack.length == 0 || needle.length == 0) {
-            return new IntArrayList(0);
-        }
         final var retl = new IntArrayList();
 
         // Establish the bad character rule table.

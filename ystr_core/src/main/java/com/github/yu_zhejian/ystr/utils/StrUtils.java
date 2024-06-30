@@ -2,6 +2,11 @@ package com.github.yu_zhejian.ystr.utils;
 
 /** Various utility functions concerning strings to support other classes. */
 public final class StrUtils {
+    /** Size of {@link Byte}. */
+    public static final int ALPHABET_SIZE = 256;
+    /** Size of {@link Long}. */
+    public static final int LONG_SIZE = 64;
+
     /** Defunct constructor */
     private StrUtils() {}
 
@@ -30,8 +35,28 @@ public final class StrUtils {
      *
      * @param start As described.
      * @param end As described.
+     * @throws IllegalArgumentException otherwise.
      */
     public static void ensureStartEndValid(final int start, final int end) {
+        if (start > end) {
+            throw new IllegalArgumentException(
+                    "start must be less than end. Actual: %d vs %d".formatted(start, end));
+        }
+        if (start < 0) {
+            throw new IllegalArgumentException(
+                    "start must be greater than or equal to zero. Actual: %d".formatted(start));
+        }
+    }
+
+    /**
+     * Ensure start and end are valid for some open-close interval, {@link Long} variant.
+     *
+     * @param start As described.
+     * @param end As described.
+     * @throws IllegalArgumentException otherwise.
+     * @see #ensureStartEndValid(int, int)
+     */
+    public static void ensureStartEndValid(final long start, final long end) {
         if (start > end) {
             throw new IllegalArgumentException(
                     "start must be less than end. Actual: %d vs %d".formatted(start, end));
@@ -48,6 +73,8 @@ public final class StrUtils {
      * @param start As described.
      * @param end As described.
      * @param strLen As described.
+     * @see #ensureStartEndValid(int, int)
+     * @throws IllegalArgumentException otherwise.
      */
     public static void ensureStartEndValid(final int start, final int end, final int strLen) {
         ensureStartEndValid(start, end);
@@ -63,6 +90,7 @@ public final class StrUtils {
      * @param start As described.
      * @param numBytesToRead As described.
      * @param strLen As described.
+     * @throws IllegalArgumentException otherwise.
      */
     public static void ensureStartLengthValid(
             final int start, final int numBytesToRead, final int strLen) {

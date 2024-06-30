@@ -295,7 +295,7 @@ public final class TwoBitParser extends BaseRandomBinaryFileParser {
         final var cm1 = curMask.clone();
         cm1.and(nBlocks[seqID]);
 
-        final int[] buffer = new int[256];
+        final int[] buffer = new int[StrUtils.ALPHABET_SIZE];
         final var it1 = cm1.getBatchIterator();
         while (it1.hasNext()) {
             // As suggested by
@@ -355,6 +355,7 @@ public final class TwoBitParser extends BaseRandomBinaryFileParser {
      * Get sequence lengths as an ordered list.
      *
      * @return As described.
+     * @throws IOException As described.
      */
     @SuppressWarnings("PMD.LooseCoupling")
     public @NotNull IntList getSeqLengths() throws IOException {
@@ -379,6 +380,7 @@ public final class TwoBitParser extends BaseRandomBinaryFileParser {
      * Get sequence names and lengths of arbitrary order.
      *
      * @return As described.
+     * @throws IOException As described.
      */
     @SuppressWarnings("PMD.LooseCoupling")
     public @NotNull Object2IntOpenHashMap<String> getSeqNameLengthMap() throws IOException {
@@ -394,6 +396,7 @@ public final class TwoBitParser extends BaseRandomBinaryFileParser {
      *
      * @param seqID As described.
      * @return As described.
+     * @throws IOException As described.
      */
     public int getSeqLength(final int seqID) throws IOException {
         loadSeqInfo(seqID);

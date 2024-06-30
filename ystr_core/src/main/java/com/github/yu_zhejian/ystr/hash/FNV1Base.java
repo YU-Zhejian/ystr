@@ -1,7 +1,9 @@
 package com.github.yu_zhejian.ystr.hash;
 
 /**
- * <b>Copyright</b>
+ * Constants for Fowler-Noll-Vo 1 hash.
+ *
+ * <p><b>Copyright</b>
  *
  * <p>Please do not copyright this code. This code is in the public domain.
  *
@@ -24,6 +26,7 @@ package com.github.yu_zhejian.ystr.hash;
  *     this software.
  */
 public abstract class FNV1Base implements HashInterface {
+    /** Default constructor. */
     protected FNV1Base() {}
 
     protected static final int FNV_PRIME_32 = 16777619;

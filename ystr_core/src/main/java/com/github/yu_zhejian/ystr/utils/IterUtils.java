@@ -17,7 +17,6 @@ import it.unimi.dsi.fastutil.objects.ObjectList;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -43,8 +42,8 @@ public final class IterUtils {
      * @return As described.
      * @param <T> As described.
      */
-    public static <T> @NotNull List<T> dedup(@NotNull List<T> list) {
-        final var result = new ArrayList<T>();
+    public static <T> @NotNull ObjectList<T> dedup(@NotNull List<T> list) {
+        final var result = new ObjectArrayList<T>();
         if (list.isEmpty()) {
             return result;
         }
@@ -85,7 +84,7 @@ public final class IterUtils {
     }
 
     /**
-     * Collect current iterator to {@link ArrayList}.
+     * Collect current iterator to {@link ObjectArrayList}.
      *
      * <p>Warning, this method impairs performance.
      *

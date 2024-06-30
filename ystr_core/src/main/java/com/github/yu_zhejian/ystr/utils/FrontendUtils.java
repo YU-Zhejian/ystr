@@ -4,6 +4,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.text.DecimalFormat;
 
+/** Helper functions for various text-based frontends. */
 public final class FrontendUtils {
     private FrontendUtils() {}
 
@@ -15,6 +16,14 @@ public final class FrontendUtils {
 
     public static @NotNull String toHumanReadable(long n) {
         return toHumanReadable(n, "B");
+    }
+
+    public static @NotNull String toHumanReadable(@NotNull Number n) {
+        return toHumanReadable(n.longValue());
+    }
+
+    public static @NotNull String toHumanReadable(@NotNull Number n, String suffix) {
+        return toHumanReadable(n.longValue(), suffix);
     }
 
     public static @NotNull String toHumanReadable(long n, String suffix) {

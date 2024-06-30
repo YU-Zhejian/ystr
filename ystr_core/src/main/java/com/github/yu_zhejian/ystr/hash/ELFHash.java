@@ -1,20 +1,27 @@
 package com.github.yu_zhejian.ystr.hash;
 
 /**
- * <b>Copy Right</b>
+ * ELF Hash.
+ *
+ * <p><b>Description</b>
+ *
+ * <p>Similar to the PJW Hash function, but tweaked for 32-bit processors. It is a widley used hash
+ * function on UNIX based systems.
+ *
+ * <p><b>Copyright</b>
  *
  * <p>General Purpose Hash Function Algorithms Library
  *
  * <p>Free use of the General Purpose Hash Function Algorithms Library is permitted under the
  * guidelines and in accordance with the MIT License.
  *
- * @author Arash Partow <a href="http://www.partow.net>...</a>
+ * @author Arash Partow <a href="http://www.partow.net">...</a>
  * @see <a href="http://www.partow.net/programming/hashfunctions/index.html">...</a>
  */
 public final class ELFHash implements HashInterface {
     private long hash;
     private long x;
-
+    /** Default constructor. */
     public ELFHash() {
         reset();
     }

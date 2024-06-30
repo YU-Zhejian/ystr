@@ -47,8 +47,8 @@ public final class NibCodec implements CodecInterface {
     }
 
     static {
-        BYTE_TO_BASE_PRE_COMPUTED = new byte[256][2];
-        BASE_TO_BYTE_PRE_COMPUTED = new int[256];
+        BYTE_TO_BASE_PRE_COMPUTED = new byte[StrUtils.ALPHABET_SIZE][2];
+        BASE_TO_BYTE_PRE_COMPUTED = new int[StrUtils.ALPHABET_SIZE];
         for (int i = 0; i <= 0b11_11_11_11; i++) {
             BYTE_TO_BASE_PRE_COMPUTED[i] = decodeToTwoBases(i);
             BASE_TO_BYTE_PRE_COMPUTED[i] = switch (i) {

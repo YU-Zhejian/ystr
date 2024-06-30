@@ -5,6 +5,7 @@ import com.github.yu_zhejian.ystr.base.UpdatableInterface;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import java.nio.ByteBuffer;
 import java.util.function.Supplier;
 import java.util.zip.Adler32;
 import java.util.zip.CRC32;
@@ -16,8 +17,6 @@ import java.util.zip.Checksum;
  *
  * <p>Some hashes may be only 16 bit or 32 bit (e.g., {@link CRC32Hash}). Cast them to corresponding
  * data types after {@link #getValue()}.
- *
- * <p>Hashes are not Checksums
  */
 public interface HashInterface extends UpdatableInterface {
     /** Static non-thread-safe instance of {@link APHash}. */
@@ -88,6 +87,26 @@ public interface HashInterface extends UpdatableInterface {
             public void update(int b) {
                 checksum.update(b);
             }
+
+            @Override
+            public void update(byte @NotNull [] string) {
+                checksum.update(string);
+            }
+
+            @Override
+            public void update(byte @NotNull [] string, int start, int end) {
+                checksum.update(string, start, end - start);
+            }
+
+            @Override
+            public void updateUnchecked(byte @NotNull [] string, int start, int end) {
+                checksum.update(string, start, end - start);
+            }
+
+            @Override
+            public void update(@NotNull ByteBuffer buffer) {
+                checksum.update(buffer);
+            }
         };
     }
 
@@ -107,43 +126,86 @@ public interface HashInterface extends UpdatableInterface {
         return instance.getValue();
     }
 
+    /**
+     * Unchecked variant of {@link #convenientHash(HashInterface, byte[], int, int)}.
+     *
+     * @param instance As described.
+     * @param string As described.
+     * @param start As described.
+     * @param end As described.
+     * @return As described.
+     * @see #convenientHash(HashInterface, byte[], int, int)
+     */
+    static long convenientHashUnchecked(
+            final @NotNull HashInterface instance, final byte[] string, int start, int end) {
+        instance.reset();
+        instance.updateUnchecked(string, start, end);
+        return instance.getValue();
+    }
+
+    /**
+     * Full-length variant of {@link #convenientHash(HashInterface, byte[], int, int)}.
+     *
+     * @param instance As described.
+     * @param string As described.
+     * @return As described.
+     * @see #convenientHash(HashInterface, byte[], int, int)
+     */
     static long convenientHash(final @NotNull HashInterface instance, final byte[] string) {
         instance.reset();
         instance.update(string);
         return instance.getValue();
     }
 
+    /**
+     * Supplier variant of {@link #convenientHash(HashInterface, byte[], int, int)}.
+     *
+     * @param supplier As described.
+     * @param string As described.
+     * @param start As described.
+     * @param end As described.
+     * @return As described.
+     * @see #convenientHash(HashInterface, byte[], int, int)
+     */
     static long convenientHash(
-            final @NotNull Checksum instance, final byte[] string, int start, int end) {
-        instance.reset();
-        instance.update(string, start, end);
-        return instance.getValue();
+            final @NotNull Supplier<HashInterface> supplier,
+            final byte[] string,
+            int start,
+            int end) {
+        var instance = supplier.get();
+        return convenientHash(instance, string, start, end);
     }
 
-    static long convenientHash(final @NotNull Checksum instance, final byte[] string) {
-        instance.reset();
-        instance.update(string);
-        return instance.getValue();
+    /**
+     * Unchecked supplier variant of {@link #convenientHash(HashInterface, byte[], int, int)}.
+     *
+     * @param supplier As described.
+     * @param string As described.
+     * @param start As described.
+     * @param end As described.
+     * @return As described.
+     * @see #convenientHash(HashInterface, byte[], int, int)
+     */
+    static long convenientHashUnchecked(
+            final @NotNull Supplier<HashInterface> supplier,
+            final byte[] string,
+            int start,
+            int end) {
+        var instance = supplier.get();
+        return convenientHashUnchecked(instance, string, start, end);
     }
 
+    /**
+     * Supplier full-length variant of {@link #convenientHash(HashInterface, byte[], int, int)}.
+     *
+     * @param supplier As described.
+     * @param string As described.
+     * @return As described.
+     * @see #convenientHash(HashInterface, byte[], int, int)
+     */
     static long convenientHash(
-            final @NotNull Supplier<?> supplier, final byte[] string, int start, int end) {
+            final @NotNull Supplier<HashInterface> supplier, final byte[] string) {
         var instance = supplier.get();
-        if (instance instanceof HashInterface hashInterface) {
-            return convenientHash(hashInterface, string, start, end);
-        } else if (instance instanceof Checksum checksum) {
-            return convenientHash(checksum, string, start, end);
-        }
-        throw new IllegalArgumentException("Unsupported hash type: " + instance.getClass());
-    }
-
-    static long convenientHash(final @NotNull Supplier<?> supplier, final byte[] string) {
-        var instance = supplier.get();
-        if (instance instanceof HashInterface hashInterface) {
-            return convenientHash(hashInterface, string);
-        } else if (instance instanceof Checksum checksum) {
-            return convenientHash(checksum, string);
-        }
-        throw new IllegalArgumentException("Unsupported hash type: " + instance.getClass());
+        return convenientHash(instance, string);
     }
 }

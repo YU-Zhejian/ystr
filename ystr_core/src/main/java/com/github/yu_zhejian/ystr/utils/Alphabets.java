@@ -2,12 +2,16 @@ package com.github.yu_zhejian.ystr.utils;
 
 /** Commonly used alphabets within range of signed {@link Byte}. */
 public final class Alphabets {
+    /** DNA Alphabet. */
     public static final byte[] DNA_ALPHABET = {'A', 'C', 'G', 'T'};
+    /** RNA Alphabet. */
+    public static final byte[] RNA_ALPHABET = {'A', 'C', 'G', 'U'};
+    /** Amino acid Alphabet. */
     public static final byte[] AA_ALPHABET = {
         'A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'V',
         'W', 'Y'
     };
-    public static final byte[] RNA_ALPHABET = {'A', 'C', 'G', 'U'};
+    /** Alphabet of all values inside {@link Byte}. */
     public static final byte[] BINARY_ALPHABET = {
         -128, -127, -126, -125, -124, -123, -122, -121, -120, -119, -118, -117, -116, -115, -114,
         -113, -112, -111, -110, -109, -108, -107, -106, -105, -104, -103, -102, -101, -100, -99,
@@ -24,6 +28,12 @@ public final class Alphabets {
         108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125,
         126, 127
     };
+
+    /**
+     * Alphabet of valid ASCII values.
+     *
+     * @see java.nio.charset.StandardCharsets#US_ASCII
+     */
     public static final byte[] ASCII_ALPHABET = {
         0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
         25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47,

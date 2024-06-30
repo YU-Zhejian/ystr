@@ -7,9 +7,9 @@ import com.github.yu_zhejian.ystr.match.NaiveMatch;
 import com.github.yu_zhejian.ystr.match.RabinKarpMatch;
 import com.github.yu_zhejian.ystr.match.ShiftOrMatch;
 import com.github.yu_zhejian.ystr.match.StrMatchInterface;
-import com.github.yu_zhejian.ystr.match.StrMatchUtils;
 import com.github.yu_zhejian.ystr.test_utils.CSVUtils;
 import com.github.yu_zhejian.ystr.test_utils.GitUtils;
+import com.github.yu_zhejian.ystr.utils.StrUtils;
 
 import org.apache.commons.csv.CSVPrinter;
 import org.jetbrains.annotations.NotNull;
@@ -63,9 +63,9 @@ public final class StrMatchBenchmarkUsingLiteratures {
         for (int j = 0; j < WARMUP_ITERATIONS; j++) {
             var thisOccurrence = 0;
             var word = OXFORD_3K.get(rng.nextInt(OXFORD_3K.size()) - 1);
-            thisOccurrence +=
-                    function.apply(SHAKESPEARE, word, 0, SHAKESPEARE.length).size();
-            thisOccurrence += function.apply(KJV, word, 0, KJV.length).size();
+            thisOccurrence += function.applyUnchecked(SHAKESPEARE, word, 0, SHAKESPEARE.length)
+                    .size();
+            thisOccurrence += function.applyUnchecked(KJV, word, 0, KJV.length).size();
             if (occurrence < thisOccurrence) {
                 occurrence = thisOccurrence;
             }
@@ -81,13 +81,13 @@ public final class StrMatchBenchmarkUsingLiteratures {
             long startNS;
             long endNS;
             startNS = System.nanoTime();
-            occurrence = function.apply(KJV, word, 0, KJV.length).size();
+            occurrence = function.applyUnchecked(KJV, word, 0, KJV.length).size();
             endNS = System.nanoTime();
             csvp.printRecord("KJV", name, word.length, occurrence, endNS - startNS);
 
             startNS = System.nanoTime();
-            occurrence =
-                    function.apply(SHAKESPEARE, word, 0, SHAKESPEARE.length).size();
+            occurrence = function.applyUnchecked(SHAKESPEARE, word, 0, SHAKESPEARE.length)
+                    .size();
             endNS = System.nanoTime();
             csvp.printRecord("SHAKESPEARE", name, word.length, occurrence, endNS - startNS);
             i += 1;
@@ -103,8 +103,8 @@ public final class StrMatchBenchmarkUsingLiteratures {
         testSS(new NaiveMatch(), Integer.MAX_VALUE);
         testSS(new RabinKarpMatch(), Integer.MAX_VALUE);
         testSS(new KnuthMorrisPrattMatch(), Integer.MAX_VALUE);
-        testSS(new ShiftOrMatch(), StrMatchUtils.LONG_SIZE);
-        testSS(new BoyerMooreBadCharactersOnlyMatch(), StrMatchUtils.LONG_SIZE);
+        testSS(new ShiftOrMatch(), StrUtils.LONG_SIZE);
+        testSS(new BoyerMooreBadCharactersOnlyMatch(), StrUtils.LONG_SIZE);
     }
 
     private static byte @NotNull [] readLC(String fileName) {

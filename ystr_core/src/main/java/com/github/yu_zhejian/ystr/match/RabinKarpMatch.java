@@ -10,27 +10,36 @@ import it.unimi.dsi.fastutil.ints.IntList;
 
 import org.jetbrains.annotations.NotNull;
 
+/** Rabin-Karp string matching. */
 public class RabinKarpMatch implements StrMatchInterface {
+    /**
+     * Rolling hash algorithm supplier.
+     *
+     * @see PolynomialRollingHash#supply(long, long)
+     * @see RollingHashInterface
+     */
     private final Function3<byte[], Integer, Integer, RollingHashInterface> supplier;
 
+    /**
+     * Default constructor.
+     *
+     * @param supplier As described.
+     */
     public RabinKarpMatch(Function3<byte[], Integer, Integer, RollingHashInterface> supplier) {
         this.supplier = supplier;
     }
 
+    /** Default constructor with default rolling hash implementation. */
     public RabinKarpMatch() {
         this(PolynomialRollingHash::new);
     }
 
     @Override
-    public IntList apply(
+    public IntList applyUnchecked(
             final byte @NotNull [] haystack,
             final byte @NotNull [] needle,
             final int start,
             final int end) {
-        StrMatchUtils.ensureParametersValid(haystack, needle, start, end);
-        if (haystack.length == 0 || needle.length == 0) {
-            return new IntArrayList();
-        }
         // Create initial hash
         var haystackPos = start;
         final var needleLen = needle.length;

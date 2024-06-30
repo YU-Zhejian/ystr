@@ -1,5 +1,6 @@
 package com.github.yu_zhejian.ystr.utils;
 
+/** Utilities for JVM. */
 public final class JVMUtils {
 
     private JVMUtils() {}

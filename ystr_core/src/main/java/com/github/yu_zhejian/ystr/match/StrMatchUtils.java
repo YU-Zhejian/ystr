@@ -7,9 +7,6 @@ import org.jetbrains.annotations.NotNull;
 public final class StrMatchUtils {
     private StrMatchUtils() {}
 
-    public static final int ALPHABET_SIZE = 256;
-    public static final int LONG_SIZE = 64;
-
     /**
      * Ensure {@code start} and {@code end} is valid on {@code haystack}, and is longer than
      * {@code needle}.

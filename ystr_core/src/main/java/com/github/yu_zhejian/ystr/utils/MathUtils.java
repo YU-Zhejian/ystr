@@ -17,6 +17,8 @@ public final class MathUtils {
      * @param p The base.
      * @param q The exponent.
      * @return As described.
+     * @throws IllegalArgumentException If {@code p} or {@code q} is negative.
+     * @see Math#pow(double, double)
      */
     public static int pow(final int p, final int q) {
         if (p < 0 || q < 0) {
@@ -31,11 +33,13 @@ public final class MathUtils {
     }
 
     /**
-     * Long version of {@link #pow(int, int)}
+     * {@link Long} version of {@link #pow(int, int)}
      *
      * @param p As described.
      * @param q As described.
      * @return As described.
+     * @throws IllegalArgumentException If {@code p} or {@code q} is negative.
+     * @see #pow(int, int)
      */
     public static long pow(final long p, final int q) {
         if (p < 0 || q < 0) {

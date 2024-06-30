@@ -9,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;
 
+/** Adaptor that converts {@link HashInterface} to {@link RollingHashInterface}. */
 public class RollingHashAdaptor extends RollingHashBase {
     private final HashInterface hashInstance;
 

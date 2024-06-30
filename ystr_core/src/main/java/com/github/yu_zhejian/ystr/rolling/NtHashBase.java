@@ -4,6 +4,7 @@ import io.vavr.Tuple;
 import io.vavr.Tuple2;
 
 import it.unimi.dsi.fastutil.longs.LongArrayList;
+import it.unimi.dsi.fastutil.longs.LongList;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -136,7 +137,9 @@ public abstract class NtHashBase extends RollingHashBase {
         VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, VEC_N, // 248..255
     };
 
+    /** Current forward hash. */
     protected long fwdHash;
+    /** Current reverse hash. */
     protected long revHash;
 
     /**
@@ -162,10 +165,10 @@ public abstract class NtHashBase extends RollingHashBase {
 
     @SuppressWarnings("PMD.LooseCoupling")
     @Contract(value = "_, _ -> new", pure = true)
-    public static @NotNull Tuple2<LongArrayList, LongArrayList> getAllBothHash(
+    public static @NotNull Tuple2<LongList, LongList> getAllBothHash(
             @NotNull NtHashBase ntHash, int estimatedLength) {
-        final var rett =
-                Tuple.of(new LongArrayList(estimatedLength), new LongArrayList(estimatedLength));
+        final var rett = Tuple.of((LongList) new LongArrayList(estimatedLength), (LongList)
+                new LongArrayList(estimatedLength));
         while (ntHash.hasNext()) {
             ntHash.nextLong();
             rett._1().add(ntHash.getFwdHash());

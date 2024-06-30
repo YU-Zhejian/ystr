@@ -1,5 +1,7 @@
 package com.github.yu_zhejian.ystr.rolling;
 
+import com.github.yu_zhejian.ystr.utils.StrUtils;
+
 import io.vavr.Function3;
 
 import org.jetbrains.annotations.Contract;
@@ -34,8 +36,6 @@ import java.util.Random;
  * </ol>
  */
 public final class PolynomialRollingHash extends RollingHashBase {
-    /** Default {@link #p}. Since we use negative part of {@link Byte}, the alphabet size is 256. */
-    public static final long DEFAULT_POLYNOMIAL_ROLLING_HASH_RADIX_P = 256;
     /** Default {@link #m}. Same as Robert Sedgewick's Implementation. */
     public static final long DEFAULT_POLYNOMIAL_ROLLING_HASH_M = 997;
 
@@ -55,12 +55,7 @@ public final class PolynomialRollingHash extends RollingHashBase {
      * @param k As described.
      */
     public PolynomialRollingHash(final byte @NotNull [] string, final int k, final int skipFirst) {
-        this(
-                string,
-                k,
-                skipFirst,
-                DEFAULT_POLYNOMIAL_ROLLING_HASH_M,
-                DEFAULT_POLYNOMIAL_ROLLING_HASH_RADIX_P);
+        this(string, k, skipFirst, DEFAULT_POLYNOMIAL_ROLLING_HASH_M, StrUtils.ALPHABET_SIZE);
     }
 
     @Contract(pure = true)

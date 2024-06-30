@@ -19,15 +19,11 @@ import org.jetbrains.annotations.NotNull;
 public final class BruteForceMatch implements StrMatchInterface {
 
     @Override
-    public @NotNull IntList apply(
+    public @NotNull IntList applyUnchecked(
             final byte @NotNull [] haystack,
             final byte @NotNull [] needle,
             final int start,
             final int end) {
-        StrMatchUtils.ensureParametersValid(haystack, needle, start, end);
-        if (haystack.length == 0 || needle.length == 0) {
-            return new IntArrayList();
-        }
         var haystackPos = start;
         final var retl = new IntArrayList();
         while (haystackPos + needle.length <= end) {

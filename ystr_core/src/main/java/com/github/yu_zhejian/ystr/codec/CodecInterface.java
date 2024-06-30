@@ -11,6 +11,7 @@ public interface CodecInterface {
      * @param src As described.
      * @param srcStart As described.
      * @param numBytesToRead As described.
+     * @return As described.
      * @throws IllegalArgumentException See {@link StrUtils#ensureStartLengthValid(int, int, int)}.
      */
     byte[] encode(byte[] src, int srcStart, int numBytesToRead);
