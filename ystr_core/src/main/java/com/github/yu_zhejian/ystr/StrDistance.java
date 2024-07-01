@@ -38,7 +38,7 @@ public final class StrDistance {
         }
         var reti = 0;
         for (int i = 0; i < end1 - start1; i++) {
-            if (array1[start1 + i] != array2[start1 + i]) {
+            if (array1[start1 + i] != array2[start2 + i]) {
                 reti++;
             }
         }
