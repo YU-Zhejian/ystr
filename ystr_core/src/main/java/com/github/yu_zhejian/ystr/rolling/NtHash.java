@@ -1,7 +1,5 @@
 package com.github.yu_zhejian.ystr.rolling;
 
-import org.jetbrains.annotations.NotNull;
-
 /**
  * The ntHash rolling hash algorithm designed for genomic sequences.
  *
@@ -50,19 +48,9 @@ import org.jetbrains.annotations.NotNull;
  * <p>The hash values produced by version 2 of ntHash differ from version 1.
  */
 public final class NtHash extends NtHashBase {
-    /**
-     * Default constructor.
-     *
-     * @param string As described.
-     * @param k As described.
-     * @param skipFirst As described.
-     */
-    public NtHash(final byte @NotNull [] string, final int k, final int skipFirst) {
-        super(string, k, skipFirst);
-    }
-
     @Override
     protected void initCurrentValue() {
+        ensureAttached();
         fwdHash = 0;
         for (var i = 0; i < k; i++) {
             fwdHash ^= Long.rotateLeft(seedTableGet(string[i + skipFirst]), k - 1 - i);
@@ -76,6 +64,7 @@ public final class NtHash extends NtHashBase {
 
     @Override
     protected void updateCurrentValueToNextState() {
+        ensureAttached();
         final var i = curPos - 1;
         final var seqi = string[i];
         final var seqk = string[i + k];

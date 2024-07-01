@@ -78,18 +78,6 @@ public final class NtShannonEntropy extends RollingEntropyBase {
         numN, numN, numN, numN, numN, numN, numN, numN // 248..255
     };
 
-    /**
-     * As described.
-     *
-     * @param string As described.
-     * @param k As described.
-     * @param skipFirst As described.
-     */
-    public NtShannonEntropy(byte @NotNull [] string, int k, int skipFirst) {
-        super(string, k, skipFirst);
-        initCurrentValue();
-    }
-
     private double getEntropy() {
         if (numN.getVal() != 0) {
             return 0.0;
@@ -106,6 +94,7 @@ public final class NtShannonEntropy extends RollingEntropyBase {
 
     @Override
     protected void initCurrentValue() {
+        ensureAttached();
         for (var i = 0; i < k; i++) {
             mappingTable[string[i]].increase();
         }
@@ -114,6 +103,7 @@ public final class NtShannonEntropy extends RollingEntropyBase {
 
     @Override
     protected void updateCurrentValueToNextState() {
+        ensureAttached();
         final var i = curPos - 1;
         final var seqi = string[i];
         final var seqk = string[i + k];

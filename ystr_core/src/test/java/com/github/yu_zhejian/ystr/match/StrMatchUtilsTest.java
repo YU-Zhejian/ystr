@@ -22,9 +22,7 @@ public class StrMatchUtilsTest {
             Map.entry(Tuple.of("AAAA", "A"), List.of(0, 1, 2, 3)),
             Map.entry(Tuple.of("AAAA", "AA"), List.of(0, 1, 2)),
             Map.entry(Tuple.of("AAAA", "AAC"), List.of()),
-            Map.entry(Tuple.of("ACTC", "ACTC"), List.of(0)),
-            Map.entry(Tuple.of("AAAA", ""), List.of()),
-            Map.entry(Tuple.of("", ""), List.of()));
+            Map.entry(Tuple.of("ACTC", "ACTC"), List.of(0)));
     public static final Map<Tuple2<String, String>, List<Integer>> TEST_CASES_STRANGE_ENCODING =
             Map.ofEntries(
                     Map.entry(

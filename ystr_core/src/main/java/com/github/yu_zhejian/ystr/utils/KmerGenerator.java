@@ -67,10 +67,10 @@ public final class KmerGenerator implements Iterator<byte[]> {
 
     @Override
     public byte @NotNull [] next() {
-        hasStarted = true;
         if (!hasNext()) {
             throw new NoSuchElementException();
         }
+        hasStarted = true;
         var state = new byte[k];
         for (int i = 0; i < k; i++) {
             state[i] = alphabet[pos[i]];

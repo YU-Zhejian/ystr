@@ -12,9 +12,9 @@ import org.jetbrains.annotations.NotNull;
  *     href="https://www.cs.emory.edu/~cheung/Courses/253/Syllabus/Text/Matching-Boyer-Moore2.html">Java
  *     source</a>
  */
-public class BoyerMooreBadCharactersOnlyMatch extends BaseBoyerMoore {
+public final class BoyerMooreBCMatch extends BaseBoyerMoore {
     @Override
-    public IntList applyUnchecked(
+    public @NotNull IntList applyUnchecked(
             final byte @NotNull [] haystack,
             final byte @NotNull [] needle,
             final int start,

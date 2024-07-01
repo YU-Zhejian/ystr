@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
  *       href="https://www.scaler.com/topics/data-structures/kmp-algorithm/">Scaler Topics</a>
  * </ul>
  */
-public class KnuthMorrisPrattMatch implements StrMatchInterface {
+public final class KnuthMorrisPrattMatch implements StrMatchInterface {
 
     /**
      * LPS -- Longest proper Prefix which is also the Suffix.
@@ -116,7 +116,7 @@ public class KnuthMorrisPrattMatch implements StrMatchInterface {
     }
 
     @Override
-    public IntList applyUnchecked(
+    public @NotNull IntList applyUnchecked(
             final byte @NotNull [] haystack,
             final byte @NotNull [] needle,
             final int start,

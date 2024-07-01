@@ -1,6 +1,6 @@
 package com.github.yu_zhejian.ystr.profilers;
 
-import com.github.yu_zhejian.ystr.match.BoyerMooreBadCharactersOnlyMatch;
+import com.github.yu_zhejian.ystr.match.BoyerMooreBCMatch;
 import com.github.yu_zhejian.ystr.match.BruteForceMatch;
 import com.github.yu_zhejian.ystr.match.KnuthMorrisPrattMatch;
 import com.github.yu_zhejian.ystr.match.NaiveMatch;
@@ -104,7 +104,7 @@ public final class StrMatchBenchmarkUsingLiteratures {
         testSS(new RabinKarpMatch(), Integer.MAX_VALUE);
         testSS(new KnuthMorrisPrattMatch(), Integer.MAX_VALUE);
         testSS(new ShiftOrMatch(), StrUtils.LONG_SIZE);
-        testSS(new BoyerMooreBadCharactersOnlyMatch(), StrUtils.LONG_SIZE);
+        testSS(new BoyerMooreBCMatch(), StrUtils.LONG_SIZE);
     }
 
     private static byte @NotNull [] readLC(String fileName) {

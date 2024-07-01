@@ -8,8 +8,10 @@ import org.jetbrains.annotations.NotNull;
 /**
  * The plain old good brute-force.
  *
- * <p>Warning, for demonstrative purposes only. Do not put it into production since it is ultra
- * slow.
+ * <p>This algorithm is brute-force. For demonstrative purposes only. It will be extremely slow, so
+ * do not use it in production environments.
+ *
+ * <p>Use {@link ShiftOrMatch} for needles that are small enough.
  *
  * <ul>
  *   <li>Time complexity: {@code O(n^2)}.

@@ -8,11 +8,22 @@ import com.github.yu_zhejian.ystr.utils.IterUtils;
 
 import io.vavr.collection.List;
 
+import it.unimi.dsi.fastutil.longs.LongList;
+
+import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 
 import java.nio.charset.StandardCharsets;
 
 class RollingHashAdaptorTest {
+
+    LongList hash(@NotNull RollingHashInterface rollingHash, byte[] string, int k) {
+        rollingHash.attach(string, k);
+        var retv = IterUtils.collect(rollingHash);
+        rollingHash.detach();
+        return retv;
+    }
+
     @Test
     void test() {
         var string = "AAAGCTCGA".getBytes(StandardCharsets.US_ASCII);
@@ -25,14 +36,7 @@ class RollingHashAdaptorTest {
                 0xa718978bL,
                 0x337e424fL);
         assertIterableEquals(
-                ans,
-                IterUtils.collect(new RollingHashAdaptor(string, 3, 0, HashInterface.CRC32_HASH)));
-        assertIterableEquals(
-                ans,
-                IterUtils.collect(
-                        RollingHashAdaptor.supply(HashInterface.CRC32_HASH).apply(string, 3, 0)));
-        assertIterableEquals(
-                ans,
-                IterUtils.collect(RollingHashAdaptor.supply(CRC32Hash::new).apply(string, 3, 0)));
+                ans, hash(new RollingHashAdaptor(HashInterface.CRC32_HASH), string, 3));
+        assertIterableEquals(ans, hash(new RollingHashAdaptor(CRC32Hash::new), string, 3));
     }
 }

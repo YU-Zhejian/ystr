@@ -2,8 +2,6 @@ package com.github.yu_zhejian.ystr.rolling;
 
 import com.github.yu_zhejian.ystr.utils.StrUtils;
 
-import io.vavr.Function3;
-
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -36,32 +34,19 @@ import java.util.Random;
  * </ol>
  */
 public final class PolynomialRollingHash extends RollingHashBase {
+
     /** Default {@link #m}. Same as Robert Sedgewick's Implementation. */
     public static final long DEFAULT_POLYNOMIAL_ROLLING_HASH_M = 997;
-
     /** Some large prime number to prevent overflow. */
     private final long m;
     /** Some small prime number. */
     private final long p;
-
     /** Is {@code Math.pow(p, k - 1)}. */
     private long pow;
 
-    /**
-     * Default constructor that is identical to Robert Sedgewick's implementation.
-     *
-     * @param skipFirst As described.
-     * @param string As described.
-     * @param k As described.
-     */
-    public PolynomialRollingHash(final byte @NotNull [] string, final int k, final int skipFirst) {
-        this(string, k, skipFirst, DEFAULT_POLYNOMIAL_ROLLING_HASH_M, StrUtils.ALPHABET_SIZE);
-    }
-
-    @Contract(pure = true)
-    public static @NotNull Function3<byte @NotNull [], Integer, Integer, RollingHashInterface>
-            supply(long m, long p) {
-        return (string, k, skipFirst) -> new PolynomialRollingHash(string, k, skipFirst, m, p);
+    /** Default constructor that is identical to Robert Sedgewick's implementation. */
+    public PolynomialRollingHash() {
+        this(DEFAULT_POLYNOMIAL_ROLLING_HASH_M, StrUtils.ALPHABET_SIZE);
     }
 
     /**
@@ -76,30 +61,22 @@ public final class PolynomialRollingHash extends RollingHashBase {
     /**
      * Default constructor.
      *
-     * @param string As described.
-     * @param k As described.
-     * @param skipFirst As described.
      * @param m Some prime number.
      * @param p Usually alphabet size.
+     * @throws IllegalArgumentException On negative {@code m} or {@code p}.
      */
-    public PolynomialRollingHash(
-            final byte @NotNull [] string,
-            final int k,
-            final int skipFirst,
-            final long m,
-            final long p) {
-        super(string, k, skipFirst);
+    public PolynomialRollingHash(final long m, final long p) {
         if (m <= 0 || p <= 0) {
             throw new IllegalArgumentException(
                     "m and p must be positive. Actual: %d, %d".formatted(m, p));
         }
         this.m = m;
         this.p = p;
-        initCurrentValue();
     }
 
     @Override
     protected void initCurrentValue() {
+        ensureAttached();
         currentValueUnboxed = 0L;
         for (int i = 0; i < k; i++) {
             currentValueUnboxed = (currentValueUnboxed * p + string[i + skipFirst]) % m;
@@ -112,6 +89,7 @@ public final class PolynomialRollingHash extends RollingHashBase {
 
     @Override
     protected void updateCurrentValueToNextState() {
+        ensureAttached();
         final var i = curPos - 1;
         final var seqi = string[i];
         final var seqk = string[i + k];

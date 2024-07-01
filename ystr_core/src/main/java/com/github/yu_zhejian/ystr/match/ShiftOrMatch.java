@@ -16,7 +16,7 @@ import java.util.Arrays;
  *
  * @see <a href="https://www-igm.univ-mlv.fr/~lecroq/string/node6.html">C source</a>
  */
-public class ShiftOrMatch implements StrMatchInterface {
+public final class ShiftOrMatch implements StrMatchInterface {
     @Override
     public IntList apply(byte @NotNull [] haystack, byte @NotNull [] needle, int start, int end) {
         if (needle.length > StrUtils.LONG_SIZE) {
@@ -36,7 +36,7 @@ public class ShiftOrMatch implements StrMatchInterface {
     }
 
     @Override
-    public IntList applyUnchecked(
+    public @NotNull IntList applyUnchecked(
             final byte @NotNull [] haystack,
             final byte @NotNull [] needle,
             final int start,

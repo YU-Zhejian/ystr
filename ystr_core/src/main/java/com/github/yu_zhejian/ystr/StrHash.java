@@ -22,6 +22,10 @@ public final class StrHash {
      * @return As described.
      */
     public static long ntHash(final byte[] string) {
-        return new PrecomputedNtHash(string, string.length, 0).nextLong();
+        var hash = new PrecomputedNtHash();
+        hash.attach(string, string.length);
+        var retv = hash.nextLong();
+        hash.detach();
+        return retv;
     }
 }

@@ -1,6 +1,5 @@
 package com.github.yu_zhejian.ystr.match;
 
-import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 
 import org.jetbrains.annotations.NotNull;
@@ -42,9 +41,6 @@ public interface StrMatchInterface {
             final int start,
             final int end) {
         StrMatchUtils.ensureParametersValid(haystack, needle, start, end);
-        if (haystack.length == 0 || needle.length == 0) {
-            return new IntArrayList(0);
-        }
         return applyUnchecked(haystack, needle, start, end);
     }
 

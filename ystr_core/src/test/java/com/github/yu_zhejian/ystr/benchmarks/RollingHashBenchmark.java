@@ -6,6 +6,7 @@ import com.github.yu_zhejian.ystr.rolling.NtHash;
 import com.github.yu_zhejian.ystr.rolling.PolynomialRollingHash;
 import com.github.yu_zhejian.ystr.rolling.PrecomputedNtHash;
 import com.github.yu_zhejian.ystr.rolling.RollingHashAdaptor;
+import com.github.yu_zhejian.ystr.rolling.RollingHashInterface;
 import com.github.yu_zhejian.ystr.test_utils.GitUtils;
 
 import org.jetbrains.annotations.NotNull;
@@ -72,24 +73,31 @@ public class RollingHashBenchmark {
         }
     }
 
+    void bench(@NotNull Blackhole blackhole, @NotNull RollingHashInterface hasher) {
+        hasher.attach(TEST_CHR, k);
+        while (hasher.hasNext()) {
+            blackhole.consume(hasher.nextLong());
+        }
+        hasher.detach();
+    }
+
     @Benchmark
     public void benchPrecomputedNtHash(@NotNull Blackhole blackhole) {
-        blackhole.consume(new PrecomputedNtHash(TEST_CHR, k, 0));
+        bench(blackhole, new PrecomputedNtHash());
     }
 
     @Benchmark
     public void benchNtHash(@NotNull Blackhole blackhole) {
-        blackhole.consume(new NtHash(TEST_CHR, k, 0));
+        bench(blackhole, new NtHash());
     }
 
     @Benchmark
     public void benchPolynomialRollingHash(@NotNull Blackhole blackhole) {
-        blackhole.consume(new PolynomialRollingHash(TEST_CHR, k, 0));
+        bench(blackhole, new PolynomialRollingHash());
     }
 
     @Benchmark
     public void benchRollingHashAdaptor(@NotNull Blackhole blackhole) {
-        blackhole.consume(
-                RollingHashAdaptor.supply(HashInterface.JUL_CRC32_CHECKSUM).apply(TEST_CHR, k, 0));
+        bench(blackhole, new RollingHashAdaptor(HashInterface.JUL_CRC32_CHECKSUM));
     }
 }

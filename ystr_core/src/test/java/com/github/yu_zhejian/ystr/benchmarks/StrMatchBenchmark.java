@@ -1,7 +1,7 @@
 package com.github.yu_zhejian.ystr.benchmarks;
 
 import com.github.yu_zhejian.ystr.io.FastxIterator;
-import com.github.yu_zhejian.ystr.match.BoyerMooreBadCharactersOnlyMatch;
+import com.github.yu_zhejian.ystr.match.BoyerMooreBCMatch;
 import com.github.yu_zhejian.ystr.match.BruteForceMatch;
 import com.github.yu_zhejian.ystr.match.KnuthMorrisPrattMatch;
 import com.github.yu_zhejian.ystr.match.NaiveMatch;
@@ -102,7 +102,7 @@ public class StrMatchBenchmark {
     @Benchmark
     public void benchRabinKarpNtHash(@NotNull Blackhole blackhole) {
         blackhole.consume(StrMatchInterface.convenientApply(
-                () -> new RabinKarpMatch(PrecomputedNtHash::new),
+                () -> new RabinKarpMatch(new PrecomputedNtHash()),
                 TEST_CHR,
                 needle.getBytes(StandardCharsets.UTF_8),
                 0,
@@ -132,7 +132,7 @@ public class StrMatchBenchmark {
     @Benchmark
     public void benchBoyerMooreBadCharactersOnly(@NotNull Blackhole blackhole) {
         blackhole.consume(StrMatchInterface.convenientApply(
-                BoyerMooreBadCharactersOnlyMatch::new,
+                BoyerMooreBCMatch::new,
                 TEST_CHR,
                 needle.getBytes(StandardCharsets.UTF_8),
                 0,

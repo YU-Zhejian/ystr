@@ -1,7 +1,5 @@
 package com.github.yu_zhejian.ystr.rolling;
 
-import org.jetbrains.annotations.NotNull;
-
 /**
  * k-mers with bases except {@code AGCTUagctu}.
  *
@@ -69,14 +67,9 @@ public final class IsPolyARollingPredicate extends RollingPredicateBase {
     /**
      * As described.
      *
-     * @param string As described.
-     * @param k As described.
-     * @param skipFirst As described.
      * @param numAThreshold As described.
      */
-    public IsPolyARollingPredicate(
-            byte @NotNull [] string, int k, int skipFirst, int numAThreshold) {
-        super(string, k, skipFirst);
+    public IsPolyARollingPredicate(int numAThreshold) {
         this.numAThreshold = numAThreshold;
         if (numAThreshold < 1) {
             throw new IllegalArgumentException(
@@ -84,19 +77,9 @@ public final class IsPolyARollingPredicate extends RollingPredicateBase {
         }
     }
 
-    /**
-     * As described.
-     *
-     * @param string As described.
-     * @param k As described.
-     * @param skipFirst As described.
-     */
-    public IsPolyARollingPredicate(byte @NotNull [] string, int k, int skipFirst) {
-        this(string, k, skipFirst, Math.max((int) (0.75 * k), 1));
-    }
-
     @Override
     protected void initCurrentValue() {
+        ensureAttached();
         for (int i = 0; i < k; i++) {
             if (PREDICATE[string[i] & 0xFF]) {
                 numA += 1;
@@ -107,6 +90,7 @@ public final class IsPolyARollingPredicate extends RollingPredicateBase {
 
     @Override
     protected void updateCurrentValueToNextState() {
+        ensureAttached();
         final var i = curPos - 1;
         final var seqi = string[i] & 0xFF;
         final var seqk = string[i + k] & 0xFF;

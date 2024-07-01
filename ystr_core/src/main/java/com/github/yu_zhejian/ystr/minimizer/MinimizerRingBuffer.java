@@ -1,5 +1,7 @@
 package com.github.yu_zhejian.ystr.minimizer;
 
+import it.unimi.dsi.fastutil.longs.LongArrayPriorityQueue;
+
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -17,6 +19,8 @@ import java.util.Arrays;
  * </ol>
  *
  * <p>Notice, if hash collision occurs, will use the one with smaller position.
+ *
+ * @see LongArrayPriorityQueue
  */
 public final class MinimizerRingBuffer {
     /** Placeholder for leat possible minimizer. */

@@ -34,4 +34,4 @@ import it.unimi.dsi.fastutil.longs.LongIterator;
  * // Which should both be "AGCT"
  * }</pre>
  */
-public interface RollingHashInterface extends LongIterator {}
+public interface RollingHashInterface extends LongIterator, RollingInterface<Long> {}

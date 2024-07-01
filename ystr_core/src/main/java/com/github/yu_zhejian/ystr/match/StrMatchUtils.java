@@ -23,6 +23,9 @@ public final class StrMatchUtils {
             final int start,
             final int end) {
         StrUtils.ensureStartEndValid(start, end, haystack.length);
+        if (needle.length == 0 || end - start == 0) {
+            throw new IllegalArgumentException("needle or haystack is empty!");
+        }
         if (needle.length > end - start) {
             throw new IllegalArgumentException(
                     "Needle length larger than valid haystack length! Are: %d vs. %d"
@@ -34,8 +37,10 @@ public final class StrMatchUtils {
      * Test whether a substring on {@code haystack} from {@code skipFirst} with length
      * {@code needle.length} matches {@code needle}.
      *
-     * <p>This algorithm is brute-force. It will be extremely slow so do not use it in production
-     * environment except you're searching a needle that is small enough.
+     * <p>This algorithm is brute-force. For demonstrative purposes only. It will be extremely slow,
+     * so do not use it in production environments.
+     *
+     * <p>Use {@link ShiftOrMatch} for needles that are small enough.
      *
      * <ul>
      *   <li>Time complexity: {@code O(n^2)}.

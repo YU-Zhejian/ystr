@@ -11,9 +11,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 class NtShannonEntropyTest {
-    void testNtShannonEntropy(@NotNull List<Double> expected, @NotNull String bases, int k) {
-        var nth = new NtShannonEntropy(bases.getBytes(StandardCharsets.US_ASCII), k, 0);
+    void testNtShannonEntropy(@NotNull List<Double> expected, @NotNull String string, int k) {
+        var nth = new NtShannonEntropy();
+        nth.attach(string.getBytes(StandardCharsets.UTF_8), k);
         var result = IterUtils.collect(nth);
+        nth.detach();
         assertEquals(expected.size(), result.size());
         for (int i = 0; i < result.size(); i++) {
             assertEquals(expected.get(i), result.getDouble(i), 0.0, "");

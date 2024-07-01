@@ -143,18 +143,6 @@ public abstract class NtHashBase extends RollingHashBase {
     protected long revHash;
 
     /**
-     * Default constructor.
-     *
-     * @param string As described.
-     * @param k As described.
-     * @param skipFirst As described.
-     */
-    protected NtHashBase(final byte @NotNull [] string, final int k, final int skipFirst) {
-        super(string, k, skipFirst);
-        initCurrentValue();
-    }
-
-    /**
      * As described.
      *
      * @return As described.
@@ -164,16 +152,17 @@ public abstract class NtHashBase extends RollingHashBase {
     }
 
     @SuppressWarnings("PMD.LooseCoupling")
-    @Contract(value = "_, _ -> new", pure = true)
     public static @NotNull Tuple2<LongList, LongList> getAllBothHash(
-            @NotNull NtHashBase ntHash, int estimatedLength) {
+            @NotNull NtHashBase ntHash, int estimatedLength, byte[] string, int k, int skipFirst) {
         final var rett = Tuple.of((LongList) new LongArrayList(estimatedLength), (LongList)
                 new LongArrayList(estimatedLength));
+        ntHash.attach(string, k, skipFirst);
         while (ntHash.hasNext()) {
             ntHash.nextLong();
             rett._1().add(ntHash.getFwdHash());
             rett._2().add(ntHash.getRevHash());
         }
+        ntHash.detach();
         return rett;
     }
 

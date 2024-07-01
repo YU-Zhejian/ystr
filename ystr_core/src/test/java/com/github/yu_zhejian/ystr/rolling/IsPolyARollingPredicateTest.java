@@ -24,27 +24,27 @@ class IsPolyARollingPredicateTest {
                 assertFalse(IsPolyARollingPredicate.PREDICATE[i]);
             }
         }
-        assertEquals(
-                3,
-                new IsPolyARollingPredicate("AAAA".getBytes(StandardCharsets.US_ASCII), 4, 0)
-                        .getNumAThreshold());
     }
 
     @Test
     void testStrangeEncoding() {
         byte[] string = new byte[] {78, 0, 78, 78, 65, 'T', 'U', 'u', -2, 78, -17, 78};
-        var predicate = new IsPolyARollingPredicate(string, 4, 0, 3);
+        var predicate = new IsPolyARollingPredicate(3);
+        predicate.attach(string, 4);
         assertIterableEquals(
                 List.of(false, false, false, true, true, true, false, false, false),
                 IterUtils.collect(predicate));
+        predicate.detach();
     }
 
     @Test
     void testNormal() {
         byte[] string = "NNNNAAAANNNN".getBytes(StandardCharsets.US_ASCII);
-        var predicate = new IsPolyARollingPredicate(string, 4, 0, 3);
+        var predicate = new IsPolyARollingPredicate(3);
+        predicate.attach(string, 4);
         assertIterableEquals(
                 List.of(false, false, false, true, true, true, false, false, false),
                 IterUtils.collect(predicate));
+        predicate.detach();
     }
 }

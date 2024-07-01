@@ -3,8 +3,7 @@ package com.github.yu_zhejian.ystr;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import com.github.yu_zhejian.ystr.match.BoyerMooreBadCharactersOnlyMatch;
-import com.github.yu_zhejian.ystr.match.BoyerMooreHorspool;
+import com.github.yu_zhejian.ystr.match.BoyerMooreBCMatch;
 import com.github.yu_zhejian.ystr.match.BruteForceMatch;
 import com.github.yu_zhejian.ystr.match.KnuthMorrisPrattMatch;
 import com.github.yu_zhejian.ystr.match.NaiveMatch;
@@ -34,10 +33,13 @@ class StrMatchTest {
         // Test edge cases and illegal inputs
         assertThrows(
                 IllegalArgumentException.class,
-                () -> function.applyUnchecked(new byte[0], new byte[0], 1, 0));
+                () -> function.apply(new byte[0], new byte[0], 1, 0));
         assertThrows(
                 IllegalArgumentException.class,
-                () -> function.applyUnchecked(new byte[0], new byte[0], -1, 0));
+                () -> function.apply(new byte[0], new byte[0], -1, 0));
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> function.apply(new byte[0], new byte[0], 0, 0));
         // Test real strings
         testCases.forEach((key, value) -> {
             var hayStack = key._1().getBytes(StandardCharsets.UTF_8);
@@ -70,14 +72,14 @@ class StrMatchTest {
     @Test
     void rabinKarpMatchUsingRandomPrime() {
         testSS(
-                new RabinKarpMatch(PolynomialRollingHash.supply(
+                new RabinKarpMatch(new PolynomialRollingHash(
                         PolynomialRollingHash.longRandomPrime(), StrUtils.ALPHABET_SIZE)),
                 StrMatchUtilsTest.TEST_CASES_AGCT);
     }
 
     @Test
     void rabinKarpMatchUsingNtHash() {
-        testSS(new RabinKarpMatch(PrecomputedNtHash::new), StrMatchUtilsTest.TEST_CASES_AGCT);
+        testSS(new RabinKarpMatch(new PrecomputedNtHash()), StrMatchUtilsTest.TEST_CASES_AGCT);
     }
 
     @Test
@@ -94,18 +96,7 @@ class StrMatchTest {
 
     @Test
     void boyerMooreBadCharacterRuleOnlyMatch() {
-        testSS(new BoyerMooreBadCharactersOnlyMatch(), StrMatchUtilsTest.TEST_CASES_AGCT);
-        testSS(
-                new BoyerMooreBadCharactersOnlyMatch(),
-                StrMatchUtilsTest.TEST_CASES_STRANGE_ENCODING);
-    }
-
-    @Test
-    void boyerMooreHorspoolMatch() {
-        if (true) {
-            return; // FIXME: This method has errors!
-        }
-        testSS(new BoyerMooreHorspool(), StrMatchUtilsTest.TEST_CASES_AGCT);
-        testSS(new BoyerMooreHorspool(), StrMatchUtilsTest.TEST_CASES_STRANGE_ENCODING);
+        testSS(new BoyerMooreBCMatch(), StrMatchUtilsTest.TEST_CASES_AGCT);
+        testSS(new BoyerMooreBCMatch(), StrMatchUtilsTest.TEST_CASES_STRANGE_ENCODING);
     }
 }

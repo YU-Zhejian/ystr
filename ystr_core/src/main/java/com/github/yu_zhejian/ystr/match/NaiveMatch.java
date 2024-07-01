@@ -8,17 +8,19 @@ import org.jetbrains.annotations.NotNull;
 /**
  * A somewhat improved {@link BruteForceMatch}.
  *
- * <p>Warning, for demonstrative purposes only. Do not put it into production since it is ultra
- * slow.
+ * <p>This algorithm is brute-force. For demonstrative purposes only. It will be extremely slow, so
+ * do not use it in production environments.
+ *
+ * <p>Use {@link ShiftOrMatch} for needles that are small enough.
  *
  * <ul>
  *   <li>Time complexity: {@code O(n^2)}.
  *   <li>Space complexity: {@code O(1)}.
  * </ul>
  */
-public class NaiveMatch implements StrMatchInterface {
+public final class NaiveMatch implements StrMatchInterface {
     @Override
-    public IntList applyUnchecked(
+    public @NotNull IntList applyUnchecked(
             final byte @NotNull [] haystack,
             final byte @NotNull [] needle,
             final int start,

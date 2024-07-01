@@ -21,9 +21,7 @@ import io.vavr.Tuple2;
 
 import it.unimi.dsi.fastutil.BigList;
 import it.unimi.dsi.fastutil.bytes.ByteArrayList;
-import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
 import it.unimi.dsi.fastutil.doubles.DoubleList;
-import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.longs.LongArrayList;
@@ -102,13 +100,12 @@ public final class GenomeIndexer {
     }
 
     private static @NotNull DoubleList calcShannonEntropy(
-            byte[] string, @NotNull GenomeIndexerConfig config) {
-        var thisShannonEntropy = new DoubleArrayList();
-        var nts = new NtShannonEntropy(string, config.kmerSize(), 0);
-        while (nts.hasNext()) {
-            thisShannonEntropy.add(nts.nextDouble());
-        }
-        return thisShannonEntropy;
+            byte @NotNull [] string, @NotNull GenomeIndexerConfig config) {
+        var nts = new NtShannonEntropy();
+        nts.attach(string, config.kmerSize());
+        var retv = IterUtils.collect(nts);
+        nts.detach();
+        return retv;
     }
 
     private static @NotNull Tuple2<LongArrayList, LongArrayList> calcMinimizers(
@@ -145,7 +142,7 @@ public final class GenomeIndexer {
         // Adding minimizers
         var minimizers = new LongArrayList(minimizerIndices.size());
         var encodedPositionsOfMinimizers = new LongArrayList(minimizerIndices.size());
-        for (int i : IterUtils.dedup((IntArrayList) minimizerIndices)) {
+        for (int i : IterUtils.dedup(minimizerIndices)) {
             minimizers.add(passedNtHashes.getLong(i));
             encodedPositionsOfMinimizers.add(encodedPositionsOfPassedNtHashes.getLong(i));
         }
@@ -166,7 +163,7 @@ public final class GenomeIndexer {
         var passingIdx =
                 IterUtils.where(thisShannonEntropy, (i) -> i > config.ntShannonEntropyCutoff());
         var hashes = NtHashBase.getAllBothHash(
-                new PrecomputedBidirectionalNtHash(string, config.kmerSize(), 0), string.length);
+                new PrecomputedBidirectionalNtHash(), string.length, string, config.kmerSize(), 0);
 
         var minimizerSpec = calcMinimizers(hashes, passingIdx, 0, config);
 
@@ -195,7 +192,7 @@ public final class GenomeIndexer {
         numProcessedKmers.addAndGet(passingIdx.size());
 
         var hashes = NtHashBase.getAllBothHash(
-                new PrecomputedBidirectionalNtHash(string, config.kmerSize(), 0), string.length);
+                new PrecomputedBidirectionalNtHash(), string.length, string, config.kmerSize(), 0);
 
         var minimizerSpec = calcMinimizers(hashes, passingIdx, offsetOfFirst, config);
 
