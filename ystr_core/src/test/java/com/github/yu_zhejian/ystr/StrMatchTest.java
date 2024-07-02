@@ -40,15 +40,44 @@ class StrMatchTest {
         assertThrows(
                 IllegalArgumentException.class,
                 () -> function.apply(new byte[0], new byte[0], 0, 0));
+        // Test alternate start/end
+        var hayStack = "NNNNATTCCGTAAATTCCAAAATTCCGATTCTCCNNNN".getBytes(StandardCharsets.UTF_8);
+        var needle = "TTCC".getBytes(StandardCharsets.UTF_8);
+
+        assertIterableEquals(
+                List.of(1 + 4, 10 + 4, 18 + 4),
+                function.applyUnchecked(
+                        hayStack, needle,
+                        4,
+                        hayStack.length
+                ));
+
+        assertIterableEquals(
+                List.of(10 + 4, 18 + 4),
+                function.applyUnchecked(
+                        hayStack, needle,
+                        6,
+                        hayStack.length
+                ));
+        assertIterableEquals(
+                List.of(10 + 4),
+                function.applyUnchecked(
+                        hayStack, needle,
+                        6,
+                        18
+                ));
+
         // Test real strings
-        testCases.forEach((key, value) -> {
-            var hayStack = key._1().getBytes(StandardCharsets.UTF_8);
-            var needle = key._2().getBytes(StandardCharsets.UTF_8);
+        for (var entry: testCases.entrySet()) {
+            var key = entry.getKey();
+            var value = entry.getValue();
+            hayStack = key._1().getBytes(StandardCharsets.UTF_8);
+            needle = key._2().getBytes(StandardCharsets.UTF_8);
             assertIterableEquals(
                     value,
                     function.applyUnchecked(hayStack, needle, 0, hayStack.length),
                     "Error at case %s in %s".formatted(key._2(), key._1()));
-        });
+        }
     }
 
     @Test

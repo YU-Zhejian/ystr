@@ -8,7 +8,7 @@ import org.jetbrains.annotations.NotNull;
  * The codec that does nothing. Bith encoder and decoder will use {@link System#arraycopy(Object,
  * int, Object, int, int)} to copy desired number of bytes from {@code src} to {@code dst}.
  */
-public class DumbCodec implements CodecInterface {
+public final class DumbCodec implements CodecInterface {
 
     /** Default constructor. */
     public DumbCodec() {
@@ -16,14 +16,14 @@ public class DumbCodec implements CodecInterface {
     }
 
     @Override
-    public byte[] encode(final byte[] src, final int srcStart, final int numBytesToRead) {
+    public byte @NotNull [] encode(final byte[] src, final int srcStart, final int numBytesToRead) {
         final var retb = new byte[numBytesToRead];
         System.arraycopy(src, srcStart, retb, 0, numBytesToRead);
         return retb;
     }
 
     @Override
-    public byte[] decode(byte @NotNull [] src, int srcStart, int numBytesToRead) {
+    public byte @NotNull [] decode(byte @NotNull [] src, int srcStart, int numBytesToRead) {
         StrUtils.ensureStartLengthValid(srcStart, numBytesToRead, src.length);
         return encode(src, srcStart, numBytesToRead);
     }

@@ -10,6 +10,9 @@ public final class BruteForceHammingMatcher implements StrMatchInterface {
     private final int maxDistance;
 
     public BruteForceHammingMatcher(final int maxDistance) {
+        if(maxDistance <= 0){
+            throw new IllegalArgumentException("maxDistance must be greater than 0. Actual: %d".formatted(maxDistance));
+        }
         this.maxDistance = maxDistance;
     }
 

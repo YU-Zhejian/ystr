@@ -38,11 +38,11 @@ public final class RabinKarpMatch implements StrMatchInterface {
 
         final var needleLen = needle.length;
 
-        rollingHasher.attach(needle, needleLen, start);
+        rollingHasher.attachUnchecked(needle, needleLen, 0);
         final var needleHash = rollingHasher.nextLong();
         rollingHasher.detach();
 
-        rollingHasher.attach(haystack, needleLen, start);
+        rollingHasher.attachUnchecked(haystack, needleLen, start);
         final var retl = new IntArrayList();
         while (haystackPos + needleLen <= end) {
             final var nextHash = rollingHasher.nextLong();
