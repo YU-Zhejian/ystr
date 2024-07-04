@@ -3,7 +3,7 @@ package com.github.yu_zhejian.ystr.rolling;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 
 import com.github.yu_zhejian.ystr.hash.CRC32Hash;
-import com.github.yu_zhejian.ystr.hash.HashInterface;
+import com.github.yu_zhejian.ystr.hash.HashConstants;
 import com.github.yu_zhejian.ystr.utils.IterUtils;
 
 import io.vavr.collection.List;
@@ -36,7 +36,7 @@ class RollingHashAdaptorTest {
                 0xa718978bL,
                 0x337e424fL);
         assertIterableEquals(
-                ans, hash(new RollingHashAdaptor(HashInterface.CRC32_HASH), string, 3));
+                ans, hash(new RollingHashAdaptor(HashConstants.CRC32_HASH), string, 3));
         assertIterableEquals(ans, hash(new RollingHashAdaptor(CRC32Hash::new), string, 3));
     }
 }

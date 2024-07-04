@@ -1,6 +1,6 @@
 package com.github.yu_zhejian.ystr.benchmarks;
 
-import com.github.yu_zhejian.ystr.hash.HashInterface;
+import com.github.yu_zhejian.ystr.hash.HashConstants;
 import com.github.yu_zhejian.ystr.io.FastxIterator;
 import com.github.yu_zhejian.ystr.rolling.NtHash;
 import com.github.yu_zhejian.ystr.rolling.PolynomialRollingHash;
@@ -98,6 +98,6 @@ public class RollingHashBenchmark {
 
     @Benchmark
     public void benchRollingHashAdaptor(@NotNull Blackhole blackhole) {
-        bench(blackhole, new RollingHashAdaptor(HashInterface.JUL_CRC32_CHECKSUM));
+        bench(blackhole, new RollingHashAdaptor(HashConstants.JUL_CRC32_CHECKSUM));
     }
 }

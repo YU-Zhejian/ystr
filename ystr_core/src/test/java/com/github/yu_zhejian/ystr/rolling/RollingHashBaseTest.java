@@ -2,7 +2,7 @@ package com.github.yu_zhejian.ystr.rolling;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-import com.github.yu_zhejian.ystr.hash.HashInterface;
+import com.github.yu_zhejian.ystr.hash.HashConstants;
 import com.github.yu_zhejian.ystr.utils.StrUtils;
 
 import org.jetbrains.annotations.NotNull;
@@ -43,7 +43,7 @@ public class RollingHashBaseTest {
                 new PolynomialRollingHash(),
                 new PolynomialRollingHash(
                         PolynomialRollingHash.longRandomPrime(), StrUtils.ALPHABET_SIZE),
-                new RollingHashAdaptor(HashInterface.CRC32_HASH))) {
+                new RollingHashAdaptor(HashConstants.CRC32_HASH))) {
             System.out.println(hasher);
             assertEquals(
                     RollingHashBaseTest.at(hasher, str1, 4, 3),
