@@ -46,29 +46,15 @@ class StrMatchTest {
 
         assertIterableEquals(
                 List.of(1 + 4, 10 + 4, 18 + 4),
-                function.applyUnchecked(
-                        hayStack, needle,
-                        4,
-                        hayStack.length
-                ));
+                function.applyUnchecked(hayStack, needle, 4, hayStack.length));
 
         assertIterableEquals(
                 List.of(10 + 4, 18 + 4),
-                function.applyUnchecked(
-                        hayStack, needle,
-                        6,
-                        hayStack.length
-                ));
-        assertIterableEquals(
-                List.of(10 + 4),
-                function.applyUnchecked(
-                        hayStack, needle,
-                        6,
-                        18
-                ));
+                function.applyUnchecked(hayStack, needle, 6, hayStack.length));
+        assertIterableEquals(List.of(10 + 4), function.applyUnchecked(hayStack, needle, 6, 18));
 
         // Test real strings
-        for (var entry: testCases.entrySet()) {
+        for (var entry : testCases.entrySet()) {
             var key = entry.getKey();
             var value = entry.getValue();
             hayStack = key._1().getBytes(StandardCharsets.UTF_8);

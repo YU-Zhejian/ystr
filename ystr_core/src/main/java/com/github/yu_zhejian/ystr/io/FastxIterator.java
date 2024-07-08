@@ -37,21 +37,6 @@ public final class FastxIterator implements Iterator<FastxRecord>, AutoCloseable
     /** As described. */
     private final boolean trimSeqID;
 
-    /** Wrapper for {@link RuntimeException} to make SonarLint silence. */
-    public static class FastxIOException extends RuntimeException {
-        private static final long serialVersionUID = 1L;
-
-        /**
-         * Convenient constructor.
-         *
-         * @param description As described.
-         * @param e As described.
-         */
-        public FastxIOException(String description, Exception e) {
-            super(description, e);
-        }
-    }
-
     /**
      * Move cursor to the sequence of first record while getting its ID. {@link #nextRecord()}
      * should be immediately called otherwise {@link #currentRecord} will be {@code null}.
@@ -100,7 +85,7 @@ public final class FastxIterator implements Iterator<FastxRecord>, AutoCloseable
             populateFirstSeqID();
             nextRecord();
         } catch (IOException e) {
-            throw new FastxIOException("Error reading file", e);
+            throw new RuntimeIOException("Error reading file", e);
         }
     }
 
@@ -194,7 +179,7 @@ public final class FastxIterator implements Iterator<FastxRecord>, AutoCloseable
         try {
             nextRecord(); // Prepare for the next record
         } catch (IOException e) {
-            throw new FastxIOException("Error reading file", e);
+            throw new RuntimeIOException("Error reading file", e);
         }
         return retv;
     }

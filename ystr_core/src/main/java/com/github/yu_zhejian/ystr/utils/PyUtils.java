@@ -114,7 +114,7 @@ public final class PyUtils {
                                 .getBytes(StandardCharsets.UTF_8));
                 pp.file().write(sepBytes);
             }
-            if (args.length != 0){
+            if (args.length != 0) {
                 pp.file()
                         .write((args[i] == null ? "null" : args[i].toString())
                                 .getBytes(StandardCharsets.UTF_8));

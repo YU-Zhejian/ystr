@@ -9,9 +9,7 @@ import java.util.zip.CRC32;
 import java.util.zip.CRC32C;
 import java.util.zip.Checksum;
 
-/**
- * Hash constants.
- */
+/** Hash constants. */
 public final class HashConstants {
     /** Static non-thread-safe instance of {@link APHash}. */
     public static final HashInterface AP_HASH = new APHash();
@@ -48,8 +46,7 @@ public final class HashConstants {
     /** Static non-thread-safe instance of {@link Adler32}. */
     public static final HashInterface JUL_ALDER32_CHECKSUM = cast(new Adler32());
 
-    private HashConstants(){}
-
+    private HashConstants() {}
 
     /**
      * Cast implementations of other hashes to this interface.
