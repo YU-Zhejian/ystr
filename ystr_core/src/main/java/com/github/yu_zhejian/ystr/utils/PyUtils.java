@@ -110,15 +110,11 @@ public final class PyUtils {
         final var f = pp.file();
         try {
             for (i = 0; i < args.length - 1; i++) {
-                f
-                        .write((args[i] == null ? "null" : args[i].toString())
-                                .getBytes(StandardCharsets.UTF_8));
+                f.write((args[i] == null ? "null" : args[i].toString()).getBytes(StandardCharsets.UTF_8));
                 f.write(sepBytes);
             }
             if (args.length != 0){
-                f
-                        .write((args[i] == null ? "null" : args[i].toString())
-                                .getBytes(StandardCharsets.UTF_8));
+                f.write((args[i] == null ? "null" : args[i].toString()).getBytes(StandardCharsets.UTF_8));
             }
             f.write(endBytes);
 

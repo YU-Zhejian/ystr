@@ -25,21 +25,21 @@ class CRC32HashTest {
         assertEquals(
                 0x00000000,
                 HashInterface.convenientHash(
-                        HashInterface.CRC32_HASH, "".getBytes(StandardCharsets.US_ASCII)));
+                        HashConstants.CRC32_HASH, "".getBytes(StandardCharsets.US_ASCII)));
         assertEquals(
                 0x66a031a7,
                 HashInterface.convenientHash(
-                        HashInterface.CRC32_HASH, "AAA".getBytes(StandardCharsets.US_ASCII)));
+                        HashConstants.CRC32_HASH, "AAA".getBytes(StandardCharsets.US_ASCII)));
         assertEquals(
                 0x5AB5AEDD,
                 HashInterface.convenientHash(
-                        HashInterface.CRC32_HASH, "ATCG".getBytes(StandardCharsets.US_ASCII)));
+                        HashConstants.CRC32_HASH, "ATCG".getBytes(StandardCharsets.US_ASCII)));
         assertEquals(
                 0x41D912FF,
-                HashInterface.convenientHash(HashInterface.CRC32_HASH, new byte[] {0, 0}));
-        assertEquals(0x3B1C424C, HashInterface.convenientHash(HashInterface.CRC32_HASH, new byte[] {
+                HashInterface.convenientHash(HashConstants.CRC32_HASH, new byte[] {0, 0}));
+        assertEquals(0x3B1C424C, HashInterface.convenientHash(HashConstants.CRC32_HASH, new byte[] {
             (byte) 0xA9, (byte) 0xC7
         }));
-        assertEquals(0x8A1C61A0L, HashInterface.convenientHash(HashInterface.CRC32_HASH, x));
+        assertEquals(0x8A1C61A0L, HashInterface.convenientHash(HashConstants.CRC32_HASH, x));
     }
 }
