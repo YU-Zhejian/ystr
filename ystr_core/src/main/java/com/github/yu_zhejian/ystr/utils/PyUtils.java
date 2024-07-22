@@ -107,22 +107,23 @@ public final class PyUtils {
         int i;
         final var sepBytes = pp.sep();
         final var endBytes = pp.end();
+        final var f = pp.file();
         try {
             for (i = 0; i < args.length - 1; i++) {
-                pp.file()
+                f
                         .write((args[i] == null ? "null" : args[i].toString())
                                 .getBytes(StandardCharsets.UTF_8));
-                pp.file().write(sepBytes);
+                f.write(sepBytes);
             }
             if (args.length != 0){
-                pp.file()
+                f
                         .write((args[i] == null ? "null" : args[i].toString())
                                 .getBytes(StandardCharsets.UTF_8));
             }
-            pp.file().write(endBytes);
+            f.write(endBytes);
 
             if (pp.flush()) {
-                pp.file().flush();
+                f.flush();
             }
         } catch (IOException ignored) {
             // Do nothing
