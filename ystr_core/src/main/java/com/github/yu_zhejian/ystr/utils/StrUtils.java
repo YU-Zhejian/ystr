@@ -1,5 +1,8 @@
 package com.github.yu_zhejian.ystr.utils;
 
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+
 /** Various utility functions concerning strings to support other classes. */
 public final class StrUtils {
     /** Size of {@link Byte}. */
@@ -18,6 +21,21 @@ public final class StrUtils {
      */
     public static int byteToUnsigned(final byte b) {
         return b & 0xFF;
+    }
+
+    /**
+     * Convert a signed byte to unsigned int.
+     *
+     * @param b As described.
+     * @return As described.
+     */
+    @Contract(pure = true)
+    public static int @NotNull [] byteToUnsigned(final byte @NotNull [] b) {
+        var reti = new int[b.length];
+        for (int i = 0; i < b.length; i++) {
+            reti[i] = byteToUnsigned(b[i]);
+        }
+        return reti;
     }
 
     /**

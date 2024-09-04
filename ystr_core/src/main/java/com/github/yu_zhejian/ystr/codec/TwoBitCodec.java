@@ -144,7 +144,7 @@ public final class TwoBitCodec implements CodecInterface {
             final int dstStart,
             final int numFullBytes,
             final int numBytesRemaining) {
-        var retl = numBytesRemaining;
+        var retl = numFullBytes;
         var srcPos = srcStart;
         var dstPos = dstStart;
         for (var i = 0; i < numFullBytes; i++) {
