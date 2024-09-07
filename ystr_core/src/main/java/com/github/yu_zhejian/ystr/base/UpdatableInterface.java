@@ -15,7 +15,7 @@ public interface UpdatableInterface {
      * @param b Signed byte, ranged {@code [-127, 128)}.
      */
     default void update(final byte b) {
-        update(b & 0xFF);
+        update(b & StrUtils.BYTE_TO_UNSIGNED_MASK);
     }
 
     /**
@@ -32,7 +32,7 @@ public interface UpdatableInterface {
      */
     default void update(final byte @NotNull [] string) {
         for (byte b : string) {
-            update(b & 0xFF);
+            update(b & StrUtils.BYTE_TO_UNSIGNED_MASK);
         }
     }
 
@@ -59,7 +59,7 @@ public interface UpdatableInterface {
      */
     default void updateUnchecked(final byte @NotNull [] string, final int start, final int end) {
         for (int i = start; i < end; i++) {
-            update(string[i] & 0xFF);
+            update(string[i] & StrUtils.BYTE_TO_UNSIGNED_MASK);
         }
     }
 

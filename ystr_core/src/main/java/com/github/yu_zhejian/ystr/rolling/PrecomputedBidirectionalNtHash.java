@@ -1,5 +1,7 @@
 package com.github.yu_zhejian.ystr.rolling;
 
+import com.github.yu_zhejian.ystr.utils.StrUtils;
+
 /**
  * Pre-computed {@link NtHash} implementation without updating {@link #currentValueUnboxed}. Only
  * {@link #getFwdHash()} and {@link #getRevHash()} is working;
@@ -25,8 +27,8 @@ public class PrecomputedBidirectionalNtHash extends NtHashBase {
     protected void updateCurrentValueToNextState() {
         ensureAttached();
         final var i = curPos - 1;
-        final var seqi = string[i] & 0xFF;
-        final var seqk = string[i + k] & 0xFF;
+        final var seqi = string[i] & StrUtils.BYTE_TO_UNSIGNED_MASK;
+        final var seqk = string[i + k] & StrUtils.BYTE_TO_UNSIGNED_MASK;
         fwdHash = Long.rotateLeft(fwdHash, 1) ^ MS_TAB[seqi][k % 64] ^ MS_TAB[seqk][0];
         revHash = Long.rotateRight(revHash, 1)
                 ^ MS_TAB[seqi & CP_OFF][63]

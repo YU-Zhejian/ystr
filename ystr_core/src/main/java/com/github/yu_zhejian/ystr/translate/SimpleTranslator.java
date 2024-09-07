@@ -165,9 +165,9 @@ public final class SimpleTranslator {
      */
     @Contract(pure = true)
     public byte getUnchecked(final byte @NotNull [] cdna, final int start) {
-        final int pos = (ENCODE_NCBI[cdna[start] & 0xFF] << 4)
-                | (ENCODE_NCBI[cdna[start + 1] & 0xFF] << 2)
-                | (ENCODE_NCBI[cdna[start + 2] & 0xFF]);
+        final int pos = (ENCODE_NCBI[cdna[start] & StrUtils.BYTE_TO_UNSIGNED_MASK] << 4)
+                | (ENCODE_NCBI[cdna[start + 1] & StrUtils.BYTE_TO_UNSIGNED_MASK] << 2)
+                | (ENCODE_NCBI[cdna[start + 2] & StrUtils.BYTE_TO_UNSIGNED_MASK]);
         return codonTable[pos];
     }
 }

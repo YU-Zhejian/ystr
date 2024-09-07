@@ -1,5 +1,7 @@
 package com.github.yu_zhejian.ystr.rolling;
 
+import com.github.yu_zhejian.ystr.utils.StrUtils;
+
 /**
  * k-mers with bases except {@code AGCTUagctu}.
  *
@@ -81,7 +83,7 @@ public final class IsPolyARollingPredicate extends RollingPredicateBase {
     protected void initCurrentValue() {
         ensureAttached();
         for (int i = 0; i < k; i++) {
-            if (PREDICATE[string[i] & 0xFF]) {
+            if (PREDICATE[string[i] & StrUtils.BYTE_TO_UNSIGNED_MASK]) {
                 numA += 1;
             }
         }
@@ -92,8 +94,8 @@ public final class IsPolyARollingPredicate extends RollingPredicateBase {
     protected void updateCurrentValueToNextState() {
         ensureAttached();
         final var i = curPos - 1;
-        final var seqi = string[i] & 0xFF;
-        final var seqk = string[i + k] & 0xFF;
+        final var seqi = string[i] & StrUtils.BYTE_TO_UNSIGNED_MASK;
+        final var seqk = string[i + k] & StrUtils.BYTE_TO_UNSIGNED_MASK;
         final var predi = PREDICATE[seqi];
         final var predk = PREDICATE[seqk];
         if (seqi == seqk) {

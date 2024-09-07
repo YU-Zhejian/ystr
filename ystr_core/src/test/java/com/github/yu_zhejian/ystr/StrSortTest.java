@@ -23,7 +23,9 @@ class StrSortTest {
         assertArrayEquals(
                 new int[] {0, 1, 3, 2, 4}, StrSort.keyIndexedCounting("ACGCT".getBytes()));
         assertArrayEquals(new int[] {3, 1, 2, 0}, StrSort.keyIndexedCounting("TCGA".getBytes()));
-        assertArrayEquals(new int[] {1, 0, 2, 3}, StrSort.keyIndexedCounting(new byte[]{1, 2, (byte) 255, 0}));
+        assertArrayEquals(
+                new int[] {1, 0, 2, 3},
+                StrSort.keyIndexedCounting(new byte[] {1, 2, (byte) 255, 0}));
     }
 
     void isSorted(@NotNull List<byte[]> strings) {
@@ -42,11 +44,11 @@ class StrSortTest {
         var kmers1 = new ArrayList<byte[]>();
 
         var kmers2 = Stream.of("AGCT", "ACGT", "TCGA", "AAAA", "TCGA", "ACCC")
-                .map(it -> it.getBytes(StandardCharsets.UTF_8))
+                .map(it -> it.getBytes(StandardCharsets.US_ASCII))
                 .toList();
 
         var kmers3 = Stream.of("A", "AGCT", "ACGT", "TCGA", "AAAA", "TCGA", "ACCC")
-                .map(it -> it.getBytes(StandardCharsets.UTF_8))
+                .map(it -> it.getBytes(StandardCharsets.US_ASCII))
                 .toList();
 
         isSorted(StrSort.lsdSort(kmers1));

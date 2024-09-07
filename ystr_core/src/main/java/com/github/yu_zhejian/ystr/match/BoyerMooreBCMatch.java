@@ -1,5 +1,6 @@
 package com.github.yu_zhejian.ystr.match;
 
+import com.github.yu_zhejian.ystr.utils.StrUtils;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 
@@ -39,7 +40,7 @@ public final class BoyerMooreBCMatch extends BaseBoyerMoore {
                 continue;
             }
             haystackPos +=
-                    Integer.max(1, needlePos - occ[haystack[haystackPos + needlePos] & 0xFF]);
+                    Integer.max(1, needlePos - occ[haystack[haystackPos + needlePos] & StrUtils.BYTE_TO_UNSIGNED_MASK]);
         }
         return retl;
     }

@@ -9,6 +9,7 @@ public final class StrUtils {
     public static final int ALPHABET_SIZE = 256;
     /** Size of {@link Long}. */
     public static final int LONG_SIZE = 64;
+    public static final int BYTE_TO_UNSIGNED_MASK = 0xFF;
 
     /** Defunct constructor */
     private StrUtils() {}
@@ -20,11 +21,11 @@ public final class StrUtils {
      * @return As described.
      */
     public static int byteToUnsigned(final byte b) {
-        return b & 0xFF;
+        return b & BYTE_TO_UNSIGNED_MASK;
     }
 
     /**
-     * Convert a signed byte to unsigned int.
+     * Convert an array of signed bytes to unsigned ints.
      *
      * @param b As described.
      * @return As described.
@@ -45,7 +46,7 @@ public final class StrUtils {
      * @return As described.
      */
     public static int byteToUnsigned(final int b) {
-        return b & 0xFF;
+        return b & BYTE_TO_UNSIGNED_MASK;
     }
 
     /**

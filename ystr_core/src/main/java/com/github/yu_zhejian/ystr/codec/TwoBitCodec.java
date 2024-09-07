@@ -148,17 +148,17 @@ public final class TwoBitCodec implements CodecInterface {
         var srcPos = srcStart;
         var dstPos = dstStart;
         for (var i = 0; i < numFullBytes; i++) {
-            dst[dstPos++] = (byte) ((BASE_TO_BYTE_PRE_COMPUTED[src[srcPos++] & 0xFF] << 6)
-                    | (BASE_TO_BYTE_PRE_COMPUTED[src[srcPos++] & 0xFF] << 4)
-                    | (BASE_TO_BYTE_PRE_COMPUTED[src[srcPos++] & 0xFF] << 2)
-                    | BASE_TO_BYTE_PRE_COMPUTED[src[srcPos++] & 0xFF]);
+            dst[dstPos++] = (byte) ((BASE_TO_BYTE_PRE_COMPUTED[src[srcPos++] & StrUtils.BYTE_TO_UNSIGNED_MASK] << 6)
+                    | (BASE_TO_BYTE_PRE_COMPUTED[src[srcPos++] & StrUtils.BYTE_TO_UNSIGNED_MASK] << 4)
+                    | (BASE_TO_BYTE_PRE_COMPUTED[src[srcPos++] & StrUtils.BYTE_TO_UNSIGNED_MASK] << 2)
+                    | BASE_TO_BYTE_PRE_COMPUTED[src[srcPos++] & StrUtils.BYTE_TO_UNSIGNED_MASK]);
         }
         if (numBytesRemaining != 0) {
             retl += 1;
             final var numBlanksRemaining = 4 - numBytesRemaining;
             byte lastb = 0;
             for (var i = 0; i < numBytesRemaining; i++) {
-                lastb = (byte) (lastb << 2 | BASE_TO_BYTE_PRE_COMPUTED[src[srcPos++] & 0xFF]);
+                lastb = (byte) (lastb << 2 | BASE_TO_BYTE_PRE_COMPUTED[src[srcPos++] & StrUtils.BYTE_TO_UNSIGNED_MASK]);
             }
             for (var i = 0; i < numBlanksRemaining; i++) {
                 lastb = (byte) (lastb << 2);
@@ -188,7 +188,7 @@ public final class TwoBitCodec implements CodecInterface {
         final var retl = numBytesToRead << 2;
         byte[] decoded;
         for (var i = 0; i < numBytesToRead; i++) {
-            decoded = BYTE_TO_BASE_PRE_COMPUTED[src[srcPos++] & 0xFF];
+            decoded = BYTE_TO_BASE_PRE_COMPUTED[src[srcPos++] & StrUtils.BYTE_TO_UNSIGNED_MASK];
             // This is the fastest way of setting all bits.
             System.arraycopy(decoded, 0, dst, dstPos, 4);
             dstPos += 4;

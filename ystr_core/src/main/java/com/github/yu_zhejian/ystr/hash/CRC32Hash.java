@@ -95,12 +95,12 @@ public final class CRC32Hash implements HashInterface {
 
     @Override
     public void update(final int b) {
-        crc = CRC_POLY8_LOOKUP_TABLE[(crc ^ b) & 0xFF] ^ (crc >>> 8);
+        crc = CRC_POLY8_LOOKUP_TABLE[(crc ^ b) & StrUtils.BYTE_TO_UNSIGNED_MASK] ^ (crc >>> 8);
     }
 
     @Override
     public void update(final byte b) {
-        crc = CRC_POLY8_LOOKUP_TABLE[(crc ^ b) & 0xFF] ^ (crc >>> 8);
+        crc = CRC_POLY8_LOOKUP_TABLE[(crc ^ b) & StrUtils.BYTE_TO_UNSIGNED_MASK] ^ (crc >>> 8);
     }
 
     /** Default constructor. */

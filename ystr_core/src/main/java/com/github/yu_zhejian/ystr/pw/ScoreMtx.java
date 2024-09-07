@@ -26,7 +26,7 @@ public class ScoreMtx {
      * @return As described.
      */
     public int get(final byte b1, final byte b2) {
-        return mtx[b1 & 0xFF][b2 & 0xFF];
+        return mtx[b1 & StrUtils.BYTE_TO_UNSIGNED_MASK][b2 & StrUtils.BYTE_TO_UNSIGNED_MASK];
     }
 
     /**

@@ -2,6 +2,8 @@ package com.github.yu_zhejian.ystr;
 
 import org.jetbrains.annotations.NotNull;
 
+import com.github.yu_zhejian.ystr.utils.StrUtils;
+
 /** LibC-like String manipulation. */
 public final class StrLibc {
 
@@ -74,7 +76,7 @@ public final class StrLibc {
             b1 = array1[start1 + i];
             b2 = array2[start2 + i];
             if (b1 != b2) {
-                return Integer.compare(b1 & 0xFF, b2 & 0xFF);
+                return Integer.compare(b1 & StrUtils.BYTE_TO_UNSIGNED_MASK, b2 & StrUtils.BYTE_TO_UNSIGNED_MASK);
             }
         }
         return 0;

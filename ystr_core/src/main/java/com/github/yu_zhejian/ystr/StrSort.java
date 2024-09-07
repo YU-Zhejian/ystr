@@ -1,6 +1,7 @@
 package com.github.yu_zhejian.ystr;
 
 import com.github.yu_zhejian.ystr.utils.StrUtils;
+
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
@@ -10,8 +11,7 @@ import java.util.List;
 
 public final class StrSort {
 
-    private StrSort() {
-    }
+    private StrSort() {}
 
     /**
      * Key-Indexed counting for strings.
@@ -24,15 +24,15 @@ public final class StrSort {
     @Contract(pure = true)
     public static int @NotNull [] keyIndexedCounting(final byte @NotNull [] keys) {
         final var counts = new int[StrUtils.ALPHABET_SIZE + 1];
-        for (final var key : keys) {
-            counts[key - Byte.MIN_VALUE + 1]++;
+        for (final byte key : keys) {
+            counts[(key & StrUtils.BYTE_TO_UNSIGNED_MASK) + 1]++;
         }
         for (int i = 0; i < StrUtils.ALPHABET_SIZE; i++) {
             counts[i + 1] += counts[i];
         }
         final var retl = new int[keys.length];
         for (int i = 0; i < keys.length; i++) {
-            retl[i] = counts[keys[i] - Byte.MIN_VALUE + 1]++;
+            retl[i] = counts[(keys[i] & StrUtils.BYTE_TO_UNSIGNED_MASK) + 1]++;
         }
         return retl;
     }

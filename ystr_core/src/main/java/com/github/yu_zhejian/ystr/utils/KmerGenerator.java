@@ -1,5 +1,6 @@
 package com.github.yu_zhejian.ystr.utils;
 
+import com.github.yu_zhejian.ystr.container.ImmutableByteArray;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
@@ -47,6 +48,10 @@ public final class KmerGenerator implements Iterator<byte[]> {
         pos = new int[k];
         finalPos = new int[k];
         Arrays.fill(finalPos, 0);
+    }
+
+    public KmerGenerator(final @NotNull ImmutableByteArray alphabet, final int k){
+        this(alphabet.getValue(), k);
     }
 
     private void advPos() {

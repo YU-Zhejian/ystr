@@ -22,7 +22,7 @@ public abstract class BaseBoyerMoore implements StrMatchInterface {
         Arrays.fill(occ, -1);
 
         for (var needlePos = 0; needlePos < needle.length; needlePos++) {
-            occ[needle[needlePos] & 0xFF] = needlePos;
+            occ[needle[needlePos] & StrUtils.BYTE_TO_UNSIGNED_MASK] = needlePos;
         }
         return occ;
     }

@@ -135,12 +135,12 @@ public final class NibCodec implements CodecInterface {
         var srcPos = srcStart;
         var dstPos = dstStart;
         for (var i = 0; i < numFullBytes; i++) {
-            dst[dstPos++] = (byte) ((BASE_TO_BYTE_PRE_COMPUTED[src[srcPos++] & 0xFF] << 4)
-                    | (BASE_TO_BYTE_PRE_COMPUTED[src[srcPos++] & 0xFF]));
+            dst[dstPos++] = (byte) ((BASE_TO_BYTE_PRE_COMPUTED[src[srcPos++] & StrUtils.BYTE_TO_UNSIGNED_MASK] << 4)
+                    | (BASE_TO_BYTE_PRE_COMPUTED[src[srcPos++] & StrUtils.BYTE_TO_UNSIGNED_MASK]));
         }
         if (numBytesRemaining != 0) {
             retl += 1;
-            dst[dstPos] = (byte) (BASE_TO_BYTE_PRE_COMPUTED[src[srcPos] & 0xFF] << 4);
+            dst[dstPos] = (byte) (BASE_TO_BYTE_PRE_COMPUTED[src[srcPos] & StrUtils.BYTE_TO_UNSIGNED_MASK] << 4);
         }
         return retl;
     }
@@ -165,7 +165,7 @@ public final class NibCodec implements CodecInterface {
         final var retl = numBytesToRead << 1;
         byte[] decoded;
         for (var i = 0; i < numBytesToRead; i++) {
-            decoded = BYTE_TO_BASE_PRE_COMPUTED[src[srcPos++] & 0xFF];
+            decoded = BYTE_TO_BASE_PRE_COMPUTED[src[srcPos++] & StrUtils.BYTE_TO_UNSIGNED_MASK];
             // This is the fastest way of setting all bits.
             System.arraycopy(decoded, 0, dst, dstPos, 2);
             dstPos += 2;

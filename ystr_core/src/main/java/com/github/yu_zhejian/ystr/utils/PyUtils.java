@@ -6,8 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.Arrays;
-import java.util.Objects;
+import java.util.*;
 
 /** Utilities mimicking Python functions. */
 public final class PyUtils {
@@ -110,11 +109,13 @@ public final class PyUtils {
         final var f = pp.file();
         try {
             for (i = 0; i < args.length - 1; i++) {
-                f.write((args[i] == null ? "null" : args[i].toString()).getBytes(StandardCharsets.UTF_8));
+                f.write((args[i] == null ? "null" : args[i].toString())
+                        .getBytes(StandardCharsets.UTF_8));
                 f.write(sepBytes);
             }
-            if (args.length != 0){
-                f.write((args[i] == null ? "null" : args[i].toString()).getBytes(StandardCharsets.UTF_8));
+            if (args.length != 0) {
+                f.write((args[i] == null ? "null" : args[i].toString())
+                        .getBytes(StandardCharsets.UTF_8));
             }
             f.write(endBytes);
 
@@ -123,6 +124,65 @@ public final class PyUtils {
             }
         } catch (IOException ignored) {
             // Do nothing
+        }
+    }
+
+
+    @Contract(value = "_, -> new", pure = true)
+    public static @NotNull Iterable<Integer> rangeAlong(@NotNull Collection<?> sizeable) {
+        return range(sizeable.size());
+    }
+
+    @Contract(value = "_, -> new", pure = true)
+    public static @NotNull Iterable<Integer> range(int stop) {
+        return range(0, stop, 1);
+    }
+
+    @Contract(value = "_, _, -> new", pure = true)
+    public static @NotNull Iterable<Integer> range(int start, int stop) {
+        return range(start, stop, 1);
+    }
+
+    @Contract(value = "_, _, _ -> new", pure = true)
+    public static @NotNull Iterable<Integer> range(int start, int stop, int step) {
+        return new Iterable<>() {
+            @NotNull
+            @Override
+            public Iterator<Integer> iterator() {
+                return new RangeIterator(start, stop, step);
+            }
+        };
+    }
+
+    private static class RangeIterator implements Iterator<Integer> {
+        private final int step;
+        private int current;
+        private final int stop;
+        private boolean hasNextField;
+
+        public RangeIterator(int start, int stop, int step) {
+            this.current = start;
+            this.step = step;
+            this.stop = stop;
+            this.hasNextField = (step > 0 && start <= stop) || (step < 0 && start >= stop);
+        }
+
+        @Override
+        public boolean hasNext() {
+            return hasNextField;
+        }
+
+        @Override
+        public Integer next() {
+            if (!hasNext()) {
+                throw new NoSuchElementException();
+            }
+            int value = current;
+            current += step;
+            if ((step > 0 && current >= stop) || (step < 0 && current <= stop)) {
+                hasNextField = false;
+            }
+            return value;
         }
     }
 }
