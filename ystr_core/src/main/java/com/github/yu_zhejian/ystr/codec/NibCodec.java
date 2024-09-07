@@ -135,12 +135,15 @@ public final class NibCodec implements CodecInterface {
         var srcPos = srcStart;
         var dstPos = dstStart;
         for (var i = 0; i < numFullBytes; i++) {
-            dst[dstPos++] = (byte) ((BASE_TO_BYTE_PRE_COMPUTED[src[srcPos++] & StrUtils.BYTE_TO_UNSIGNED_MASK] << 4)
+            dst[dstPos++] = (byte) ((BASE_TO_BYTE_PRE_COMPUTED[
+                                    src[srcPos++] & StrUtils.BYTE_TO_UNSIGNED_MASK]
+                            << 4)
                     | (BASE_TO_BYTE_PRE_COMPUTED[src[srcPos++] & StrUtils.BYTE_TO_UNSIGNED_MASK]));
         }
         if (numBytesRemaining != 0) {
             retl += 1;
-            dst[dstPos] = (byte) (BASE_TO_BYTE_PRE_COMPUTED[src[srcPos] & StrUtils.BYTE_TO_UNSIGNED_MASK] << 4);
+            dst[dstPos] = (byte)
+                    (BASE_TO_BYTE_PRE_COMPUTED[src[srcPos] & StrUtils.BYTE_TO_UNSIGNED_MASK] << 4);
         }
         return retl;
     }

@@ -148,9 +148,13 @@ public final class TwoBitCodec implements CodecInterface {
         var srcPos = srcStart;
         var dstPos = dstStart;
         for (var i = 0; i < numFullBytes; i++) {
-            dst[dstPos++] = (byte) ((BASE_TO_BYTE_PRE_COMPUTED[src[srcPos++] & StrUtils.BYTE_TO_UNSIGNED_MASK] << 6)
-                    | (BASE_TO_BYTE_PRE_COMPUTED[src[srcPos++] & StrUtils.BYTE_TO_UNSIGNED_MASK] << 4)
-                    | (BASE_TO_BYTE_PRE_COMPUTED[src[srcPos++] & StrUtils.BYTE_TO_UNSIGNED_MASK] << 2)
+            dst[dstPos++] = (byte) ((BASE_TO_BYTE_PRE_COMPUTED[
+                                    src[srcPos++] & StrUtils.BYTE_TO_UNSIGNED_MASK]
+                            << 6)
+                    | (BASE_TO_BYTE_PRE_COMPUTED[src[srcPos++] & StrUtils.BYTE_TO_UNSIGNED_MASK]
+                            << 4)
+                    | (BASE_TO_BYTE_PRE_COMPUTED[src[srcPos++] & StrUtils.BYTE_TO_UNSIGNED_MASK]
+                            << 2)
                     | BASE_TO_BYTE_PRE_COMPUTED[src[srcPos++] & StrUtils.BYTE_TO_UNSIGNED_MASK]);
         }
         if (numBytesRemaining != 0) {
@@ -158,7 +162,9 @@ public final class TwoBitCodec implements CodecInterface {
             final var numBlanksRemaining = 4 - numBytesRemaining;
             byte lastb = 0;
             for (var i = 0; i < numBytesRemaining; i++) {
-                lastb = (byte) (lastb << 2 | BASE_TO_BYTE_PRE_COMPUTED[src[srcPos++] & StrUtils.BYTE_TO_UNSIGNED_MASK]);
+                lastb = (byte) (lastb << 2
+                        | BASE_TO_BYTE_PRE_COMPUTED[
+                                src[srcPos++] & StrUtils.BYTE_TO_UNSIGNED_MASK]);
             }
             for (var i = 0; i < numBlanksRemaining; i++) {
                 lastb = (byte) (lastb << 2);

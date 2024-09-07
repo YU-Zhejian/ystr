@@ -2,6 +2,7 @@ package com.github.yu_zhejian.ystr.container;
 
 import it.unimi.dsi.fastutil.bytes.ByteIterable;
 import it.unimi.dsi.fastutil.bytes.ByteIterator;
+
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -24,9 +25,7 @@ public final class ImmutableByteArray implements ByteIterable {
     @Contract(pure = true)
     @Override
     public @NotNull String toString() {
-        return "ImmutableByteArray{" +
-                "value=" + Arrays.toString(value) +
-                '}';
+        return "ImmutableByteArray{" + "value=" + Arrays.toString(value) + '}';
     }
 
     @Override

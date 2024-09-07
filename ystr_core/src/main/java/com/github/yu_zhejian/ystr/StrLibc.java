@@ -1,8 +1,8 @@
 package com.github.yu_zhejian.ystr;
 
-import org.jetbrains.annotations.NotNull;
-
 import com.github.yu_zhejian.ystr.utils.StrUtils;
+
+import org.jetbrains.annotations.NotNull;
 
 /** LibC-like String manipulation. */
 public final class StrLibc {
@@ -28,6 +28,18 @@ public final class StrLibc {
         final int minLength = Math.min(array1.length, array2.length);
         final int strCmpMinLen = strncmp(array1, array2, minLength);
         return strCmpMinLen == 0 ? Integer.compare(array1.length, array2.length) : strCmpMinLen;
+    }
+
+    /**
+     * Compare two characters as unsigned int.
+     *
+     * @param char1 As described.
+     * @param char2 As described.
+     * @return As described.
+     */
+    public static int strcmp(final byte char1, final byte char2) {
+        return Integer.compare(
+                char1 & StrUtils.BYTE_TO_UNSIGNED_MASK, char2 & StrUtils.BYTE_TO_UNSIGNED_MASK);
     }
 
     /**
@@ -76,7 +88,8 @@ public final class StrLibc {
             b1 = array1[start1 + i];
             b2 = array2[start2 + i];
             if (b1 != b2) {
-                return Integer.compare(b1 & StrUtils.BYTE_TO_UNSIGNED_MASK, b2 & StrUtils.BYTE_TO_UNSIGNED_MASK);
+                return Integer.compare(
+                        b1 & StrUtils.BYTE_TO_UNSIGNED_MASK, b2 & StrUtils.BYTE_TO_UNSIGNED_MASK);
             }
         }
         return 0;

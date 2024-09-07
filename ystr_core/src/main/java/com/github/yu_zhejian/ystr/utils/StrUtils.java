@@ -1,7 +1,11 @@
 package com.github.yu_zhejian.ystr.utils;
 
+import com.github.yu_zhejian.ystr.StrLibc;
+
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 /** Various utility functions concerning strings to support other classes. */
 public final class StrUtils {
@@ -9,6 +13,7 @@ public final class StrUtils {
     public static final int ALPHABET_SIZE = 256;
     /** Size of {@link Long}. */
     public static final int LONG_SIZE = 64;
+
     public static final int BYTE_TO_UNSIGNED_MASK = 0xFF;
 
     /** Defunct constructor */
@@ -114,5 +119,81 @@ public final class StrUtils {
     public static void ensureStartLengthValid(
             final int start, final int numBytesToRead, final int strLen) {
         ensureStartEndValid(start, start + numBytesToRead, strLen);
+    }
+
+    /**
+     * Assert whether a list of string is sorted.
+     *
+     * @param strings As described.
+     */
+    public static void requiresSorted(final @NotNull List<byte[]> strings) {
+        if (strings.isEmpty()) {
+            return;
+        }
+        for (int i = 0; i < strings.size() - 1; i++) {
+            if (StrLibc.strcmp(strings.get(i), strings.get(i + 1)) > 0) {
+                throw new IllegalArgumentException(
+                        "The array is not sorted between %d and %d!".formatted(i, i + 1));
+            }
+        }
+    }
+
+    /**
+     * Assert whether a string is sorted.
+     *
+     * @param string As described.
+     */
+    public static void requiresSorted(final byte @NotNull [] string) {
+        if (string.length == 0) {
+            return;
+        }
+        for (int i = 0; i < string.length - 1; i++) {
+            if (StrLibc.strcmp(string[i], string[i + 1]) > 0) {
+                throw new IllegalArgumentException(
+                        "The array is not sorted between %d and %d!".formatted(i, i + 1));
+            }
+        }
+    }
+
+    /**
+     * In-place sorting of small arrays. Modified from Robert Sedgewick et al. This sorting
+     * algorithm is stable.
+     *
+     * @param array Array of unsigned integers. <b>WILL BE MUTATED</b>
+     * @param alphabetSize Size of the alphabet.
+     */
+    public static void keyIndexedCounting(final int @NotNull [] array, final int alphabetSize) {
+        int[] aux = new int[array.length];
+        int[] count = new int[alphabetSize + 1];
+        for (int j : array) {
+            count[j + 1]++;
+        }
+        for (int r = 0; r < alphabetSize; r++) {
+            count[r + 1] += count[r];
+        }
+        for (int j : array) {
+            aux[count[j]++] = j;
+        }
+        System.arraycopy(aux, 0, array, 0, array.length);
+    }
+
+    /**
+     * String variant of {@link #keyIndexedCounting(int[], int)}.
+     *
+     * @param array As described.
+     */
+    public static void keyIndexedCounting(final byte @NotNull [] array) {
+        byte[] aux = new byte[array.length];
+        int[] count = new int[ALPHABET_SIZE + 1];
+        for (final byte j : array) {
+            count[(j & BYTE_TO_UNSIGNED_MASK) + 1]++;
+        }
+        for (int r = 0; r < ALPHABET_SIZE; r++) {
+            count[r + 1] += count[r];
+        }
+        for (final byte j : array) {
+            aux[count[(j & BYTE_TO_UNSIGNED_MASK)]++] = (j);
+        }
+        System.arraycopy(aux, 0, array, 0, array.length);
     }
 }

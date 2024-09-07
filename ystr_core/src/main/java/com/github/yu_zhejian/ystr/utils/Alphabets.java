@@ -5,17 +5,37 @@ import com.github.yu_zhejian.ystr.container.ImmutableByteArray;
 /** Commonly used alphabets within range of signed {@link Byte}. */
 public final class Alphabets {
     /** DNA Alphabet. */
-    public static final ImmutableByteArray DNA_ALPHABET = new ImmutableByteArray(new byte[]{'A', 'C', 'G', 'T'});
+    public static final ImmutableByteArray DNA_ALPHABET =
+            new ImmutableByteArray(new byte[] {'A', 'C', 'G', 'T'});
+    /** {@link #DNA_ALPHABET} with <code>N</code>. * */
+    public static final ImmutableByteArray DNA5_ALPHABET =
+            new ImmutableByteArray(new byte[] {'A', 'C', 'G', 'T', 'N'});
+    /** {@link #DNA_ALPHABET} with smaller cases. */
+    public static final ImmutableByteArray DNA_ALPHABET_BC =
+            new ImmutableByteArray(new byte[] {'A', 'C', 'G', 'T', 'a', 'g', 'c', 't'});
+    /** {@link #DNA_ALPHABET_BC} with <code>N</code>. * */
+    public static final ImmutableByteArray DNA5_ALPHABET_BC =
+            new ImmutableByteArray(new byte[] {'A', 'C', 'G', 'T', 'N', 'a', 'g', 'c', 't', 'n'});
+
     /** RNA Alphabet. */
-    public static final ImmutableByteArray RNA_ALPHABET = new ImmutableByteArray(new byte[]{'A', 'C', 'G', 'U'});
+    public static final ImmutableByteArray RNA_ALPHABET =
+            new ImmutableByteArray(new byte[] {'A', 'C', 'G', 'U'});
+    /** {@link #RNA_ALPHABET} with <code>N</code> * */
+    public static final ImmutableByteArray RNA5_ALPHABET =
+            new ImmutableByteArray(new byte[] {'A', 'C', 'G', 'U', 'N'});
+
     /** Amino acid Alphabet. */
-    public static final ImmutableByteArray AA_ALPHABET = new ImmutableByteArray(new byte[]{
+    public static final ImmutableByteArray AA_ALPHABET = new ImmutableByteArray(new byte[] {
         'A', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'V',
         'W', 'Y'
     });
 
+    /** Alphabet that contains only 0 and 1 * */
+    public static final ImmutableByteArray BINARY_ALPHABET =
+            new ImmutableByteArray(new byte[] {0, 1});
+
     /** Alphabet of all values inside {@link Byte}. */
-    public static final ImmutableByteArray BINARY_ALPHABET = new ImmutableByteArray(new byte[]{
+    public static final ImmutableByteArray FULL_ALPHABET = new ImmutableByteArray(new byte[] {
         -128, -127, -126, -125, -124, -123, -122, -121, -120, -119, -118, -117, -116, -115, -114,
         -113, -112, -111, -110, -109, -108, -107, -106, -105, -104, -103, -102, -101, -100, -99,
         -98, -97, -96, -95, -94, -93, -92, -91, -90, -89, -88, -87, -86, -85, -84, -83, -82, -81,
@@ -37,7 +57,7 @@ public final class Alphabets {
      *
      * @see java.nio.charset.StandardCharsets#US_ASCII
      */
-    public static final ImmutableByteArray ASCII_ALPHABET = new ImmutableByteArray(new byte[]{
+    public static final ImmutableByteArray ASCII_ALPHABET = new ImmutableByteArray(new byte[] {
         0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
         25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47,
         48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70,

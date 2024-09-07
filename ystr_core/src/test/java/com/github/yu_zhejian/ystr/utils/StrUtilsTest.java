@@ -5,6 +5,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.List;
+
 class StrUtilsTest {
     @Test
     @SuppressWarnings("java:S3415")
@@ -15,13 +17,8 @@ class StrUtilsTest {
     }
 
     @Test
-    void test() {
-        var bytes = new byte[StrUtils.ALPHABET_SIZE];
-        byte j = Byte.MIN_VALUE;
-        for (int i = 0; i < bytes.length; j++) {
-            bytes[i] = j;
-            i++;
-        }
+    void testByteToUnsigned() {
+        var bytes = Alphabets.FULL_ALPHABET.getValue();
         var ints = StrUtils.byteToUnsigned(bytes);
         assertArrayEquals(
                 new int[] {
@@ -42,5 +39,17 @@ class StrUtilsTest {
                     117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127
                 },
                 ints);
+    }
+
+    @Test
+    void testKeyIndexedCounting() {
+        for (final byte[] bytes : List.of(
+                new byte[] {'A', 'C', 'T', 'G'},
+                new byte[] {-1, 0, 9, 2},
+                new byte[] {},
+                new byte[] {1, 1, 1})) {
+            StrUtils.keyIndexedCounting(bytes);
+            StrUtils.requiresSorted(bytes);
+        }
     }
 }

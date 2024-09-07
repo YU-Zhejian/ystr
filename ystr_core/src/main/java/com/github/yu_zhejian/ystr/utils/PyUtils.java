@@ -127,7 +127,6 @@ public final class PyUtils {
         }
     }
 
-
     @Contract(value = "_, -> new", pure = true)
     public static @NotNull Iterable<Integer> rangeAlong(@NotNull Collection<?> sizeable) {
         return range(sizeable.size());

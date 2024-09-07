@@ -9,9 +9,7 @@ public final class JVMUtils {
         var systemProperties = System.getProperties();
 
         var osName = systemProperties.get("os.name");
-
         var osArch = systemProperties.get("os.arch");
-
         var osVer = systemProperties.get("os.version");
         PyUtils.print("OS: name=", osName, "; arch=", osArch, "; ver=", osVer);
 
