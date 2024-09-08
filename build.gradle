@@ -107,15 +107,16 @@ spotless {
 		trimTrailingWhitespace()
 		endWithNewline()
 	}
-	format 'sh', {
-		target '**/*.sh', "*.sh"
-		prettier(['prettier': '3.3', 'prettier-plugin-sh': '0.14.0'])
-            .config(['parser': 'sh', 'indent': 4, 'plugins': ['prettier-plugin-sh']])
-            .npmExecutable("${tasks.named('npmSetup').get().npmDir.get()}${npmExec}")
-            .nodeExecutable("${tasks.named('nodeSetup').get().nodeDir.get()}${nodeExec}")
-		trimTrailingWhitespace()
-		endWithNewline()
-	}
+	//	format 'sh', {
+	//		target '**/*.sh', "*.sh"
+	//		prettier(['prettier': '3.3', 'prettier-plugin-sh': '0.14.0'])
+	//		.config(['parser': 'sh', 'indent': 4, 'plugins': ['prettier-plugin-sh']])
+	//		.npmExecutable("${tasks.named('npmSetup').get().npmDir.get()}${npmExec}")
+	//		.nodeExecutable("${tasks.named('nodeSetup').get().nodeDir.get()}${nodeExec}")
+	//		trimTrailingWhitespace()
+	//		endWithNewline()
+	//	}
+
 	json {
 		target '**/*.json', "*.json"
 		targetExclude ".idea", "**/node_modules/**/*.json"
@@ -129,9 +130,11 @@ spotless {
 		endWithNewline()
 	}
 }
-tasks.named('spotlessSh').configure {
-	it.dependsOn('nodeSetup', 'npmSetup')
-}
+
+//tasks.named('spotlessSh').configure {
+//	it.dependsOn('nodeSetup', 'npmSetup')
+//}
+
 
 // ---------------------------- Antora Docs Site ----------------------------
 

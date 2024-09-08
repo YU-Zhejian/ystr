@@ -16,6 +16,9 @@ class TwoBitCodecTest {
             Map.entry(new byte[] {(byte) 0x80}, "A".getBytes(StandardCharsets.US_ASCII)),
             Map.entry(new byte[] {}, "".getBytes(StandardCharsets.US_ASCII)),
             Map.entry(
+                    new byte[] {27, -92, 75, 5, -101, 2, -128},
+                    "TCAGAACTCTAGTTCCACAGTTTAA".getBytes(StandardCharsets.US_ASCII)),
+            Map.entry(
                     new byte[] {(byte) 0x9C, (byte) 0x80},
                     "ACGTA".getBytes(StandardCharsets.US_ASCII)));
 

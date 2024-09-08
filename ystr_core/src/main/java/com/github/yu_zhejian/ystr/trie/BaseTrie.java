@@ -11,13 +11,12 @@ import java.util.List;
 public abstract class BaseTrie implements TrieInterface {
     protected int treeHeight;
     protected int numWords;
+    protected int numNodes;
 
     @Override
     public int numNodes() {
-        return getRoot().numNodes();
+        return numNodes;
     }
-
-    protected abstract TrieNodeInterface getRoot();
 
     @Override
     public final int numWords() {
@@ -56,7 +55,8 @@ public abstract class BaseTrie implements TrieInterface {
     public void set(final byte @NotNull [] s, final @Nullable Object o) {
         var node = getNode(s);
         if (node == null) {
-            return;
+            add(s);
+            node = getNode(s);
         }
         node.setValue(o);
     }

@@ -21,6 +21,7 @@ public final class MapBasedTrie extends BaseTrie {
 
     public MapBasedTrie() {
         root = new MapBasedTrieNode();
+        numNodes++;
     }
 
     @Override
@@ -34,7 +35,10 @@ public final class MapBasedTrie extends BaseTrie {
     public void add(final byte @NotNull [] s) {
         var node = root;
         for (byte b : s) {
-            node.mapping.computeIfAbsent(b, i -> new MapBasedTrieNode());
+            node.mapping.computeIfAbsent(b, i -> {
+                numNodes++;
+                return new MapBasedTrieNode();
+            });
             node = node.mapping.get(b);
         }
         if (!node.isWordEnd) {
@@ -57,11 +61,6 @@ public final class MapBasedTrie extends BaseTrie {
         return node;
     }
 
-    @Override
-    protected TrieNodeInterface getRoot() {
-        return root;
-    }
-
     /** A node contains mapping to child nodes. */
     private static class MapBasedTrieNode extends BaseTrieNode {
         private final Byte2ObjectMap<MapBasedTrieNode> mapping;
@@ -69,17 +68,6 @@ public final class MapBasedTrie extends BaseTrie {
         /** Default constructor. */
         private MapBasedTrieNode() {
             mapping = new Byte2ObjectAVLTreeMap<>(StrLibc::strcmp);
-        }
-
-        @Override
-        public int numNodes() {
-            int reti = 1;
-            for (final var node : mapping.values()) {
-                if (node != null) {
-                    reti += node.numNodes();
-                }
-            }
-            return reti;
         }
 
         @Override

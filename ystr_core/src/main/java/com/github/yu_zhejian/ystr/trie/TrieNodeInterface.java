@@ -2,19 +2,15 @@ package com.github.yu_zhejian.ystr.trie;
 
 import it.unimi.dsi.fastutil.bytes.ByteArrayList;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.util.List;
 
 public interface TrieNodeInterface {
+    @Nullable
     Object getValue();
 
-    void setValue(Object value);
-
-    /**
-     * Get number of children nodes, including myself.
-     *
-     * @return As described.
-     */
-    int numNodes();
+    void setValue(@Nullable Object value);
 
     /**
      * Recursive DFS implementation.

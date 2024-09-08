@@ -21,11 +21,6 @@ public final class TernarySearchTrie extends BaseTrie {
         isEmptyPresented = false;
     }
 
-    @Override
-    protected TrieNodeInterface getRoot() {
-        return root;
-    }
-
     /**
      * Adapted from <a href="https://www.geeksforgeeks.org/ternary-search-tree/">Geeks for
      * Geeks</a>.
@@ -42,6 +37,7 @@ public final class TernarySearchTrie extends BaseTrie {
             final int currentTreeHeight) {
         if (node == null) {
             node = new TernaryTrieNode();
+            numNodes++;
             node.myByte = word[offset];
         }
         int strcmpResult = StrLibc.strcmp(word[offset], node.myByte);
@@ -93,16 +89,13 @@ public final class TernarySearchTrie extends BaseTrie {
 
     @Override
     public int numNodes() {
-        int reti = 0;
-        if (root != null) {
-            reti += root.numNodes();
-        }
-        return reti + (isEmptyPresented ? 1 : 0);
+        return numNodes + (isEmptyPresented ? 1 : 0);
     }
 
     @Override
     public void set(byte @NotNull [] s, @Nullable Object o) {
-        if (s.length == 0 && isEmptyPresented) {
+        if (s.length == 0) {
+            isEmptyPresented = true;
             empty = o;
             return;
         }
@@ -180,38 +173,6 @@ public final class TernarySearchTrie extends BaseTrie {
         private TernaryTrieNode larger;
         private TernaryTrieNode equal;
         private byte myByte;
-
-        @Override
-        public int numNodes() {
-            int retv = 1;
-            if (smaller != null) {
-                retv += smaller.numNodes();
-            }
-            if (equal != null) {
-                retv += equal.numNodes();
-            }
-            if (larger != null) {
-                retv += larger.numNodes();
-            }
-            return retv;
-        }
-
-        /*
-                public static void
-        traverseTSTUtil(Node root, char[] buffer, int depth)
-        {
-            if (root != null) {
-                traverseTSTUtil(root.left, buffer, depth);
-                buffer[depth] = root.data;
-                if (root.isEndOfString) {
-                    System.out.println(
-                        new String(buffer, 0, depth + 1));
-                }
-                traverseTSTUtil(root.eq, buffer, depth + 1);
-                traverseTSTUtil(root.right, buffer, depth);
-            }
-        }
-             */
 
         @Override
         public void traverse(

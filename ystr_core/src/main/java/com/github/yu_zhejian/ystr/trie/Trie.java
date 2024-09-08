@@ -22,6 +22,7 @@ public final class Trie extends BaseTrie {
     public Trie(final AlphabetCodec abCodec) {
         this.abCodec = abCodec;
         root = new TrieNode();
+        numNodes++;
     }
 
     public Trie() {
@@ -36,17 +37,13 @@ public final class Trie extends BaseTrie {
     }
 
     @Override
-    protected TrieNodeInterface getRoot() {
-        return root;
-    }
-
-    @Override
     public void add(final byte @NotNull [] s) {
         var node = root;
         for (byte b : s) {
             int encodedB = abCodec.encode(b);
             if (node.mapping[encodedB] == null) {
                 node.mapping[encodedB] = new TrieNode();
+                numNodes++;
             }
             node = node.mapping[encodedB];
         }
@@ -82,17 +79,6 @@ public final class Trie extends BaseTrie {
         private TrieNode() {
             mapping = new TrieNode[abCodec.getAlphabet().length()];
             Arrays.fill(mapping, null);
-        }
-
-        @Override
-        public int numNodes() {
-            int reti = 1;
-            for (final var node : mapping) {
-                if (node != null) {
-                    reti += node.numNodes();
-                }
-            }
-            return reti;
         }
 
         @Override
