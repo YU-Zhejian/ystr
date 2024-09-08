@@ -1,4 +1,4 @@
-package com.github.yu_zhejian.ystr.unsorted;
+package com.github.yu_zhejian.ystr.trie;
 
 import it.unimi.dsi.fastutil.bytes.ByteArrayList;
 
@@ -25,4 +25,6 @@ public interface TrieNodeInterface {
      * @param values Output list of values.
      */
     void traverse(ByteArrayList prefix, List<byte[]> words, List<Object> values);
+
+    boolean isWordEnd();
 }

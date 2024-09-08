@@ -35,6 +35,27 @@ public final class IterUtils {
 
     private IterUtils() {}
 
+    @Contract(value = "_, _ -> new", pure = true)
+    public static <T> @NotNull Iterator<T> head(@NotNull final Iterator<T> iterator, final int n) {
+        return new Iterator<T>() {
+            private int i = 0;
+
+            @Override
+            public boolean hasNext() {
+                return i < n && iterator.hasNext();
+            }
+
+            @Override
+            public T next() {
+                if (!hasNext()) {
+                    throw new NoSuchElementException();
+                }
+                i++;
+                return iterator.next();
+            }
+        };
+    }
+
     /**
      * Remove adjacent duplications.
      *

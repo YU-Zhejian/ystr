@@ -1,4 +1,4 @@
-package com.github.yu_zhejian.ystr.unsorted;
+package com.github.yu_zhejian.ystr.trie;
 
 import com.github.yu_zhejian.ystr.utils.AlphabetCodec;
 
@@ -36,6 +36,11 @@ public final class Trie extends BaseTrie {
     }
 
     @Override
+    protected TrieNodeInterface getRoot() {
+        return root;
+    }
+
+    @Override
     public void add(final byte @NotNull [] s) {
         var node = root;
         for (byte b : s) {
@@ -52,14 +57,9 @@ public final class Trie extends BaseTrie {
         treeHeight = Integer.max(treeHeight, s.length);
     }
 
-    /**
-     * Search for one node.
-     *
-     * @param s String to search.
-     * @return Identified node. {@code null} if the node was not found.
-     */
+    @Override
     @Contract(pure = true)
-    private @Nullable TrieNode getNode(final byte @NotNull [] s) {
+    protected @Nullable TrieNodeInterface getNode(final byte @NotNull [] s) {
         var node = root;
         for (byte b : s) {
             int encodedB = abCodec.encode(b);
@@ -69,42 +69,6 @@ public final class Trie extends BaseTrie {
             node = node.mapping[encodedB];
         }
         return node;
-    }
-
-    @Override
-    public @Nullable Object get(byte @NotNull [] s) {
-        var node = getNode(s);
-        if (node == null) {
-            return null;
-        }
-        return node.value;
-    }
-
-    @Override
-    public void set(byte @NotNull [] s, @Nullable Object o) {
-        var node = getNode(s);
-        if (node == null) {
-            return;
-        }
-        node.value = o;
-    }
-
-    @Override
-    public boolean contains(final byte @NotNull [] s) {
-        var node = getNode(s);
-        return node != null && node.isWordEnd;
-    }
-
-    @Override
-    public void traverse(
-            final byte[] prefix, final @NotNull List<byte[]> words, final List<Object> values) {
-        var node = getNode(prefix);
-        if (node == null) {
-            return;
-        }
-        var ba = new ByteArrayList(prefix);
-        ba.ensureCapacity(treeHeight);
-        node.traverse(ba, words, values);
     }
 
     /**

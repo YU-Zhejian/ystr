@@ -1,4 +1,4 @@
-package com.github.yu_zhejian.ystr.unsorted;
+package com.github.yu_zhejian.ystr.trie;
 
 import com.github.yu_zhejian.ystr.container.NopList;
 

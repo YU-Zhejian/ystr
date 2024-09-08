@@ -1,4 +1,4 @@
-package com.github.yu_zhejian.ystr.unsorted;
+package com.github.yu_zhejian.ystr.trie;
 
 import com.github.yu_zhejian.ystr.container.NopList;
 
@@ -7,6 +7,7 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Iterator;
 import java.util.List;
 
 public interface TrieInterface {
@@ -17,6 +18,24 @@ public interface TrieInterface {
      * @param s The inserting string.
      */
     void add(byte @NotNull [] s);
+
+    default void addAll(byte @NotNull [][] words) {
+        for (final var word : words) {
+            add(word);
+        }
+    }
+
+    default void addAll(@NotNull Iterable<byte[]> words) {
+        for (final var word : words) {
+            add(word);
+        }
+    }
+
+    default void addAll(@NotNull Iterator<byte[]> words) {
+        while (words.hasNext()) {
+            add(words.next());
+        }
+    }
 
     /** Remove all items inside a trie. */
     void clear();

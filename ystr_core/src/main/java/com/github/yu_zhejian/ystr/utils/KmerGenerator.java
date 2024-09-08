@@ -36,7 +36,7 @@ public final class KmerGenerator implements Iterator<byte[]> {
      * @param k As described.
      * @throws IllegalArgumentException If {@link #k} is negative or {@link #alphabet} is empty.
      */
-    public KmerGenerator(byte @NotNull [] alphabet, int k) {
+    public KmerGenerator(final byte @NotNull [] alphabet, final int k) {
         if (alphabet.length == 0) {
             throw new IllegalArgumentException("alphabet must contain at least one character");
         }

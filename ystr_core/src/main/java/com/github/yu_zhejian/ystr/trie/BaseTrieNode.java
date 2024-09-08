@@ -1,4 +1,4 @@
-package com.github.yu_zhejian.ystr.unsorted;
+package com.github.yu_zhejian.ystr.trie;
 
 public abstract class BaseTrieNode implements TrieNodeInterface {
     protected Object value = null;
@@ -12,7 +12,12 @@ public abstract class BaseTrieNode implements TrieNodeInterface {
     }
 
     @Override
-    public void setValue(Object value) {
+    public void setValue(final Object value) {
         this.value = value;
+    }
+
+    @Override
+    public boolean isWordEnd() {
+        return isWordEnd;
     }
 }

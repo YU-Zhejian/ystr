@@ -1,6 +1,12 @@
-package com.github.yu_zhejian.ystr.unsorted;
+package com.github.yu_zhejian.ystr.trie;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+import com.github.yu_zhejian.ystr.utils.Alphabets;
+import com.github.yu_zhejian.ystr.utils.IterUtils;
+import com.github.yu_zhejian.ystr.utils.RandomKmerGenerator;
+
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
@@ -48,6 +54,7 @@ class TrieTest {
         for (final var s : List.of(
                 "and",
                 "ant",
+                "annnnnnnt",
                 "do",
                 "geek",
                 "dad",
@@ -67,10 +74,23 @@ class TrieTest {
         trie.add(new byte[] {});
         assertTrue(trie.contains("".getBytes(StandardCharsets.US_ASCII)));
         assertEquals(24, trie.treeHeight());
-        assertEquals(9, trie.numWords());
+        assertEquals(10, trie.numWords());
+        //        System.out.println(trie.traverse("".getBytes(StandardCharsets.US_ASCII)).stream()
+        //                .map(i -> new String(i, StandardCharsets.US_ASCII))
+        //                .toList());
         assertIterableEquals(
-                List.of("and", "ant"),
+                List.of("and", "annnnnnnt", "ant"),
                 trie.traverse("an".getBytes(StandardCharsets.US_ASCII)).stream()
+                        .map(i -> new String(i, StandardCharsets.US_ASCII))
+                        .toList());
+        assertIterableEquals(
+                List.of("ball"),
+                trie.traverse("b".getBytes(StandardCharsets.US_ASCII)).stream()
+                        .map(i -> new String(i, StandardCharsets.US_ASCII))
+                        .toList());
+        assertIterableEquals(
+                List.of(),
+                trie.traverse("X".getBytes(StandardCharsets.US_ASCII)).stream()
                         .map(i -> new String(i, StandardCharsets.US_ASCII))
                         .toList());
         assertIterableEquals(
@@ -78,6 +98,7 @@ class TrieTest {
                         "",
                         ":AGSTTCGSGTRCTSGCT\0\0XXXX",
                         "and",
+                        "annnnnnnt",
                         "ant",
                         "ball",
                         "dad",
@@ -87,6 +108,32 @@ class TrieTest {
                 trie.traverse().stream()
                         .map(i -> new String(i, StandardCharsets.US_ASCII))
                         .toList());
+        System.out.println("Trie test result: " + trie);
+    }
+
+    void testRandomKmers(@NotNull TrieInterface trie) {
+        for (int k = 3; k < 6; k++) {
+            trie.clear();
+            final var set = new ObjectOpenHashSet<String>();
+            final var kmers =
+                    IterUtils.head(new RandomKmerGenerator(Alphabets.DNA5_ALPHABET, k), 50);
+            while (kmers.hasNext()) {
+                final var kmer = kmers.next();
+                trie.add(kmer);
+                set.add(new String(kmer, StandardCharsets.US_ASCII));
+            }
+            for (var kmer : set) {
+                assertTrue(trie.contains(kmer.getBytes(StandardCharsets.US_ASCII)));
+            }
+            final var kmers2 =
+                    IterUtils.head(new RandomKmerGenerator(Alphabets.DNA5_ALPHABET, k), 500);
+            while (kmers2.hasNext()) {
+                final var kmer = kmers2.next();
+                assertEquals(
+                        set.contains(new String(kmer, StandardCharsets.US_ASCII)),
+                        trie.contains(kmer));
+            }
+        }
     }
 
     @Test
@@ -94,6 +141,7 @@ class TrieTest {
         var trie = new Trie();
         test(trie);
         testTrieHelper(trie);
+        testRandomKmers(trie);
     }
 
     @Test
@@ -101,5 +149,14 @@ class TrieTest {
         var trie = new MapBasedTrie();
         test(trie);
         testTrieHelper(trie);
+        testRandomKmers(trie);
+    }
+
+    @Test
+    void testTernarySearchTrie() {
+        var trie = new TernarySearchTrie();
+        test(trie);
+        testTrieHelper(trie);
+        testRandomKmers(trie);
     }
 }

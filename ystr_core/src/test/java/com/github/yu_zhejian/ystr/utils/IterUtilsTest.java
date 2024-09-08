@@ -4,10 +4,26 @@ import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 class IterUtilsTest {
+
+    @Test
+    void head() {
+        assertIterableEquals(
+                new ArrayList<>(),
+                IterUtils.collect(IterUtils.head(Collections.emptyIterator(), 10)));
+        assertIterableEquals(
+                List.of(1, 2, 3),
+                IterUtils.collect(IterUtils.head(List.of(1, 2, 3).iterator(), 10)));
+        assertIterableEquals(
+                List.of(1, 2), IterUtils.collect(IterUtils.head(List.of(1, 2, 3).iterator(), 2)));
+        assertIterableEquals(
+                List.of(1, 2, 3),
+                IterUtils.collect(IterUtils.head(List.of(1, 2, 3).iterator(), 3)));
+    }
 
     @Test
     void dedup() {
