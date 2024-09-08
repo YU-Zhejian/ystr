@@ -84,8 +84,8 @@ public interface HashInterface extends UpdatableInterface {
     static long convenientHash(
             final @NotNull Supplier<HashInterface> supplier,
             final byte[] string,
-            int start,
-            int end) {
+            final int start,
+            final int end) {
         var instance = supplier.get();
         return convenientHash(instance, string, start, end);
     }
@@ -103,8 +103,8 @@ public interface HashInterface extends UpdatableInterface {
     static long convenientHashUnchecked(
             final @NotNull Supplier<HashInterface> supplier,
             final byte[] string,
-            int start,
-            int end) {
+            final int start,
+            final int end) {
         var instance = supplier.get();
         return convenientHashUnchecked(instance, string, start, end);
     }

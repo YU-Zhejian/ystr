@@ -55,7 +55,7 @@ public final class HashConstants {
      * @return Converted hash instance.
      */
     @Contract(value = "_ -> new", pure = true)
-    private static @NotNull HashInterface cast(Checksum checksum) {
+    private static @NotNull HashInterface cast(final Checksum checksum) {
         return new HashInterface() {
             @Override
             public long getValue() {
@@ -73,22 +73,23 @@ public final class HashConstants {
             }
 
             @Override
-            public void update(byte @NotNull [] string) {
+            public void update(final byte @NotNull [] string) {
                 checksum.update(string);
             }
 
             @Override
-            public void update(byte @NotNull [] string, int start, int end) {
+            public void update(final byte @NotNull [] string, final int start, final int end) {
                 checksum.update(string, start, end - start);
             }
 
             @Override
-            public void updateUnchecked(byte @NotNull [] string, int start, int end) {
+            public void updateUnchecked(
+                    final byte @NotNull [] string, final int start, final int end) {
                 checksum.update(string, start, end - start);
             }
 
             @Override
-            public void update(@NotNull ByteBuffer buffer) {
+            public void update(final @NotNull ByteBuffer buffer) {
                 checksum.update(buffer);
             }
         };
