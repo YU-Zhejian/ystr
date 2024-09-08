@@ -1,5 +1,7 @@
 package com.github.yu_zhejian.ystr.unsorted;
 
+import com.github.yu_zhejian.ystr.container.NopList;
+
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectArraySet;
 
@@ -73,7 +75,7 @@ public class TrieHelper<V> implements Map<byte[], V> {
 
     @Override
     public void clear() {
-        throw new UnsupportedOperationException(); // TODO
+        trie.clear();
     }
 
     @Override
@@ -83,22 +85,28 @@ public class TrieHelper<V> implements Map<byte[], V> {
 
     @Override
     public @NotNull Collection<V> values() {
-        var retl = new ObjectArrayList<V>();
+        var retl = new ObjectArrayList<>();
         retl.ensureCapacity(trie.numWords());
-        for (final var node : trie.traverseNodes()) {
-            retl.add((V) node.getValue());
+        trie.traverse(new NopList<>(), retl);
+        var typedRetl = new ObjectArrayList<V>();
+        typedRetl.ensureCapacity(trie.numWords());
+        for (final var entry : retl) {
+            typedRetl.add((V) entry);
         }
-        return retl;
+        return typedRetl;
     }
 
     @Override
     public @NotNull Set<Entry<byte[], V>> entrySet() {
-        var keys = keySet();
-        var values = values().iterator();
+        var values = new ObjectArrayList<>();
+        var keys = new ObjectArrayList<byte[]>();
+        values.ensureCapacity(trie.numWords());
+        keys.ensureCapacity(trie.numWords());
+        trie.traverse(keys, values);
+        var valuesIterator = values.iterator();
         var retl = new ObjectArrayList<Entry<byte[], V>>();
-        retl.ensureCapacity(trie.numWords());
         for (var key : keys) {
-            retl.add(Map.entry(key, values.next()));
+            retl.add(Map.entry(key, (V) valuesIterator.next()));
         }
         return new ObjectArraySet<>(retl.toArray());
     }

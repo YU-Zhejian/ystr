@@ -1,5 +1,9 @@
 package com.github.yu_zhejian.ystr.unsorted;
 
+import com.github.yu_zhejian.ystr.container.NopList;
+
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -13,6 +17,9 @@ public interface TrieInterface {
      * @param s The inserting string.
      */
     void add(byte @NotNull [] s);
+
+    /** Remove all items inside a trie. */
+    void clear();
 
     /**
      * Determine whether a string exists inside the trie.
@@ -72,7 +79,31 @@ public interface TrieInterface {
      * @return As described.
      */
     @NotNull
-    List<byte[]> traverse(byte[] prefix);
+    default List<byte[]> traverse(byte[] prefix) {
+        var retl = new ObjectArrayList<byte[]>();
+        retl.ensureCapacity(numWords());
+        traverse(prefix, retl, new NopList<>());
+        return retl;
+    }
+
+    /**
+     * {@link #traverse(byte[])} for both words and values stored in nodes.
+     *
+     * @param prefix As described.
+     * @param words As described.
+     * @param values As described.
+     */
+    void traverse(byte[] prefix, List<byte[]> words, List<Object> values);
+
+    /**
+     * {@link #traverse(byte[], List, List)} with empty prefix.
+     *
+     * @param words As described.
+     * @param values As described.
+     */
+    default void traverse(List<byte[]> words, List<Object> values) {
+        traverse(new byte[] {}, words, values);
+    }
 
     /**
      * Tree height is the length of the longest word.
@@ -80,12 +111,4 @@ public interface TrieInterface {
      * @return As described.
      */
     int treeHeight();
-
-    @NotNull
-    default List<TrieNodeInterface> traverseNodes() {
-        return traverseNodes(new byte[] {});
-    }
-
-    @NotNull
-    List<TrieNodeInterface> traverseNodes(byte[] prefix);
 }

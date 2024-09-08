@@ -3,7 +3,6 @@ package com.github.yu_zhejian.ystr.unsorted;
 import com.github.yu_zhejian.ystr.utils.AlphabetCodec;
 
 import it.unimi.dsi.fastutil.bytes.ByteArrayList;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -16,11 +15,9 @@ import java.util.List;
  * A simple data structure that stores a set of strings. This method requires an encoder to reduce
  * space consumed by nodes.
  */
-public final class Trie implements TrieInterface {
+public final class Trie extends BaseTrie {
     private final AlphabetCodec abCodec;
     private final TrieNode root;
-    private int treeHeight;
-    private int numWords;
 
     public Trie(final AlphabetCodec abCodec) {
         this.abCodec = abCodec;
@@ -29,6 +26,13 @@ public final class Trie implements TrieInterface {
 
     public Trie() {
         this(AlphabetCodec.DUMB_CODEC);
+    }
+
+    @Override
+    public void clear() {
+        root.value = null;
+        Arrays.fill(root.mapping, null);
+        root.isWordEnd = false;
     }
 
     @Override
@@ -92,44 +96,23 @@ public final class Trie implements TrieInterface {
     }
 
     @Override
-    public int numNodes() {
-        return root.numNodes();
-    }
-
-    @Override
-    public int numWords() {
-        return numWords;
-    }
-
-    @Override
-    public @NotNull List<byte[]> traverse(final byte[] prefix) {
-        var retl = new ObjectArrayList<byte[]>();
-        retl.ensureCapacity(numWords);
+    public void traverse(
+            final byte[] prefix, final @NotNull List<byte[]> words, final List<Object> values) {
         var node = getNode(prefix);
         if (node == null) {
-            return retl;
+            return;
         }
         var ba = new ByteArrayList(prefix);
         ba.ensureCapacity(treeHeight);
-        node.traverse(ba, retl);
-        return retl;
-    }
-
-    @Override
-    public int treeHeight() {
-        return treeHeight;
+        node.traverse(ba, words, values);
     }
 
     /**
      * A node contains mapping to {@link #abCodec} child nodes. Child node will be set to
      * {@code null} if not exist.
      */
-    private class TrieNode implements TrieNodeInterface {
+    private class TrieNode extends BaseTrieNode {
         private final TrieNode[] mapping;
-        /** Whether a word ends here. This separates real word ends with intermediate nodes. */
-        private boolean isWordEnd = false;
-
-        private Object value;
 
         /** Default constructor. */
         private TrieNode() {
@@ -137,12 +120,8 @@ public final class Trie implements TrieInterface {
             Arrays.fill(mapping, null);
         }
 
-        /**
-         * Get number of children nodes, including myself.
-         *
-         * @return As described.
-         */
-        private int numNodes() {
+        @Override
+        public int numNodes() {
             int reti = 1;
             for (final var node : mapping) {
                 if (node != null) {
@@ -152,34 +131,19 @@ public final class Trie implements TrieInterface {
             return reti;
         }
 
-        /**
-         * Recursive DFS implementation.
-         *
-         * @param prefix Current prefix, including the character that is represented by the current
-         *     node.
-         * @param retl Output list.
-         */
-        private void traverse(final ByteArrayList prefix, final List<byte[]> retl) {
+        @Override
+        public void traverse(ByteArrayList prefix, List<byte[]> words, List<Object> values) {
             if (isWordEnd) {
-                retl.add(prefix.toByteArray());
+                words.add(prefix.toByteArray());
+                values.add(value);
             }
             for (int i = 0; i < mapping.length; i++) {
                 if (mapping[i] != null) {
                     prefix.add(abCodec.decode(i));
-                    mapping[i].traverse(prefix, retl);
+                    mapping[i].traverse(prefix, words, values);
                     prefix.popByte();
                 }
             }
-        }
-
-        @Override
-        public Object getValue() {
-            return value;
-        }
-
-        @Override
-        public void setValue(Object value) {
-            this.value = value;
         }
     }
 }

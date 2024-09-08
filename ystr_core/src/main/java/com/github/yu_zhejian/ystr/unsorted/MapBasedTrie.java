@@ -5,7 +5,6 @@ import com.github.yu_zhejian.ystr.StrLibc;
 import it.unimi.dsi.fastutil.bytes.Byte2ObjectAVLTreeMap;
 import it.unimi.dsi.fastutil.bytes.Byte2ObjectMap;
 import it.unimi.dsi.fastutil.bytes.ByteArrayList;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -17,13 +16,18 @@ import java.util.List;
  * A simple data structure that stores a set of strings. This method requires an encoder to reduce
  * space consumed by nodes.
  */
-public final class MapBasedTrie implements TrieInterface {
+public final class MapBasedTrie extends BaseTrie {
     private final MapBasedTrieNode root;
-    private int treeHeight;
-    private int numWords;
 
     public MapBasedTrie() {
         root = new MapBasedTrieNode();
+    }
+
+    @Override
+    public void clear() {
+        root.value = null;
+        root.mapping.clear();
+        root.isWordEnd = false;
     }
 
     @Override
@@ -83,67 +87,28 @@ public final class MapBasedTrie implements TrieInterface {
     }
 
     @Override
-    public int numNodes() {
-        return root.numNodes();
-    }
-
-    @Override
-    public int numWords() {
-        return numWords;
-    }
-
-    @Override
-    public @NotNull List<byte[]> traverse(final byte[] prefix) {
-        var retl = new ObjectArrayList<byte[]>();
-        retl.ensureCapacity(numWords);
+    public void traverse(
+            final byte[] prefix, final @NotNull List<byte[]> words, final List<Object> values) {
         var node = getNode(prefix);
         if (node == null) {
-            return retl;
+            return;
         }
         var ba = new ByteArrayList(prefix);
         ba.ensureCapacity(treeHeight);
-        node.traverse(ba, retl);
-        return retl;
-    }
-
-    @Override
-    public int treeHeight() {
-        return treeHeight;
-    }
-
-    @Override
-    public @NotNull List<TrieNodeInterface> traverseNodes(byte[] prefix) {
-        var retl = new ObjectArrayList<TrieNodeInterface>();
-        retl.ensureCapacity(numWords);
-        var node = getNode(prefix);
-        if (node == null) {
-            return retl;
-        }
-        var ba = new ByteArrayList(prefix);
-        ba.ensureCapacity(treeHeight);
-        node.traverseNode(ba, retl);
-        return retl;
+        node.traverse(ba, words, values);
     }
 
     /** A node contains mapping to child nodes. */
-    private static class MapBasedTrieNode implements TrieNodeInterface {
-        private Object value = null;
-
+    private static class MapBasedTrieNode extends BaseTrieNode {
         private final Byte2ObjectMap<MapBasedTrieNode> mapping;
-        /** Whether a word ends here. This separates real word ends with intermediate nodes. */
-        private boolean isWordEnd = false;
 
         /** Default constructor. */
         private MapBasedTrieNode() {
             mapping = new Byte2ObjectAVLTreeMap<>(StrLibc::strcmp);
         }
 
-        /**
-         * Get number of children nodes, including myself.
-         *
-         * @return As described.
-         */
-        private int numNodes() {
+        @Override
+        public int numNodes() {
             int reti = 1;
             for (final var node : mapping.values()) {
                 if (node != null) {
@@ -153,47 +118,20 @@ public final class MapBasedTrie implements TrieInterface {
             return reti;
         }
 
-        /**
-         * Recursive DFS implementation.
-         *
-         * @param prefix Current prefix, including the character that is represented by the current
-         *     node.
-         * @param retl Output list.
-         */
-        private void traverse(final ByteArrayList prefix, final List<byte[]> retl) {
+        @Override
+        public void traverse(
+                final ByteArrayList prefix, final List<byte[]> words, final List<Object> values) {
             if (isWordEnd) {
-                retl.add(prefix.toByteArray());
+                words.add(prefix.toByteArray());
+                values.add(value);
             }
             for (final var entry : mapping.byte2ObjectEntrySet()) {
                 if (entry.getValue() != null) {
                     prefix.add(entry.getByteKey());
-                    entry.getValue().traverse(prefix, retl);
+                    entry.getValue().traverse(prefix, words, values);
                     prefix.popByte();
                 }
             }
-        }
-
-        private void traverseNode(final ByteArrayList prefix, final List<TrieNodeInterface> retl) {
-            if (isWordEnd) {
-                retl.add(this);
-            }
-            for (final var entry : mapping.byte2ObjectEntrySet()) {
-                if (entry.getValue() != null) {
-                    prefix.add(entry.getByteKey());
-                    entry.getValue().traverseNode(prefix, retl);
-                    prefix.popByte();
-                }
-            }
-        }
-
-        @Override
-        public Object getValue() {
-            return value;
-        }
-
-        @Override
-        public void setValue(Object value) {
-            this.value = value;
         }
     }
 }
