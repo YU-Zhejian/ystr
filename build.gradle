@@ -1,4 +1,5 @@
 import com.diffplug.spotless.LineEnding
+import com.diffplug.spotless.extra.wtp.EclipseWtpFormatterStep
 import java.nio.charset.StandardCharsets
 
 // ---------------------------- Plugins ----------------------------
@@ -13,10 +14,11 @@ plugins {
 	id "com.diffplug.spotless" version "6.25.0"
 	// https://mvnrepository.com/artifact/com.github.spotbugs/spotbugs-gradle-plugin
 	// https://plugins.gradle.org/plugin/com.github.spotbugs
-	id "com.github.spotbugs" version "6.0.15"
+	id "com.github.spotbugs" version "6.0.22"
 	// https://plugins.gradle.org/plugin/com.github.node-gradle.node
 	id "com.github.node-gradle.node" version "7.0.2"
 }
+
 
 group = proj_group
 version = proj_version
@@ -71,33 +73,64 @@ pmd {
 spotbugs {
 	toolVersion = SPOTBUGS_VER
 }
+
+def npmExec = System.getProperty('os.name').toLowerCase().contains('windows') ? '/npm.cmd' : '/bin/npm'
+def nodeExec = System.getProperty('os.name').toLowerCase().contains('windows') ? '/node.exe' : '/bin/node'
+
 spotless {
 	encoding StandardCharsets.UTF_8
 	lineEndings LineEnding.UNIX
+	format 'misc', {
+		target '**/*.md', '**/.gitignore', '**/.adoc', '*.md', '*.adoc', '.gitignore'
+		trimTrailingWhitespace()
+		endWithNewline()
+	}
 	java {
 		target '**/*.java'
 		importOrder()
 		removeUnusedImports()
 		palantirJavaFormat(PALANTIR_JAVA_FMT_VER).style("AOSP").formatJavadoc(true)
+		trimTrailingWhitespace()
+		endWithNewline()
 	}
-	//	shell {
-	//		target '**/*.sh'
-	//		shfmt('v3.8.0')
-	//	}
 	groovyGradle {
-		target '**/*.gradle'
+		target '**/*.gradle', '*.gradle'
 		importOrder()
 		removeSemicolons()
 		greclipse(ECLIPSE_JDT_VER)
+		trimTrailingWhitespace()
+		endWithNewline()
 	}
 	format 'xml', {
 		target "ystr_core/**/*.xml", "ystr_demo/**/*.xml"
-		eclipseWtp('xml')
+		eclipseWtp(EclipseWtpFormatterStep.XML, ECLIPSE_WTP_VER)
+		trimTrailingWhitespace()
+		endWithNewline()
+	}
+	format 'sh', {
+		target '**/*.sh', "*.sh"
+		prettier(['prettier': '3.3', 'prettier-plugin-sh': '0.14.0'])
+            .config(['parser': 'sh', 'indent': 4, 'plugins': ['prettier-plugin-sh']])
+            .npmExecutable("${tasks.named('npmSetup').get().npmDir.get()}${npmExec}")
+            .nodeExecutable("${tasks.named('nodeSetup').get().nodeDir.get()}${nodeExec}")
+		trimTrailingWhitespace()
+		endWithNewline()
+	}
+	json {
+		target '**/*.json', "*.json"
+		targetExclude ".idea", "**/node_modules/**/*.json"
+		jackson()
+		trimTrailingWhitespace()
 	}
 	yaml {
-		target '**/*.yml', "**/*.yaml"
+		target '**/*.yml', "**/*.yaml", "*.yml", "*.yaml"
 		jackson()
+		trimTrailingWhitespace()
+		endWithNewline()
 	}
+}
+tasks.named('spotlessSh').configure {
+	it.dependsOn('nodeSetup', 'npmSetup')
 }
 
 // ---------------------------- Antora Docs Site ----------------------------
@@ -105,6 +138,7 @@ spotless {
 node {
 	download = true
 	version = NODE_VER
+	distBaseUrl = "https://mirrors.tuna.tsinghua.edu.cn/nodejs-release/"
 	nodeProjectDir = file("src/antora")
 }
 

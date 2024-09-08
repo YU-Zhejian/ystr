@@ -35,3 +35,32 @@ java{
 test {
 	useJUnitPlatform()
 }
+
+configurations {
+	asciidoclet
+}
+
+//dependencies {
+//	asciidoclet 'org.asciidoctor:asciidoclet:2.0.0'
+//}
+//
+//javadoc {
+//	options {
+//		docletpath = configurations.asciidoclet.files.asType(List)
+//		doclet = 'org.asciidoctor.asciidoclet.Asciidoclet'
+//		overview = "Readme.adoc"
+//		addStringOption "-base-dir", "${projectDir}"
+//		addStringOption \
+//            "-attribute",
+//				"name=${project.name}," +
+//						"version=${project.version}," +
+//						"title-link=TODO"
+//		jFlags \
+//            "--add-exports=jdk.javadoc/jdk.javadoc.internal.tool=ALL-UNNAMED",
+//				"--add-exports=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED",
+//				"--add-exports=jdk.compiler/com.sun.tools.javac.tree=ALL-UNNAMED",
+//				"--add-exports=jdk.compiler/com.sun.tools.javac.model=ALL-UNNAMED",
+//				"--add-opens=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED",
+//				"--add-opens=jdk.compiler/com.sun.tools.javac.parser=ALL-UNNAMED"
+//	}
+//}

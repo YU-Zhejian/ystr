@@ -1,8 +1,7 @@
 package com.github.yu_zhejian.ystr_demo.tinymap;
 
-import com.github.yu_zhejian.ystr.io.FastxIterator;
-import com.github.yu_zhejian.ystr.io.FastxRecord;
 import com.github.yu_zhejian.ystr.io.LongEncoder;
+import com.github.yu_zhejian.ystr.io.RuntimeIOException;
 import com.github.yu_zhejian.ystr.minimizer.MinimizerCalculator;
 import com.github.yu_zhejian.ystr.rolling.NtHashBase;
 import com.github.yu_zhejian.ystr.rolling.NtShannonEntropy;
@@ -40,17 +39,15 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
 public final class GenomeIndexer {
     private final GenomeIndexerConfig config;
     private static final Logger LH = LoggerFactory.getLogger(GenomeIndexer.class.getSimpleName());
 
-    /** 512 Mbp per segment for {@link IndexType#CHR_SPLIT_IDX}. */
+    /** 512 Mbp per segment for large contigs. */
     private static final int CHR_SPLIT_SEG_LEN = (1 << 28);
-    /** Number of sequences to process per {@link IndexType#UNIFIED_SPLIT_IDX}. */
-    private static final int UNIFIED_SPLIT_SEG_LEN = (1 << 14);
+
     /** Length of encoded positions. */
     private static final int ENCODED_POSITION_SIZE = 2 * Long.BYTES;
 
@@ -161,8 +158,8 @@ public final class GenomeIndexer {
         var thisShannonEntropy = calcShannonEntropy(string, config);
 
         var passingIdx =
-                IterUtils.where(thisShannonEntropy, (i) -> i > config.ntShannonEntropyCutoff());
-        var hashes = NtHashBase.getAllBothHash(
+                IterUtils.where(thisShannonEntropy, i -> i > config.ntShannonEntropyCutoff());
+        var hashes = NtHashBase.hashOnBothDirections(
                 new PrecomputedBidirectionalNtHash(), string.length, string, config.kmerSize(), 0);
 
         var minimizerSpec = calcMinimizers(hashes, passingIdx, 0, config);
@@ -174,7 +171,7 @@ public final class GenomeIndexer {
         for (var i = 0; i < minimizers.size(); i++) {
             long hashValue = minimizers.getLong(i);
             hashOffsetDict.computeIfAbsent(hashValue, k -> new LongArrayList());
-            hashOffsetDict.get(hashValue).add(positions.getLong(i));
+            hashOffsetDict.get(hashValue).add((long) positions.getLong(i));
         }
         return hashOffsetDict;
     }
@@ -191,7 +188,7 @@ public final class GenomeIndexer {
                 IterUtils.where(thisShannonEntropy, i -> i > config.ntShannonEntropyCutoff());
         numProcessedKmers.addAndGet(passingIdx.size());
 
-        var hashes = NtHashBase.getAllBothHash(
+        var hashes = NtHashBase.hashOnBothDirections(
                 new PrecomputedBidirectionalNtHash(), string.length, string, config.kmerSize(), 0);
 
         var minimizerSpec = calcMinimizers(hashes, passingIdx, offsetOfFirst, config);
@@ -222,19 +219,10 @@ public final class GenomeIndexer {
             int strLen, long contigID, long offsetOfFirst, int nthPart, String trailing) {
         LH.info(
                 "PROCESS {}:{} {} -> {} {}",
-                contigNames.get(contigID),
+                LogUtils.lazy(() -> contigNames.get(contigID)),
                 nthPart,
                 LogUtils.lazy(() -> FrontendUtils.toHumanReadable(offsetOfFirst, "bp")),
                 LogUtils.lazy(() -> FrontendUtils.toHumanReadable(offsetOfFirst + strLen, "bp")),
-                trailing);
-    }
-
-    public void fmtLogUnifiedSplit(List<FastxRecord> records, long batchID, String trailing) {
-        LH.info(
-                "PROCESS batch {} {} -> {} {}",
-                batchID,
-                LogUtils.lazy(() -> records.get(0).seqid()),
-                LogUtils.lazy(() -> records.get(records.size() - 1).seqid()),
                 trailing);
     }
 
@@ -260,43 +248,6 @@ public final class GenomeIndexer {
         fmtLogChrSplit(string.length, contigID, offsetOfFirst, nthPart, "Finished");
     }
 
-    /** Generating indices using {@link IndexType#UNIFIED_SPLIT_IDX}. */
-    public void generateHashesUnifiedSplit(@NotNull List<FastxRecord> records, long batchID)
-            throws IOException {
-        fmtLogUnifiedSplit(records, batchID, "Started");
-        var hashEncodedOffsetDict = new Long2ObjectOpenHashMap<ByteArrayList>();
-        for (var record : records) {
-            var contigID = contigNames.size64();
-            contigNames.add(record.seqid());
-            contigLens.add(record.seq().length);
-            if (record.seq().length < config.kmerSize()) {
-                LH.warn("SEQ {} too short; Skipped", record.seqid());
-            }
-            for (var entry :
-                    constructMinimizerMap(record.seq(), contigID, 0).long2ObjectEntrySet()) {
-                var minimizer = entry.getLongKey();
-                var encodedPositions = entry.getValue();
-                hashEncodedOffsetDict.computeIfAbsent(
-                        minimizer,
-                        k -> new ByteArrayList(entry.getValue().size() * ENCODED_POSITION_SIZE));
-                hashEncodedOffsetDict.get(minimizer).addAll(encodedPositions);
-            }
-        }
-        fmtLogUnifiedSplit(records, batchID, "Writing");
-        var outd = fnaPath.toString().concat(".d");
-        Files.createDirectories(Path.of(outd));
-        var out = Path.of(outd, "%d.idx.bin".formatted(batchID)).toFile();
-        numMinimizers.addAndGet(hashEncodedOffsetDict.size());
-        try (var w = new FileOutputStream(out)) {
-            for (var entry : hashEncodedOffsetDict.long2ObjectEntrySet()) {
-                fimalIndexSize.addAndGet(appendToOutput(w, entry.getLongKey(), entry.getValue()));
-            }
-        }
-
-        fmtLogUnifiedSplit(records, batchID, "Finished");
-    }
-
-    /** Generating indices using {@link IndexType#CHR_SPLIT_IDX}. */
     private void indexChrSplit() {
         var refi = new FastaSequenceIndex(new File(fnaPath + ".fai"));
         contigLens = new LongBigArrayBigList();
@@ -326,31 +277,12 @@ public final class GenomeIndexer {
                 } while (tofwd <= contigLens.getLong(i));
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private void indexUnifiedSplit() {
-        var batchID = 0L;
-        contigLens = new LongBigArrayBigList();
-        contigNames = new ObjectBigArrayBigList<>();
-        try (var ref = FastxIterator.read(this.fnaPath)) {
-            var batches = IterUtils.window(ref, UNIFIED_SPLIT_SEG_LEN);
-            while (batches.hasNext()) {
-                generateHashesUnifiedSplit(batches.next(), batchID);
-                batchID++;
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeIOException("", e);
         }
     }
 
     public void index() {
-        if (IndexType.CHR_SPLIT_IDX.equals(config.indexType())) {
-            indexChrSplit();
-        } else {
-            indexUnifiedSplit();
-        }
+        indexChrSplit();
         printStatistics();
     }
 
@@ -364,8 +296,8 @@ public final class GenomeIndexer {
                         contigLensStatistics, "bp")));
         LH.info(
                 "FINAL k-mers: all {} ; processed {} ({})",
-                FrontendUtils.toHumanReadable(numAllKmers, ""),
-                FrontendUtils.toHumanReadable(numProcessedKmers, ""),
+                LogUtils.lazy(() -> FrontendUtils.toHumanReadable(numAllKmers, "")),
+                LogUtils.lazy(() -> FrontendUtils.toHumanReadable(numProcessedKmers, "")),
                 LogUtils.lazy(LogUtils.calcPctLazy(numProcessedKmers, numAllKmers)));
         LH.info("FINAL index size: {}", FrontendUtils.toHumanReadable(fimalIndexSize, "B"));
         LH.info(
@@ -382,29 +314,16 @@ public final class GenomeIndexer {
                         minimizerDistances, "bp")));
         LH.info(
                 "FINAL distinct minimizers: {}, singletons: {} ({})",
-                FrontendUtils.toHumanReadable(numMinimizers, ""),
-                FrontendUtils.toHumanReadable(minimizerSingletonNumber, ""),
+                LogUtils.lazy(() -> FrontendUtils.toHumanReadable(numMinimizers, "")),
+                LogUtils.lazy(() -> FrontendUtils.toHumanReadable(minimizerSingletonNumber, "")),
                 LogUtils.lazy(LogUtils.calcPctLazy(minimizerSingletonNumber, numMinimizers)));
     }
 
-    static void main1() {
-        var basePath = "F:\\home\\Documents\\ystr\\test\\ref";
-        var fnaPath = Path.of(basePath, "c_elegans_ests.fa");
-        var conf = GenomeIndexerConfig.blast();
-        var gi = new GenomeIndexer(fnaPath, conf, false);
-        gi.index();
-    }
-
-    static void main2() {
+    public static void main(String[] args) {
         var basePath = "F:\\home\\Documents\\ystr\\test\\ref";
         var fnaPath = Path.of(basePath, "ce11.genomic.fna");
         var conf = GenomeIndexerConfig.minimap2();
         var gi = new GenomeIndexer(fnaPath, conf, false);
         gi.index();
-    }
-
-    public static void main(String[] args) {
-        main1();
-        main2();
     }
 }

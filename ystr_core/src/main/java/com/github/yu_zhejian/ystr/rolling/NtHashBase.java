@@ -152,7 +152,7 @@ public abstract class NtHashBase extends RollingHashBase {
     }
 
     @SuppressWarnings("PMD.LooseCoupling")
-    public static @NotNull Tuple2<LongList, LongList> getAllBothHash(
+    public static @NotNull Tuple2<LongList, LongList> hashOnBothDirections(
             @NotNull NtHashBase ntHash, int estimatedLength, byte[] string, int k, int skipFirst) {
         final var rett = Tuple.of((LongList) new LongArrayList(estimatedLength), (LongList)
                 new LongArrayList(estimatedLength));

@@ -1,10 +1,12 @@
 package com.github.yu_zhejian.ystr_demo.utils;
 
 import org.apache.commons.math3.exception.MathIllegalStateException;
-import org.apache.commons.math3.exception.NullArgumentException;
 import org.apache.commons.math3.stat.descriptive.StatisticalSummary;
 import org.apache.commons.math3.stat.descriptive.StorelessUnivariateStatistic;
 import org.apache.commons.math3.stat.descriptive.SummaryStatistics;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /** A statistics that records and reports nothing. */
 public final class DumbStatistics extends SummaryStatistics {
@@ -43,94 +45,103 @@ public final class DumbStatistics extends SummaryStatistics {
         return 0;
     }
 
+    @Contract(pure = true)
     @Override
-    public SummaryStatistics copy() {
-        return null;
+    public @NotNull SummaryStatistics copy() {
+        return new DumbStatistics();
     }
 
     @Override
     public void setVarianceImpl(StorelessUnivariateStatistic varianceImpl)
             throws MathIllegalStateException {
-        // Do nothing!
+        throw new UnsupportedOperationException();
     }
 
+    @Contract(pure = true)
     @Override
-    public StorelessUnivariateStatistic getVarianceImpl() {
-        return null;
+    public @Nullable StorelessUnivariateStatistic getVarianceImpl() {
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void setMeanImpl(StorelessUnivariateStatistic meanImpl)
             throws MathIllegalStateException {
-        // Do nothing!
+        throw new UnsupportedOperationException();
     }
 
+    @Contract(pure = true)
     @Override
-    public StorelessUnivariateStatistic getMeanImpl() {
-        return null;
+    public @Nullable StorelessUnivariateStatistic getMeanImpl() {
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void setGeoMeanImpl(StorelessUnivariateStatistic geoMeanImpl)
             throws MathIllegalStateException {
-        // Do nothing!
+        throw new UnsupportedOperationException();
     }
 
+    @Contract(pure = true)
     @Override
-    public StorelessUnivariateStatistic getGeoMeanImpl() {
-        return null;
+    public @Nullable StorelessUnivariateStatistic getGeoMeanImpl() {
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void setSumLogImpl(StorelessUnivariateStatistic sumLogImpl)
             throws MathIllegalStateException {
-        // Do nothing!
+        throw new UnsupportedOperationException();
     }
 
+    @Contract(pure = true)
     @Override
-    public StorelessUnivariateStatistic getSumLogImpl() {
-        return null;
+    public @Nullable StorelessUnivariateStatistic getSumLogImpl() {
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void setMaxImpl(StorelessUnivariateStatistic maxImpl) throws MathIllegalStateException {
-        // Do nothing!
+        throw new UnsupportedOperationException();
     }
 
+    @Contract(pure = true)
     @Override
-    public StorelessUnivariateStatistic getMaxImpl() {
-        return null;
+    public @Nullable StorelessUnivariateStatistic getMaxImpl() {
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void setMinImpl(StorelessUnivariateStatistic minImpl) throws MathIllegalStateException {
-        // Do nothing!
+        throw new UnsupportedOperationException();
     }
 
+    @Contract(pure = true)
     @Override
-    public StorelessUnivariateStatistic getMinImpl() {
-        return null;
+    public @Nullable StorelessUnivariateStatistic getMinImpl() {
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void setSumsqImpl(StorelessUnivariateStatistic sumsqImpl)
             throws MathIllegalStateException {
-        // Do nothing!
+        throw new UnsupportedOperationException();
     }
 
+    @Contract(pure = true)
     @Override
-    public StorelessUnivariateStatistic getSumsqImpl() {
-        return null;
+    public @Nullable StorelessUnivariateStatistic getSumsqImpl() {
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void setSumImpl(StorelessUnivariateStatistic sumImpl) throws MathIllegalStateException {
-        // Do nothing!
+        throw new UnsupportedOperationException();
     }
 
+    @Contract(pure = true)
     @Override
-    public StorelessUnivariateStatistic getSumImpl() {
-        return null;
+    public @Nullable StorelessUnivariateStatistic getSumImpl() {
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -188,13 +199,10 @@ public final class DumbStatistics extends SummaryStatistics {
         // Do nothing!
     }
 
+    @Contract(pure = true)
     @Override
-    public StatisticalSummary getSummary() {
-        return null;
-    }
-
-    public DumbStatistics(SummaryStatistics original) throws NullArgumentException {
-        // Do nothing!
+    public @NotNull StatisticalSummary getSummary() {
+        return new DumbStatistics();
     }
 
     public DumbStatistics() {

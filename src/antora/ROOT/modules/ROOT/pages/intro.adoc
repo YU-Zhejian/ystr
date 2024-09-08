@@ -27,7 +27,7 @@ yStr is designed to be fast, memory-efficient, with the support of the latest fe
 
 === Representation of Biological Sequences
 
-Most yStr algorithms deal with `byte[]` instead of `String` or `char[]` since we hardly deal with unicode characters in biological texts. Using such could reduce time used on encoding and decoding, but would risk of loosing Java's optimization on strings (e.g., small string pool).
+Most yStr algorithms deal with `byte[]` instead of `String` or `char[]` since we hardly deal with Unicode characters in biological texts. Using such could reduce time used on encoding and decoding, but would risk of loosing Java's optimization on strings (e.g., small string pool).
 
 yStr uses 2 types of encodings:
 

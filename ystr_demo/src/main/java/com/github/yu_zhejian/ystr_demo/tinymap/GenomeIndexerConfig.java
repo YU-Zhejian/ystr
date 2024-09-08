@@ -4,11 +4,11 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 public record GenomeIndexerConfig(
-        int kmerSize, int numKmerPerMinimizer, double ntShannonEntropyCutoff, IndexType indexType) {
+        int kmerSize, int numKmerPerMinimizer, double ntShannonEntropyCutoff) {
     @Contract(" -> new")
     @NotNull
     public static GenomeIndexerConfig minimap2() {
-        return new GenomeIndexerConfig(14, 10, 0.7, IndexType.CHR_SPLIT_IDX);
+        return new GenomeIndexerConfig(14, 10, 0.7);
     }
 
     /**
@@ -19,6 +19,6 @@ public record GenomeIndexerConfig(
     @Contract(" -> new")
     @NotNull
     public static GenomeIndexerConfig blast() {
-        return new GenomeIndexerConfig(7, 1, 0.7, IndexType.UNIFIED_SPLIT_IDX);
+        return new GenomeIndexerConfig(7, 1, 0.7);
     }
 }
