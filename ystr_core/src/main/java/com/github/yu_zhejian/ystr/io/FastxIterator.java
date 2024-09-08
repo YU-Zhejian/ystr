@@ -22,10 +22,10 @@ import java.util.NoSuchElementException;
 public final class FastxIterator implements Iterator<FastxRecord>, AutoCloseable {
     /** Whitespace characters. */
     private static final String SPLIT_REGEX = "\\s+";
-
     private static final char FASTA_RECORD_NAME_START = '>';
     private static final char FASTQ_RECORD_NAME_START = '@';
     private static final char FASTQ_QUAL_NAME_START = '+';
+
     /** As described. */
     private final BufferedReader reader;
     /** The current usable record. */

@@ -13,7 +13,7 @@ import java.util.NoSuchElementException;
  *
  * @param <V> As described.
  */
-public class NopList<V> implements List<V> {
+public final class NopList<V> implements List<V> {
     @Override
     public int size() {
         return 0;

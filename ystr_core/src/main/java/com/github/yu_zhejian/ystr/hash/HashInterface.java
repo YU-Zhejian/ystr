@@ -1,6 +1,6 @@
 package com.github.yu_zhejian.ystr.hash;
 
-import com.github.yu_zhejian.ystr.base.UpdatableInterface;
+import com.github.yu_zhejian.ystr.container.UpdatableInterface;
 
 import org.jetbrains.annotations.NotNull;
 
