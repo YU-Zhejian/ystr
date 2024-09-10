@@ -279,6 +279,12 @@ public final class GenomeIndexer {
                 .toDisk(Path.of(outDirectory.toString(), "index.json"));
     }
 
+    /**
+     * @deprecated Test method that should be removed before publishing.
+     * @param args As described.
+     * @throws IOException As described.
+     */
+    @Deprecated(forRemoval = true)
     public static void main(String[] args) throws IOException {
         var basePath = "D:\\Work\\ystr\\test\\ref";
         var fnaPath = Path.of(basePath, "ce11.genomic.fna");

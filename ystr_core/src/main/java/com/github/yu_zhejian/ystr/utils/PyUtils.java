@@ -77,7 +77,46 @@ public final class PyUtils {
          */
         @Contract(" -> new")
         public static @NotNull PrintParams getDefault() {
-            return new PrintParams(" ", "\n", System.out, false);
+            return new PrintParamsBuilder().build();
+        }
+    }
+
+    public static class PrintParamsBuilder {
+        private byte[] sep = new byte[] {' '};
+        private byte[] end = new byte[] {'\n'};
+        private OutputStream file = System.out;
+        private boolean flush = false;
+
+        /** See {@link PrintParams#sep()}* */
+        public PrintParamsBuilder setSep(final byte[] sep) {
+            this.sep = sep;
+            return this;
+        }
+
+        /** See {@link PrintParams#end()}* */
+        public PrintParamsBuilder setEnd(final byte[] end) {
+            this.end = end;
+            return this;
+        }
+
+        /** See {@link PrintParams#file()}* */
+        public PrintParamsBuilder setFile(final OutputStream file) {
+            this.file = file;
+            return this;
+        }
+
+        /** See {@link PrintParams#flush()}* */
+        public PrintParamsBuilder setFlush(final boolean flush) {
+            this.flush = flush;
+            return this;
+        }
+
+        public PrintParamsBuilder() {
+            // Default constructor
+        }
+
+        public PrintParams build() {
+            return new PrintParams(sep, end, file, flush);
         }
     }
 

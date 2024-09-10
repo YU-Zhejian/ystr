@@ -11,9 +11,10 @@ public final class JVMUtils {
         var osName = systemProperties.get("os.name");
         var osArch = systemProperties.get("os.arch");
         var osVer = systemProperties.get("os.version");
-        PyUtils.print("OS: name=", osName, "; arch=", osArch, "; ver=", osVer);
-
+        var pp = new PyUtils.PrintParamsBuilder().setSep(new byte[0]).build();
+        PyUtils.print(pp, "OS: name=", osName, "; arch=", osArch, "; ver=", osVer);
         PyUtils.print(
+                pp,
                 "Java: name=",
                 systemProperties.get("java.runtime.name"),
                 "; ver=",
@@ -28,7 +29,9 @@ public final class JVMUtils {
 
     public static void printMemInfo() {
         var rt = Runtime.getRuntime();
+        var pp = new PyUtils.PrintParamsBuilder().setSep(new byte[0]).build();
         PyUtils.print(
+                pp,
                 "JVM Memory: Free/Total/Max =",
                 FrontendUtils.toHumanReadable(rt.freeMemory()),
                 "/",

@@ -1,5 +1,6 @@
 plugins {
 	id 'java'
+	id 'application'
 }
 
 group = proj_group
@@ -17,6 +18,9 @@ dependencies {
 	implementation "org.slf4j:jcl-over-slf4j:${SLF4J_VER}"
 	implementation "org.slf4j:jul-to-slf4j:${SLF4J_VER}"
 	implementation "org.slf4j:log4j-over-slf4j:${SLF4J_VER}"
+	implementation "info.picocli:picocli:${PICOCLI_VER}"
+	annotationProcessor "info.picocli:picocli-codegen:${PICOCLI_VER}"
+
 	implementation "org.apache.commons:commons-math3:${COMMONS_MATH_VER}"
 	implementation "org.apache.commons:commons-configuration2:${COMMONS_CONFIGURATION_VER}"
 
@@ -30,4 +34,8 @@ tasks.named('javadoc') {
 }
 tasks.named('test') {
 	enabled = false
+}
+
+application{
+	mainClass = 'com.github.yu_zhejian.ystr_demo.Main'
 }

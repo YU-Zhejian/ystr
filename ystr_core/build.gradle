@@ -6,23 +6,21 @@ group = proj_group
 version = proj_version
 
 dependencies {
-	// ---------------------------- UNIT TEST ----------------------------
-	testImplementation platform("org.junit:junit-bom:${JUNIT_VER}")
-	testImplementation "org.junit.jupiter:junit-jupiter:${JUNIT_VER}"
-
 	implementation "io.vavr:vavr:${VAVR_VER}"
 	implementation "org.jetbrains:annotations:${JETBRAINS_ANNOTATION_VER}"
 	implementation "it.unimi.dsi:fastutil:${FASTUTIL_VER}"
 	implementation "org.roaringbitmap:RoaringBitmap:${ROARING_BITMAP_VER}"
 
-	runtimeOnly "ch.qos.logback:logback-classic:${LOGBACK_VER}"
-
+	testImplementation platform("org.junit:junit-bom:${JUNIT_VER}")
+	testImplementation "org.junit.jupiter:junit-jupiter:${JUNIT_VER}"
 	testImplementation "com.github.samtools:htsjdk:${HTSJDK_VER}"
 	testImplementation "org.openjdk.jmh:jmh-core:${JMH_VER}"
 	testImplementation "org.eclipse.jgit:org.eclipse.jgit:${JGIT_VER}"
 	testImplementation "org.apache.commons:commons-csv:${COMMONS_CSV_VER}"
 	testImplementation "org.apache.commons:commons-compress:${COMMONS_COMPRESS_VER}"
-	testImplementation 'net.openhft:zero-allocation-hashing:0.16'
+	testImplementation "net.openhft:zero-allocation-hashing:${ZAH_VER}"
+	testImplementation "org.slf4j:slf4j-api:${SLF4J_VER}"
+	testRuntimeOnly "ch.qos.logback:logback-classic:${LOGBACK_VER}"
 
 	testAnnotationProcessor "org.openjdk.jmh:jmh-generator-annprocess:${JMH_VER}"
 }
@@ -36,10 +34,9 @@ test {
 	useJUnitPlatform()
 }
 
-configurations {
-	asciidoclet
-}
-
+//configurations {
+//	asciidoclet
+//}
 //dependencies {
 //	asciidoclet 'org.asciidoctor:asciidoclet:2.0.0'
 //}

@@ -2,6 +2,7 @@ package com.github.yu_zhejian.ystr_demo.tinymap;
 
 import it.unimi.dsi.fastutil.BigList;
 import it.unimi.dsi.fastutil.longs.LongBigArrayBigList;
+import it.unimi.dsi.fastutil.longs.LongBigList;
 import it.unimi.dsi.fastutil.objects.ObjectBigArrayBigList;
 
 import org.apache.commons.configuration2.BaseConfiguration;
@@ -18,25 +19,12 @@ import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
 
-public final class GenomeIndex {
-    private final GenomeIndexerConfig config;
-    private final String fnaPath;
-    private final LongBigArrayBigList contigLens;
-    private final BigList<String> contigNames;
-    private final BigList<BigList<String>> contigIndexPaths;
-
-    public GenomeIndex(
-            final GenomeIndexerConfig config,
-            final String fnaPath,
-            final LongBigArrayBigList contigLens,
-            final BigList<String> contigNames,
-            final BigList<BigList<String>> contigIndexPaths) {
-        this.config = config;
-        this.fnaPath = fnaPath;
-        this.contigLens = contigLens;
-        this.contigNames = contigNames;
-        this.contigIndexPaths = contigIndexPaths;
-    }
+public record GenomeIndex(
+        GenomeIndexerConfig config,
+        String fnaPath,
+        LongBigList contigLens,
+        BigList<String> contigNames,
+        BigList<BigList<String>> contigIndexPaths) {
 
     public long numContigs() {
         return contigNames.size64();
@@ -50,9 +38,11 @@ public final class GenomeIndex {
             oConfig.setProperty("contig.%d.contigLen".formatted(i), contigLens.getLong(i));
             oConfig.setProperty("contig.%d.contigName".formatted(i), contigNames.get(i));
             // FIXME: Errors here: List not saved as lists due to Apache Commons.
-            // May change to //
+            // May change to
             // https://mvnrepository.com/artifact/com.electronwill.night-config/toml
-            // implementation 'com.electronwill.night-config:toml:3.8.1' instead.
+            // or
+            // https://mvnrepository.com/artifact/org.ini4j/ini4j/0.5.4
+            // instead
             oConfig.setProperty("contig.%d.contigIndexPaths".formatted(i), contigIndexPaths.get(i));
         }
         oConfig.setProperty("config.kmerSize", config.kmerSize());
