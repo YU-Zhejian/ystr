@@ -18,7 +18,11 @@ dependencies {
 	implementation "org.slf4j:jul-to-slf4j:${SLF4J_VER}"
 	implementation "org.slf4j:log4j-over-slf4j:${SLF4J_VER}"
 	implementation "org.apache.commons:commons-math3:${COMMONS_MATH_VER}"
+	implementation "org.apache.commons:commons-configuration2:${COMMONS_CONFIGURATION_VER}"
+
+	runtimeOnly "com.fasterxml.jackson.core:jackson-databind:${JACKSON_VERSION}"
 	runtimeOnly "ch.qos.logback:logback-classic:${LOGBACK_VER}"
+	runtimeOnly "commons-beanutils:commons-beanutils:${COMMONS_BEANUTILS_VER}"
 }
 
 tasks.named('javadoc') {

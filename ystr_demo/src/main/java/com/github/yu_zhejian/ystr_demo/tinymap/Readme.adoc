@@ -1,3 +1,8 @@
 = Readme for TinyMap
 
 TinyMap is an aligner that aligns DNA or RNA-derived sequences to a reference genome.
+
+== GenomeIndex
+
+- **INPUT**: A `samtools faidx`-indexed FASTA file of some reference genome. This application deals with those with limited number of contigs of various lengths.
+- **OUTPUT**: The index.
