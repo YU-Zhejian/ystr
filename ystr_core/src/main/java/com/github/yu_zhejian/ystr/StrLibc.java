@@ -4,6 +4,8 @@ import com.github.yu_zhejian.ystr.utils.StrUtils;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
+
 /** LibC-like String manipulation. */
 public final class StrLibc {
 
@@ -25,9 +27,7 @@ public final class StrLibc {
      *     href="https://pubs.opengroup.org/onlinepubs/9699919799/functions/strcmp.html">POSIX</a>
      */
     public static int strcmp(final byte @NotNull [] array1, final byte @NotNull [] array2) {
-        final int minLength = Math.min(array1.length, array2.length);
-        final int strCmpMinLen = strncmp(array1, array2, minLength);
-        return strCmpMinLen == 0 ? Integer.compare(array1.length, array2.length) : strCmpMinLen;
+        return Arrays.compareUnsigned(array1, array2);
     }
 
     /**
@@ -38,8 +38,7 @@ public final class StrLibc {
      * @return As described.
      */
     public static int strcmp(final byte char1, final byte char2) {
-        return Integer.compare(
-                char1 & StrUtils.BYTE_TO_UNSIGNED_MASK, char2 & StrUtils.BYTE_TO_UNSIGNED_MASK);
+        return Byte.compareUnsigned(char1, char2);
     }
 
     /**
@@ -82,16 +81,6 @@ public final class StrLibc {
             final int start1,
             final int start2,
             final int n) {
-        byte b1;
-        byte b2;
-        for (int i = 0; i < n; i++) {
-            b1 = array1[start1 + i];
-            b2 = array2[start2 + i];
-            if (b1 != b2) {
-                return Integer.compare(
-                        b1 & StrUtils.BYTE_TO_UNSIGNED_MASK, b2 & StrUtils.BYTE_TO_UNSIGNED_MASK);
-            }
-        }
-        return 0;
+        return Arrays.compareUnsigned(array1, start1, start1 + n, array2, start2, start2 + n);
     }
 }

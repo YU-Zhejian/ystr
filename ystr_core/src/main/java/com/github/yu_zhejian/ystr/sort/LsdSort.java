@@ -10,6 +10,8 @@ import java.util.Arrays;
 import java.util.List;
 
 public class LsdSort implements SortInterface {
+
+    // FIXME: This method have bugs.
     @Override
     public void sort(@NotNull List<byte[]> strings) {
         if (strings.isEmpty()) {
@@ -18,7 +20,9 @@ public class LsdSort implements SortInterface {
         int keyLen = strings.get(0).length;
         int[] count = new int[StrUtils.ALPHABET_SIZE];
         var aux = new ObjectArrayList<byte[]>();
-        aux.addAll(strings);
+        for (int i = 0; i < strings.size(); i++){
+            aux.add(null);
+        }
         for (int d = keyLen - 1; d >= 0; d--) {
             Arrays.fill(count, 0);
             for (int i = 0; i < StrUtils.ALPHABET_SIZE; i++) {
@@ -34,5 +38,6 @@ public class LsdSort implements SortInterface {
                 strings.set(i, aux.get(i));
             }
         }
+        strings.size();
     }
 }

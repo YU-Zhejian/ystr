@@ -5,6 +5,7 @@ import com.github.yu_zhejian.ystr.StrLibc;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
 import java.util.List;
 
 /** Various utility functions concerning strings to support other classes. */
@@ -133,7 +134,11 @@ public final class StrUtils {
         for (int i = 0; i < strings.size() - 1; i++) {
             if (StrLibc.strcmp(strings.get(i), strings.get(i + 1)) > 0) {
                 throw new IllegalArgumentException(
-                        "The array is not sorted between %d and %d!".formatted(i, i + 1));
+                        "The array is not sorted between %d and %d, whish is %s and %s".formatted(
+                            i, i + 1,
+                            Arrays.toString(strings.get(i)),
+                            Arrays.toString(strings.get(i + 1))
+                        ));
             }
         }
     }
@@ -159,32 +164,11 @@ public final class StrUtils {
      * In-place sorting of small arrays. Modified from Robert Sedgewick et al. This sorting
      * algorithm is stable.
      *
-     * @param array Array of unsigned integers. <b>WILL BE MUTATED</b>
-     * @param alphabetSize Size of the alphabet.
-     */
-    public static void keyIndexedCounting(final int @NotNull [] array, final int alphabetSize) {
-        int[] aux = new int[array.length];
-        int[] count = new int[alphabetSize + 1];
-        for (int j : array) {
-            count[j + 1]++;
-        }
-        for (int r = 0; r < alphabetSize; r++) {
-            count[r + 1] += count[r];
-        }
-        for (int j : array) {
-            aux[count[j]++] = j;
-        }
-        System.arraycopy(aux, 0, array, 0, array.length);
-    }
-
-    /**
-     * String variant of {@link #keyIndexedCounting(int[], int)}.
-     *
      * @param array As described.
      */
-    public static void keyIndexedCounting(final byte @NotNull [] array) {
-        byte[] aux = new byte[array.length];
-        int[] count = new int[ALPHABET_SIZE + 1];
+    public static void countingSort(final byte @NotNull [] array) {
+        var aux = new byte[array.length];
+        var count = new int[ALPHABET_SIZE + 1];
         for (final byte j : array) {
             count[(j & BYTE_TO_UNSIGNED_MASK) + 1]++;
         }

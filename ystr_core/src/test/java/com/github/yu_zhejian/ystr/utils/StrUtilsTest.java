@@ -43,13 +43,31 @@ class StrUtilsTest {
 
     @Test
     void testKeyIndexedCounting() {
+        assertEquals(0, (new int[]{}).length); // To supress warnings
         for (final byte[] bytes : List.of(
                 new byte[] {'A', 'C', 'T', 'G'},
                 new byte[] {-1, 0, 9, 2},
                 new byte[] {},
                 new byte[] {1, 1, 1})) {
-            StrUtils.keyIndexedCounting(bytes);
+            StrUtils.countingSort(bytes);
             StrUtils.requiresSorted(bytes);
+        }
+        for (int i = 1; i < 10; i++){
+            var rkg = new RandomKmerGenerator(Alphabets.FULL_ALPHABET.getValue(), i);
+            for (int j = 0; j < 1000; j++){
+                var bytes = rkg.next();
+                StrUtils.countingSort(bytes);
+                StrUtils.requiresSorted(bytes);
+
+            }
+        }
+        for (final int i: List.of(1<<10, 1<<20)){
+            var rkg = new RandomKmerGenerator(Alphabets.FULL_ALPHABET.getValue(), i);
+            for (int j = 0; j < 100; j++){
+                var bytes = rkg.next();
+                StrUtils.countingSort(bytes);
+                StrUtils.requiresSorted(bytes);
+            }
         }
     }
 }
