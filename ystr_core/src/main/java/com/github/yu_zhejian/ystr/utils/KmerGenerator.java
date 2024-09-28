@@ -12,11 +12,11 @@ import java.util.NoSuchElementException;
  * Generating all k-mers over some alphabet.
  *
  * @see Alphabets
+ * @see RandomKmerGenerator
  */
 public final class KmerGenerator implements Iterator<byte[]> {
-
     /** As described. */
-    private final byte[] alphabet;
+    private final ImmutableByteArray alphabet;
     /** Maximum index inside {@link #alphabet}, which is {@code len(alphabet) - 1}. */
     private final int alphabetMaxIdx;
     /** As described. */
@@ -36,8 +36,8 @@ public final class KmerGenerator implements Iterator<byte[]> {
      * @param k As described.
      * @throws IllegalArgumentException If {@link #k} is negative or {@link #alphabet} is empty.
      */
-    public KmerGenerator(final byte @NotNull [] alphabet, final int k) {
-        if (alphabet.length == 0) {
+    public KmerGenerator(final @NotNull ImmutableByteArray alphabet, final int k) {
+        if (alphabet.isEmpty()) {
             throw new IllegalArgumentException("alphabet must contain at least one character");
         }
         if (k <= 0) {
@@ -45,14 +45,10 @@ public final class KmerGenerator implements Iterator<byte[]> {
         }
         this.alphabet = alphabet;
         this.k = k;
-        alphabetMaxIdx = alphabet.length - 1;
+        alphabetMaxIdx = alphabet.length() - 1;
         pos = new int[k];
         finalPos = new int[k];
         Arrays.fill(finalPos, 0);
-    }
-
-    public KmerGenerator(final @NotNull ImmutableByteArray alphabet, final int k) {
-        this(alphabet.getValue(), k);
     }
 
     private void advPos() {
@@ -79,7 +75,7 @@ public final class KmerGenerator implements Iterator<byte[]> {
         hasStarted = true;
         var state = new byte[k];
         for (int i = 0; i < k; i++) {
-            state[i] = alphabet[pos[i]];
+            state[i] = alphabet.at(pos[i]);
         }
         advPos();
         return state;

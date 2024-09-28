@@ -1,9 +1,12 @@
 package com.github.yu_zhejian.ystr.translate;
 
+import com.github.yu_zhejian.ystr.container.ImmutableByteArray;
+
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 /**
  * NCBI codon tables.
@@ -13,69 +16,146 @@ import java.nio.charset.StandardCharsets;
 public final class Codons {
     private Codons() {}
 
+    public static final ImmutableByteArray NOP_CODONS =
+            new ImmutableByteArray("X".repeat(64), StandardCharsets.US_ASCII);
+    public static final String NOP_CODON_NAME = "NOP";
+
     /** The codon table. */
-    static final byte[][] NCBI_CODON_TABLE = {
-        /* 0 */ null,
-        /* 1 */ "FFLLSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG"
-                .getBytes(StandardCharsets.US_ASCII),
-        /* 2 */ "FFLLSSSSYY**CCWWLLLLPPPPHHQQRRRRIIMMTTTTNNKKSS**VVVVAAAADDEEGGGG"
-                .getBytes(StandardCharsets.US_ASCII),
-        /* 3 */ "FFLLSSSSYY**CCWWTTTTPPPPHHQQRRRRIIMMTTTTNNKKSSRRVVVVAAAADDEEGGGG"
-                .getBytes(StandardCharsets.US_ASCII),
-        /* 4 */ "FFLLSSSSYY**CCWWLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG"
-                .getBytes(StandardCharsets.US_ASCII),
-        /* 5 */ "FFLLSSSSYY**CCWWLLLLPPPPHHQQRRRRIIMMTTTTNNKKSSSSVVVVAAAADDEEGGGG"
-                .getBytes(StandardCharsets.US_ASCII),
-        /* 6 */ "FFLLSSSSYYQQCC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG"
-                .getBytes(StandardCharsets.US_ASCII),
-        /* 7 */ null,
-        /* 8 */ null,
-        /* 9 */ "FFLLSSSSYY**CCWWLLLLPPPPHHQQRRRRIIIMTTTTNNNKSSSSVVVVAAAADDEEGGGG"
-                .getBytes(StandardCharsets.US_ASCII),
-        /* 10 */ "FFLLSSSSYY**CCCWLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG"
-                .getBytes(StandardCharsets.US_ASCII),
-        /* 11 */ "FFLLSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG"
-                .getBytes(StandardCharsets.US_ASCII),
-        /* 12 */ "FFLLSSSSYY**CC*WLLLSPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG"
-                .getBytes(StandardCharsets.US_ASCII),
-        /* 13 */ "FFLLSSSSYY**CCWWLLLLPPPPHHQQRRRRIIMMTTTTNNKKSSGGVVVVAAAADDEEGGGG"
-                .getBytes(StandardCharsets.US_ASCII),
-        /* 14 */ "FFLLSSSSYYY*CCWWLLLLPPPPHHQQRRRRIIIMTTTTNNNKSSSSVVVVAAAADDEEGGGG"
-                .getBytes(StandardCharsets.US_ASCII),
-        /* 15 */ "FFLLSSSSYY*QCC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG"
-                .getBytes(StandardCharsets.US_ASCII),
-        /* 16 */ "FFLLSSSSYY*LCC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG"
-                .getBytes(StandardCharsets.US_ASCII),
-        /* 17 */ null,
-        /* 18 */ null,
-        /* 19 */ null,
-        /* 20 */ null,
-        /* 21 */ "FFLLSSSSYY**CCWWLLLLPPPPHHQQRRRRIIMMTTTTNNNKSSSSVVVVAAAADDEEGGGG"
-                .getBytes(StandardCharsets.US_ASCII),
-        /* 22 */ "FFLLSS*SYY*LCC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG"
-                .getBytes(StandardCharsets.US_ASCII),
-        /* 23 */ "FF*LSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG"
-                .getBytes(StandardCharsets.US_ASCII),
-        /* 24 */ "FFLLSSSSYY**CCWWLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSSKVVVVAAAADDEEGGGG"
-                .getBytes(StandardCharsets.US_ASCII),
-        /* 25 */ "FFLLSSSSYY**CCGWLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG"
-                .getBytes(StandardCharsets.US_ASCII),
-        /* 26 */ "FFLLSSSSYY**CC*WLLLAPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG"
-                .getBytes(StandardCharsets.US_ASCII),
-        /* 27 */ "FFLLSSSSYYQQCCWWLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG"
-                .getBytes(StandardCharsets.US_ASCII),
-        /* 28 */ "FFLLSSSSYYQQCCWWLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG"
-                .getBytes(StandardCharsets.US_ASCII),
-        /* 29 */ "FFLLSSSSYYYYCC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG"
-                .getBytes(StandardCharsets.US_ASCII),
-        /* 30 */ "FFLLSSSSYYEECC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG"
-                .getBytes(StandardCharsets.US_ASCII),
-        /* 31 */ "FFLLSSSSYYEECCWWLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG"
-                .getBytes(StandardCharsets.US_ASCII),
-        /* 32 */ null,
-        /* 33 */ "FFLLSSSSYYY*CCWWLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSSKVVVVAAAADDEEGGGG"
-                .getBytes(StandardCharsets.US_ASCII)
-    };
+    public static final List<ImmutableByteArray> NCBI_CODON_TABLE = List.of(
+            /* 0 */ NOP_CODONS,
+            /* 1 */ new ImmutableByteArray(
+                    "FFLLSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG",
+                    StandardCharsets.US_ASCII),
+            /* 2 */ new ImmutableByteArray(
+                    "FFLLSSSSYY**CCWWLLLLPPPPHHQQRRRRIIMMTTTTNNKKSS**VVVVAAAADDEEGGGG",
+                    StandardCharsets.US_ASCII),
+            /* 3 */ new ImmutableByteArray(
+                    "FFLLSSSSYY**CCWWTTTTPPPPHHQQRRRRIIMMTTTTNNKKSSRRVVVVAAAADDEEGGGG",
+                    StandardCharsets.US_ASCII),
+            /* 4 */ new ImmutableByteArray(
+                    "FFLLSSSSYY**CCWWLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG",
+                    StandardCharsets.US_ASCII),
+            /* 5 */ new ImmutableByteArray(
+                    "FFLLSSSSYY**CCWWLLLLPPPPHHQQRRRRIIMMTTTTNNKKSSSSVVVVAAAADDEEGGGG",
+                    StandardCharsets.US_ASCII),
+            /* 6 */ new ImmutableByteArray(
+                    "FFLLSSSSYYQQCC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG",
+                    StandardCharsets.US_ASCII),
+            /* 7 */ NOP_CODONS,
+            /* 8 */ NOP_CODONS,
+            /* 9 */ new ImmutableByteArray(
+                    "FFLLSSSSYY**CCWWLLLLPPPPHHQQRRRRIIIMTTTTNNNKSSSSVVVVAAAADDEEGGGG",
+                    StandardCharsets.US_ASCII),
+            /* 10 */ new ImmutableByteArray(
+                    "FFLLSSSSYY**CCCWLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG",
+                    StandardCharsets.US_ASCII),
+            /* 11 */ new ImmutableByteArray(
+                    "FFLLSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG",
+                    StandardCharsets.US_ASCII),
+            /* 12 */ new ImmutableByteArray(
+                    "FFLLSSSSYY**CC*WLLLSPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG",
+                    StandardCharsets.US_ASCII),
+            /* 13 */ new ImmutableByteArray(
+                    "FFLLSSSSYY**CCWWLLLLPPPPHHQQRRRRIIMMTTTTNNKKSSGGVVVVAAAADDEEGGGG",
+                    StandardCharsets.US_ASCII),
+            /* 14 */ new ImmutableByteArray(
+                    "FFLLSSSSYYY*CCWWLLLLPPPPHHQQRRRRIIIMTTTTNNNKSSSSVVVVAAAADDEEGGGG",
+                    StandardCharsets.US_ASCII),
+            /* 15 */ new ImmutableByteArray(
+                    "FFLLSSSSYY*QCC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG",
+                    StandardCharsets.US_ASCII),
+            /* 16 */ new ImmutableByteArray(
+                    "FFLLSSSSYY*LCC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG",
+                    StandardCharsets.US_ASCII),
+            /* 17 */ NOP_CODONS,
+            /* 18 */ NOP_CODONS,
+            /* 19 */ NOP_CODONS,
+            /* 20 */ NOP_CODONS,
+            /* 21 */ new ImmutableByteArray(
+                    "FFLLSSSSYY**CCWWLLLLPPPPHHQQRRRRIIMMTTTTNNNKSSSSVVVVAAAADDEEGGGG",
+                    StandardCharsets.US_ASCII),
+            /* 22 */ new ImmutableByteArray(
+                    "FFLLSS*SYY*LCC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG",
+                    StandardCharsets.US_ASCII),
+            /* 23 */ new ImmutableByteArray(
+                    "FF*LSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG",
+                    StandardCharsets.US_ASCII),
+            /* 24 */ new ImmutableByteArray(
+                    "FFLLSSSSYY**CCWWLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSSKVVVVAAAADDEEGGGG",
+                    StandardCharsets.US_ASCII),
+            /* 25 */ new ImmutableByteArray(
+                    "FFLLSSSSYY**CCGWLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG",
+                    StandardCharsets.US_ASCII),
+            /* 26 */ new ImmutableByteArray(
+                    "FFLLSSSSYY**CC*WLLLAPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG",
+                    StandardCharsets.US_ASCII),
+            /* 27 */ new ImmutableByteArray(
+                    "FFLLSSSSYYQQCCWWLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG",
+                    StandardCharsets.US_ASCII),
+            /* 28 */ new ImmutableByteArray(
+                    "FFLLSSSSYYQQCCWWLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG",
+                    StandardCharsets.US_ASCII),
+            /* 29 */ new ImmutableByteArray(
+                    "FFLLSSSSYYYYCC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG",
+                    StandardCharsets.US_ASCII),
+            /* 30 */ new ImmutableByteArray(
+                    "FFLLSSSSYYEECC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG",
+                    StandardCharsets.US_ASCII),
+            /* 31 */ new ImmutableByteArray(
+                    "FFLLSSSSYYEECCWWLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG",
+                    StandardCharsets.US_ASCII),
+            /* 32 */ NOP_CODONS,
+            /* 33 */ new ImmutableByteArray(
+                    "FFLLSSSSYYY*CCWWLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSSKVVVVAAAADDEEGGGG",
+                    StandardCharsets.US_ASCII));
+
+    public static final List<String> NCBI_CODON_NAMES = List.of(
+            /* 0 */ NOP_CODON_NAME,
+            /* 1 */ "The Standard Code",
+            /* 2 */ "The Vertebrate Mitochondrial Code",
+            /* 3 */ "The Yeast Mitochondrial Code",
+            /* 4 */ "The Mold, Protozoan, and Coelenterate Mitochondrial Code and the Mycoplasma/Spiroplasma Code",
+            /* 5 */ "The Invertebrate Mitochondrial Code",
+            /* 6 */ "The Ciliate, Dasycladacean and Hexamita Nuclear Code",
+            /* 7 */ NOP_CODON_NAME,
+            /* 8 */ NOP_CODON_NAME,
+            /* 9 */ "The Echinoderm and Flatworm Mitochondrial Code",
+            /* 10 */ "The Euplotid Nuclear Code",
+            /* 11 */ "The Bacterial, Archaeal and Plant Plastid Code",
+            /* 12 */ "The Alternative Yeast Nuclear Code",
+            /* 13 */ "The Ascidian Mitochondrial Code",
+            /* 14 */ "The Alternative Flatworm Mitochondrial Code",
+            /* 15 */ "Blepharisma Nuclear Code",
+            /* 16 */ "Chlorophycean Mitochondrial Code",
+            /* 17 */ NOP_CODON_NAME,
+            /* 18 */ NOP_CODON_NAME,
+            /* 19 */ NOP_CODON_NAME,
+            /* 20 */ NOP_CODON_NAME,
+            /* 21 */ "Trematode Mitochondrial Code",
+            /* 22 */ "Scenedesmus obliquus Mitochondrial Code",
+            /* 23 */ "Thraustochytrium Mitochondrial Code",
+            /* 24 */ "Rhabdopleuridae Mitochondrial Code",
+            /* 25 */ "Candidate Division SR1 and Gracilibacteria Code",
+            /* 26 */ "Pachysolen tannophilus Nuclear Code",
+            /* 27 */ "Karyorelict Nuclear Code",
+            /* 28 */ "Condylostoma Nuclear Code",
+            /* 29 */ "Mesodinium Nuclear Code",
+            /* 30 */ "Peritrich Nuclear Code",
+            /* 31 */ "Blastocrithidia Nuclear Code",
+            /* 32 */ "Balanophoraceae Plastid Code",
+            /* 33 */ "Cephalodiscidae Mitochondrial UAA-Tyr Code");
+
+    public static ImmutableByteArray getCodonTable(final int ncbiCodonIndex) {
+        return NCBI_CODON_TABLE.get(ncbiCodonIndex);
+    }
+
+    public static String getCodonName(final int ncbiCodonIndex) {
+        return NCBI_CODON_NAMES.get(ncbiCodonIndex);
+    }
+
+    public static int size() {
+        return NCBI_CODON_NAMES.size();
+    }
 
     /**
      * Create {@link SimpleTranslator} using desired codon table.
@@ -86,7 +166,7 @@ public final class Codons {
      */
     @Contract(value = "_, _ -> new", pure = true)
     public static @NotNull SimpleTranslator getTranslator(
-            int ncbiCodonIndex, final byte[][] startCodons) {
-        return new SimpleTranslator(NCBI_CODON_TABLE[ncbiCodonIndex], startCodons);
+            final int ncbiCodonIndex, final byte[][] startCodons) {
+        return new SimpleTranslator(getCodonTable(ncbiCodonIndex), startCodons);
     }
 }

@@ -15,6 +15,9 @@ public final class StrUtils {
     /** Size of {@link Long}. */
     public static final int LONG_SIZE = 64;
 
+    /**
+     * The mask used to convert a byte to unsigned int thus allows it to be used as array indices *
+     */
     public static final int BYTE_TO_UNSIGNED_MASK = 0xFF;
 
     /** Defunct constructor */
@@ -126,6 +129,7 @@ public final class StrUtils {
      * Assert whether a list of string is sorted.
      *
      * @param strings As described.
+     * @throws IllegalArgumentException If the list is not sorted.
      */
     public static void requiresSorted(final @NotNull List<byte[]> strings) {
         if (strings.isEmpty()) {
@@ -134,11 +138,12 @@ public final class StrUtils {
         for (int i = 0; i < strings.size() - 1; i++) {
             if (StrLibc.strcmp(strings.get(i), strings.get(i + 1)) > 0) {
                 throw new IllegalArgumentException(
-                        "The array is not sorted between %d and %d, whish is %s and %s".formatted(
-                            i, i + 1,
-                            Arrays.toString(strings.get(i)),
-                            Arrays.toString(strings.get(i + 1))
-                        ));
+                        "The array is not sorted between %d and %d, whish is %s and %s"
+                                .formatted(
+                                        i,
+                                        i + 1,
+                                        Arrays.toString(strings.get(i)),
+                                        Arrays.toString(strings.get(i + 1))));
             }
         }
     }
@@ -147,6 +152,7 @@ public final class StrUtils {
      * Assert whether a string is sorted.
      *
      * @param string As described.
+     * @throws IllegalArgumentException If the string is not sorted.
      */
     public static void requiresSorted(final byte @NotNull [] string) {
         if (string.length == 0) {
@@ -176,7 +182,7 @@ public final class StrUtils {
             count[r + 1] += count[r];
         }
         for (final byte j : array) {
-            aux[count[(j & BYTE_TO_UNSIGNED_MASK)]++] = (j);
+            aux[count[(j & BYTE_TO_UNSIGNED_MASK)]++] = j;
         }
         System.arraycopy(aux, 0, array, 0, array.length);
     }

@@ -12,11 +12,16 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 
-public class TrieHelper<V> implements Map<byte[], V> {
+/**
+ * A string-to-whatever Map implemented using Trie.
+ *
+ * @param <V> Type of the values.
+ */
+public final class TrieMap<V> implements Map<byte[], V> {
 
     private final TrieInterface trie;
 
-    public TrieHelper(final TrieInterface trie) {
+    public TrieMap(final TrieInterface trie) {
         this.trie = trie;
     }
 

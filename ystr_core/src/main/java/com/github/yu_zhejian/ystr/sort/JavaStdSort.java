@@ -10,7 +10,7 @@ import java.util.List;
 /**
  * Sort using standard Java {@link List#sort(Comparator)} with {@link StrLibc#strcmp} as comparator.
  */
-public class JavaStdSort implements SortInterface {
+public final class JavaStdSort implements SortInterface {
     @Override
     public void sort(@NotNull List<byte[]> strings) {
         strings.sort(StrLibc::strcmp);

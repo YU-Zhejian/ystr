@@ -15,17 +15,17 @@ import java.util.List;
  * A simple data structure that stores a set of strings. This method requires an encoder to reduce
  * space consumed by nodes.
  */
-public final class Trie extends BaseTrie {
+public final class CodecTrie extends BaseTrie {
     private final AlphabetCodec abCodec;
     private final TrieNode root;
 
-    public Trie(final AlphabetCodec abCodec) {
+    public CodecTrie(final AlphabetCodec abCodec) {
         this.abCodec = abCodec;
         root = new TrieNode();
         numNodes++;
     }
 
-    public Trie() {
+    public CodecTrie() {
         this(AlphabetCodec.DUMB_CODEC);
     }
 

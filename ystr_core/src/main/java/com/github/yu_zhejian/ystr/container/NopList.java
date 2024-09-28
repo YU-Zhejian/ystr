@@ -1,117 +1,48 @@
 package com.github.yu_zhejian.ystr.container;
 
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 /**
  * A list that discards all input elements.
  *
  * @param <V> As described.
  */
-public final class NopList<V> implements List<V> {
-    @Override
-    public int size() {
-        return 0;
-    }
-
-    @Override
-    public boolean isEmpty() {
-        return true;
-    }
-
-    @Override
-    public boolean contains(Object o) {
-        return false;
-    }
-
-    @Override
-    public @NotNull Iterator<V> iterator() {
-        return new Iterator<>() {
-            @Override
-            public boolean hasNext() {
-                return false;
-            }
-
-            @Override
-            public V next() {
-                throw new NoSuchElementException();
-            }
-        };
-    }
-
-    @Override
-    public @NotNull Object @NotNull [] toArray() {
-        return new Object[0];
-    }
-
-    @Override
-    public @NotNull <T> T @NotNull [] toArray(@NotNull T @NotNull [] a) {
-        return a;
-    }
-
-    @Override
-    public boolean add(V v) {
-        return false;
-    }
-
-    @Override
-    public boolean remove(Object o) {
-        return false;
-    }
-
-    @Override
-    public boolean containsAll(@NotNull Collection<?> c) {
-        return false;
-    }
-
-    @Override
-    public boolean addAll(@NotNull Collection<? extends V> c) {
-        return false;
-    }
+public final class NopList<V> extends NopCollection<V> implements List<V> {
+    private static final int size = 0;
 
     @Override
     public boolean addAll(int index, @NotNull Collection<? extends V> c) {
         return false;
     }
 
+    @Contract(pure = true)
     @Override
-    public boolean removeAll(@NotNull Collection<?> c) {
-        return false;
+    public @Nullable V get(int index) {
+        throw new IndexOutOfBoundsException();
     }
 
+    @Contract(pure = true)
     @Override
-    public boolean retainAll(@NotNull Collection<?> c) {
-        return false;
-    }
-
-    @Override
-    public void clear() {
-        // Do nothing!
-    }
-
-    @Override
-    public V get(int index) {
-        return null;
-    }
-
-    @Override
-    public V set(int index, V element) {
-        return null;
+    public @Nullable V set(int index, V element) {
+        throw new IndexOutOfBoundsException();
     }
 
     @Override
     public void add(int index, V element) {
-        // Do nothing!
+        if (index == size) {
+            return;
+        }
+        throw new IndexOutOfBoundsException();
     }
 
     @Override
-    public V remove(int index) {
-        return null;
+    public @Nullable V remove(int index) {
+        throw new IndexOutOfBoundsException();
     }
 
     @Override
@@ -124,108 +55,63 @@ public final class NopList<V> implements List<V> {
         return -1;
     }
 
+    private static class NopListIterator<T> extends NopIterator<T> implements ListIterator<T> {
+
+        @Override
+        public boolean hasPrevious() {
+            return false;
+        }
+
+        @Override
+        public T previous() {
+            throw new NoSuchElementException();
+        }
+
+        @Override
+        public int nextIndex() {
+            return 0;
+        }
+
+        @Override
+        public int previousIndex() {
+            return -1;
+        }
+
+        @Override
+        public void remove() {
+            // Do nothing!
+        }
+
+        @Override
+        public void set(T v) {
+            // Do nothing!
+        }
+
+        @Override
+        public void add(T v) {
+            // Do nothing!
+        }
+    }
+
     @Override
     public @NotNull ListIterator<V> listIterator() {
-        return new ListIterator<>() {
-            @Override
-            public boolean hasNext() {
-                return false;
-            }
-
-            @Override
-            public V next() {
-                throw new NoSuchElementException();
-            }
-
-            @Override
-            public boolean hasPrevious() {
-                return false;
-            }
-
-            @Override
-            public V previous() {
-                throw new NoSuchElementException();
-            }
-
-            @Override
-            public int nextIndex() {
-                return -1;
-            }
-
-            @Override
-            public int previousIndex() {
-                return -1;
-            }
-
-            @Override
-            public void remove() {
-                // Do nothing!
-            }
-
-            @Override
-            public void set(V v) {
-                // Do nothing!
-            }
-
-            @Override
-            public void add(V v) {
-                // Do nothing!
-            }
-        };
+        return new NopListIterator<>();
     }
 
     @Override
     public @NotNull ListIterator<V> listIterator(int index) {
-        return new ListIterator<>() {
-            @Override
-            public boolean hasNext() {
-                return false;
-            }
-
-            @Override
-            public V next() {
-                throw new NoSuchElementException();
-            }
-
-            @Override
-            public boolean hasPrevious() {
-                return false;
-            }
-
-            @Override
-            public V previous() {
-                throw new NoSuchElementException();
-            }
-
-            @Override
-            public int nextIndex() {
-                return -1;
-            }
-
-            @Override
-            public int previousIndex() {
-                return -1;
-            }
-
-            @Override
-            public void remove() {
-                // Do nothing!
-            }
-
-            @Override
-            public void set(V v) {
-                // Do nothing!
-            }
-
-            @Override
-            public void add(V v) {
-                // Do nothing!
-            }
-        };
+        if (index == size) {
+            return listIterator();
+        }
+        throw new IndexOutOfBoundsException();
     }
 
+    @Contract(pure = true)
     @Override
-    public @NotNull List<V> subList(int fromIndex, int toIndex) {
-        return List.of();
+    public @NotNull @Unmodifiable List<V> subList(int fromIndex, int toIndex) {
+        if (fromIndex == size && toIndex == size) {
+            return List.of();
+        }
+        throw new IndexOutOfBoundsException();
     }
 }

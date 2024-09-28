@@ -15,9 +15,9 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-class TrieTest {
+class CodecTrieTest {
     void testTrieHelper(@NotNull TrieInterface trie) {
-        var th = new TrieHelper<Integer>(trie);
+        var th = new TrieMap<Integer>(trie);
         th.clear();
         assertNull(th.put("and".getBytes(StandardCharsets.US_ASCII), 1));
         assertEquals(1, th.put("and".getBytes(StandardCharsets.US_ASCII), 1));
@@ -138,7 +138,7 @@ class TrieTest {
 
     @Test
     void testTrie() {
-        var trie = new Trie();
+        var trie = new CodecTrie();
         test(trie);
         testTrieHelper(trie);
         testRandomKmers(trie);

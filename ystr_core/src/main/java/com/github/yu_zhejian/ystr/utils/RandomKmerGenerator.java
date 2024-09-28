@@ -4,6 +4,7 @@ import com.github.yu_zhejian.ystr.container.ImmutableByteArray;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.security.SecureRandom;
 import java.util.Iterator;
 import java.util.Random;
 
@@ -15,14 +16,21 @@ import java.util.Random;
 public final class RandomKmerGenerator implements Iterator<byte[]> {
 
     /** As described. */
-    private final byte[] alphabet;
+    private final ImmutableByteArray alphabet;
     /** As described. */
     public final int k;
 
-    public final Random rand = new Random();
+    /** The random generator * */
+    private final Random rand = new SecureRandom();
 
-    public RandomKmerGenerator(final byte @NotNull [] alphabet, final int k) {
-        if (alphabet.length == 0) {
+    /**
+     * The default constructor
+     *
+     * @param alphabet The alphabet. See {@link Alphabets} for a series of pre-defined alphabets.
+     * @param k K-mer size.
+     */
+    public RandomKmerGenerator(final @NotNull ImmutableByteArray alphabet, final int k) {
+        if (alphabet.length() == 0) {
             throw new IllegalArgumentException("alphabet must contain at least one character");
         }
         if (k <= 0) {
@@ -30,10 +38,6 @@ public final class RandomKmerGenerator implements Iterator<byte[]> {
         }
         this.alphabet = alphabet;
         this.k = k;
-    }
-
-    public RandomKmerGenerator(final @NotNull ImmutableByteArray alphabet, final int k) {
-        this(alphabet.getValue(), k);
     }
 
     @Override
@@ -46,7 +50,7 @@ public final class RandomKmerGenerator implements Iterator<byte[]> {
     public byte @NotNull [] next() {
         var retb = new byte[k];
         for (int i = 0; i < k; i++) {
-            retb[i] = alphabet[rand.nextInt(alphabet.length)];
+            retb[i] = alphabet.at(rand.nextInt(alphabet.length()));
         }
         return retb;
     }

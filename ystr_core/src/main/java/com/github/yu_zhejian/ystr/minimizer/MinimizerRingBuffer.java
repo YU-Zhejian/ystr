@@ -70,7 +70,7 @@ public final class MinimizerRingBuffer {
      * @param hash As described.
      * @param newPos As described.
      */
-    public void add(final long hash, int newPos) {
+    public void add(final long hash, final int newPos) {
         contents[curPos] = hash;
         pos[curPos] = newPos;
         if (hash + Long.MIN_VALUE < curMin + Long.MIN_VALUE) {
