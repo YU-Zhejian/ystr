@@ -1,10 +1,8 @@
 package com.github.yu_zhejian.ystr.sort;
 
-import static org.junit.jupiter.api.Assertions.*;
-
-import com.github.yu_zhejian.ystr.utils.Alphabets;
+import com.github.yu_zhejian.ystr.alphabet.AlphabetConstants;
+import com.github.yu_zhejian.ystr.alphabet.RandomKmerGenerator;
 import com.github.yu_zhejian.ystr.utils.IterUtils;
-import com.github.yu_zhejian.ystr.utils.RandomKmerGenerator;
 import com.github.yu_zhejian.ystr.utils.StrUtils;
 
 import org.jetbrains.annotations.NotNull;
@@ -36,8 +34,8 @@ class SortInterfaceTest {
 
     public static void testUsingKmers(final SortInterface si) {
         for (int i = 1; i < 10; i++) {
-            var kmers = new ArrayList<>(IterUtils.collect(
-                    IterUtils.head(new RandomKmerGenerator(Alphabets.DNA5_ALPHABET, i), 1000)));
+            var kmers = new ArrayList<>(IterUtils.collect(IterUtils.head(
+                    new RandomKmerGenerator(AlphabetConstants.DNA5_ALPHABET, i), 1000)));
             si.sort(kmers);
             StrUtils.requiresSorted(kmers);
         }

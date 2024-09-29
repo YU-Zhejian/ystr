@@ -24,7 +24,9 @@ public final class NaiveMatch implements StrMatchInterface {
             final byte @NotNull [] haystack,
             final byte @NotNull [] needle,
             final int start,
-            final int end) {
+            final int end,
+            final int limitTo) {
+        int numMatch = 0;
         final var needleLen = needle.length;
         final var retl = new IntArrayList();
 
@@ -48,6 +50,10 @@ public final class NaiveMatch implements StrMatchInterface {
             if (needlePos == needleLen) {
                 // No mismatch occurred.
                 retl.add(haystackPos);
+                numMatch++;
+                if (limitTo == numMatch) {
+                    return retl;
+                }
                 haystackPos++;
             } else {
                 haystackPos += needlePos;

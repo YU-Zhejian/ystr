@@ -1,6 +1,6 @@
 package com.github.yu_zhejian.ystr.trie;
 
-import com.github.yu_zhejian.ystr.utils.AlphabetCodec;
+import com.github.yu_zhejian.ystr.alphabet.AlphabetCodec;
 
 import it.unimi.dsi.fastutil.bytes.ByteArrayList;
 

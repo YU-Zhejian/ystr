@@ -20,7 +20,9 @@ public final class BoyerMooreBCMatch extends BaseBoyerMoore {
             final byte @NotNull [] haystack,
             final byte @NotNull [] needle,
             final int start,
-            final int end) {
+            final int end,
+            final int limitTo) {
+        int numMatch = 0;
         final var retl = new IntArrayList();
 
         // Establish the bad character rule table.
@@ -32,14 +34,20 @@ public final class BoyerMooreBCMatch extends BaseBoyerMoore {
             // Start at last position of the needle
             needlePos = needleLen - 1;
             while (needlePos >= 0 && haystack[haystackPos + needlePos] == needle[needlePos]) {
-                needlePos--; // Check previous character.
+                needlePos--; // Check the previous character.
             }
             if (needlePos == -1) {
                 // Searched until the start of the needle, indicating a match.
                 retl.add(haystackPos);
+
+                numMatch++;
+                if (limitTo == numMatch) {
+                    return retl;
+                }
                 haystackPos += 1;
                 continue;
             }
+            // Not a match, we jump
             haystackPos += Integer.max(
                     1,
                     needlePos

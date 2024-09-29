@@ -11,6 +11,7 @@ import com.github.yu_zhejian.ystr.match.RabinKarpMatch;
 import com.github.yu_zhejian.ystr.match.ShiftOrMatch;
 import com.github.yu_zhejian.ystr.match.StrMatchInterface;
 import com.github.yu_zhejian.ystr.match.StrMatchUtilsTest;
+import com.github.yu_zhejian.ystr.match.ZMatch;
 import com.github.yu_zhejian.ystr.rolling.PolynomialRollingHash;
 import com.github.yu_zhejian.ystr.rolling.PrecomputedNtHash;
 import com.github.yu_zhejian.ystr.utils.StrUtils;
@@ -68,6 +69,10 @@ class StrMatchTest {
 
     @Test
     void bruteForceMatch() {
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> StrMatchInterface.convenientApply(
+                        BruteForceMatch::new, new byte[0], new byte[0]));
         testSS(new BruteForceMatch(), StrMatchUtilsTest.TEST_CASES_AGCT);
         testSS(new BruteForceMatch(), StrMatchUtilsTest.TEST_CASES_STRANGE_ENCODING);
     }
@@ -113,5 +118,10 @@ class StrMatchTest {
     void boyerMooreBadCharacterRuleOnlyMatch() {
         testSS(new BoyerMooreBCMatch(), StrMatchUtilsTest.TEST_CASES_AGCT);
         testSS(new BoyerMooreBCMatch(), StrMatchUtilsTest.TEST_CASES_STRANGE_ENCODING);
+    }
+
+    @Test
+    void zMatch() {
+        testSS(new ZMatch((byte) '$'), StrMatchUtilsTest.TEST_CASES_AGCT);
     }
 }

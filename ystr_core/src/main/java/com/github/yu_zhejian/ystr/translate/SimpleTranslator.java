@@ -1,6 +1,6 @@
 package com.github.yu_zhejian.ystr.translate;
 
-import com.github.yu_zhejian.ystr.container.ImmutableByteArray;
+import com.github.yu_zhejian.ystr.alphabet.Alphabet;
 import com.github.yu_zhejian.ystr.match.ShiftOrMatch;
 import com.github.yu_zhejian.ystr.utils.StrUtils;
 
@@ -24,7 +24,7 @@ public final class SimpleTranslator {
      *
      * @see Codons#NCBI_CODON_TABLE
      */
-    private final ImmutableByteArray codonTable;
+    private final Alphabet codonTable;
 
     /** Start codons. */
     private final byte[][] startCodons;
@@ -53,7 +53,7 @@ public final class SimpleTranslator {
      * @param startCodons As described.
      * @see Codons#getTranslator(int, byte[][])
      */
-    public SimpleTranslator(final ImmutableByteArray codonTable, final byte[][] startCodons) {
+    public SimpleTranslator(final Alphabet codonTable, final byte[][] startCodons) {
         this.codonTable = codonTable;
         this.startCodons = startCodons;
     }

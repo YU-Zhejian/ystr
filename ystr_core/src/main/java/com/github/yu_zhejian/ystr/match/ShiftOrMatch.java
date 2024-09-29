@@ -18,21 +18,13 @@ import java.util.Arrays;
  */
 public final class ShiftOrMatch implements StrMatchInterface {
     @Override
-    public IntList apply(byte @NotNull [] haystack, byte @NotNull [] needle, int start, int end) {
+    public void assertInputIsValid(
+            byte @NotNull [] haystack, byte @NotNull [] needle, int start, int end, int limitTo) {
+        StrMatchInterface.super.assertInputIsValid(haystack, needle, start, end, limitTo);
         if (needle.length > StrUtils.LONG_SIZE) {
             throw new IllegalArgumentException(
                     "Needle length should not exceed 64! Actual: %d".formatted(needle.length));
         }
-        return StrMatchInterface.super.apply(haystack, needle, start, end);
-    }
-
-    @Override
-    public IntList apply(byte @NotNull [] haystack, byte @NotNull [] needle) {
-        if (needle.length > StrUtils.LONG_SIZE) {
-            throw new IllegalArgumentException(
-                    "Needle length should not exceed 64! Actual: %d".formatted(needle.length));
-        }
-        return StrMatchInterface.super.apply(haystack, needle);
     }
 
     @Override
@@ -40,7 +32,9 @@ public final class ShiftOrMatch implements StrMatchInterface {
             final byte @NotNull [] haystack,
             final byte @NotNull [] needle,
             final int start,
-            final int end) {
+            final int end,
+            final int limitTo) {
+        int numMatch = 0;
         final var retl = new IntArrayList();
 
         // Pre-processing
@@ -65,6 +59,10 @@ public final class ShiftOrMatch implements StrMatchInterface {
                     | positionOfEachByteOnNeedle[StrUtils.byteToUnsigned(haystack[haystackPos])];
             if (state < mask) { // TODO: Why?
                 retl.add(haystackPos - needle.length + 1);
+                numMatch++;
+                if (limitTo == numMatch) {
+                    return retl;
+                }
             }
         }
         return retl;

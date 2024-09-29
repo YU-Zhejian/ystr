@@ -120,7 +120,9 @@ public final class KnuthMorrisPrattMatch implements StrMatchInterface {
             final byte @NotNull [] haystack,
             final byte @NotNull [] needle,
             final int start,
-            final int end) {
+            final int end,
+            final int limitTo) {
+        int numMatch = 0;
         final var retl = new IntArrayList();
         final var lpsNeedle = lps(needle);
         var needlePos = 0;
@@ -133,6 +135,10 @@ public final class KnuthMorrisPrattMatch implements StrMatchInterface {
             }
             if (needlePos == needleLen) {
                 retl.add(haystackPos - needlePos);
+                numMatch++;
+                if (limitTo == numMatch) {
+                    return retl;
+                }
                 needlePos = lpsNeedle[needlePos - 1];
             } else if (haystackPos < end && needle[needlePos] != haystack[haystackPos]) {
                 if (needlePos == 0) {

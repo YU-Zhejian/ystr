@@ -1,4 +1,4 @@
-package com.github.yu_zhejian.ystr.container;
+package com.github.yu_zhejian.ystr.alphabet;
 
 import it.unimi.dsi.fastutil.bytes.ByteIterable;
 import it.unimi.dsi.fastutil.bytes.ByteIterator;
@@ -12,7 +12,7 @@ import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Objects;
 
-public final class ImmutableByteArray implements ByteIterable, Serializable {
+public final class Alphabet implements ByteIterable, Serializable {
     @Serial
     private static final long serialVersionUID = 20240929L;
 
@@ -27,7 +27,7 @@ public final class ImmutableByteArray implements ByteIterable, Serializable {
      *
      * @param value As described.
      */
-    public ImmutableByteArray(final byte @NotNull [] value) {
+    public Alphabet(final byte @NotNull [] value) {
         this.value = new byte[value.length];
         System.arraycopy(value, 0, this.value, 0, value.length);
         hash = Arrays.hashCode(this.value);
@@ -39,8 +39,8 @@ public final class ImmutableByteArray implements ByteIterable, Serializable {
      * @param string As described.
      * @param charset As described.
      */
-    public ImmutableByteArray(final @NotNull String string, Charset charset) {
-        this.value = (string.getBytes(charset));
+    public Alphabet(final @NotNull String string, Charset charset) {
+        value = string.getBytes(charset);
         hash = Arrays.hashCode(this.value);
     }
 
@@ -57,14 +57,14 @@ public final class ImmutableByteArray implements ByteIterable, Serializable {
     @Contract(pure = true)
     @Override
     public @NotNull String toString() {
-        return "ImmutableByteArray{" + "value=" + Arrays.toString(value) + '}';
+        return "Alphabet{" + "value=" + Arrays.toString(value) + '}';
     }
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ImmutableByteArray that = (ImmutableByteArray) o;
+        Alphabet that = (Alphabet) o;
         if (that.hash != hash) return false;
         return Objects.deepEquals(value, that.value);
     }

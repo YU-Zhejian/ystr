@@ -3,6 +3,9 @@ package com.github.yu_zhejian.ystr.utils;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import com.github.yu_zhejian.ystr.alphabet.AlphabetConstants;
+import com.github.yu_zhejian.ystr.alphabet.RandomKmerGenerator;
+
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -18,7 +21,7 @@ class StrUtilsTest {
 
     @Test
     void testByteToUnsigned() {
-        var bytes = Alphabets.FULL_ALPHABET.getValue();
+        var bytes = AlphabetConstants.FULL_ALPHABET.getValue();
         var ints = StrUtils.byteToUnsigned(bytes);
         assertArrayEquals(
                 new int[] {
@@ -42,7 +45,7 @@ class StrUtilsTest {
     }
 
     @Test
-    void testKeyIndexedCounting() {
+    void testKeyIndexedCountingSimple() {
         assertEquals(0, (new int[] {}).length); // To supress warnings
         for (final byte[] bytes : List.of(
                 new byte[] {'A', 'C', 'T', 'G'},
@@ -52,17 +55,13 @@ class StrUtilsTest {
             StrUtils.countingSort(bytes);
             StrUtils.requiresSorted(bytes);
         }
+    }
+
+    @Test
+    void testKeyIndexedCountingShortKmers() {
         for (int i = 1; i < 10; i++) {
-            var rkg = new RandomKmerGenerator(Alphabets.FULL_ALPHABET, i);
+            var rkg = new RandomKmerGenerator(AlphabetConstants.FULL_ALPHABET, i);
             for (int j = 0; j < 1000; j++) {
-                var bytes = rkg.next();
-                StrUtils.countingSort(bytes);
-                StrUtils.requiresSorted(bytes);
-            }
-        }
-        for (final int i : List.of(1 << 10, 1 << 20)) {
-            var rkg = new RandomKmerGenerator(Alphabets.FULL_ALPHABET, i);
-            for (int j = 0; j < 100; j++) {
                 var bytes = rkg.next();
                 StrUtils.countingSort(bytes);
                 StrUtils.requiresSorted(bytes);

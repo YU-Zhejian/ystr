@@ -21,8 +21,9 @@ public final class BruteForceHammingMatcher implements StrMatchInterface {
 
     @Override
     public @NotNull IntList applyUnchecked(
-            byte @NotNull [] haystack, byte @NotNull [] needle, int start, int end) {
+            byte @NotNull [] haystack, byte @NotNull [] needle, int start, int end, int limitTo) {
         var haystackPos = start;
+        int numMatch = 0;
         final var retl = new IntArrayList();
         while (haystackPos + needle.length < end) {
             if (StrDistance.hammingDistance(
@@ -34,6 +35,10 @@ public final class BruteForceHammingMatcher implements StrMatchInterface {
                             needle.length)
                     <= maxDistance) {
                 retl.add(haystackPos);
+                numMatch++;
+                if (numMatch == limitTo) {
+                    return retl;
+                }
             }
             haystackPos++;
         }

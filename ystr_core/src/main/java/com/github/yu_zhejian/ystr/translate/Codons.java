@@ -1,6 +1,6 @@
 package com.github.yu_zhejian.ystr.translate;
 
-import com.github.yu_zhejian.ystr.container.ImmutableByteArray;
+import com.github.yu_zhejian.ystr.alphabet.Alphabet;
 
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -16,96 +16,96 @@ import java.util.List;
 public final class Codons {
     private Codons() {}
 
-    public static final ImmutableByteArray NOP_CODONS =
-            new ImmutableByteArray("X".repeat(64), StandardCharsets.US_ASCII);
+    public static final Alphabet NOP_CODONS =
+            new Alphabet("X".repeat(64), StandardCharsets.US_ASCII);
     public static final String NOP_CODON_NAME = "NOP";
 
     /** The codon table. */
-    public static final List<ImmutableByteArray> NCBI_CODON_TABLE = List.of(
+    public static final List<Alphabet> NCBI_CODON_TABLE = List.of(
             /* 0 */ NOP_CODONS,
-            /* 1 */ new ImmutableByteArray(
+            /* 1 */ new Alphabet(
                     "FFLLSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG",
                     StandardCharsets.US_ASCII),
-            /* 2 */ new ImmutableByteArray(
+            /* 2 */ new Alphabet(
                     "FFLLSSSSYY**CCWWLLLLPPPPHHQQRRRRIIMMTTTTNNKKSS**VVVVAAAADDEEGGGG",
                     StandardCharsets.US_ASCII),
-            /* 3 */ new ImmutableByteArray(
+            /* 3 */ new Alphabet(
                     "FFLLSSSSYY**CCWWTTTTPPPPHHQQRRRRIIMMTTTTNNKKSSRRVVVVAAAADDEEGGGG",
                     StandardCharsets.US_ASCII),
-            /* 4 */ new ImmutableByteArray(
+            /* 4 */ new Alphabet(
                     "FFLLSSSSYY**CCWWLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG",
                     StandardCharsets.US_ASCII),
-            /* 5 */ new ImmutableByteArray(
+            /* 5 */ new Alphabet(
                     "FFLLSSSSYY**CCWWLLLLPPPPHHQQRRRRIIMMTTTTNNKKSSSSVVVVAAAADDEEGGGG",
                     StandardCharsets.US_ASCII),
-            /* 6 */ new ImmutableByteArray(
+            /* 6 */ new Alphabet(
                     "FFLLSSSSYYQQCC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG",
                     StandardCharsets.US_ASCII),
             /* 7 */ NOP_CODONS,
             /* 8 */ NOP_CODONS,
-            /* 9 */ new ImmutableByteArray(
+            /* 9 */ new Alphabet(
                     "FFLLSSSSYY**CCWWLLLLPPPPHHQQRRRRIIIMTTTTNNNKSSSSVVVVAAAADDEEGGGG",
                     StandardCharsets.US_ASCII),
-            /* 10 */ new ImmutableByteArray(
+            /* 10 */ new Alphabet(
                     "FFLLSSSSYY**CCCWLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG",
                     StandardCharsets.US_ASCII),
-            /* 11 */ new ImmutableByteArray(
+            /* 11 */ new Alphabet(
                     "FFLLSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG",
                     StandardCharsets.US_ASCII),
-            /* 12 */ new ImmutableByteArray(
+            /* 12 */ new Alphabet(
                     "FFLLSSSSYY**CC*WLLLSPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG",
                     StandardCharsets.US_ASCII),
-            /* 13 */ new ImmutableByteArray(
+            /* 13 */ new Alphabet(
                     "FFLLSSSSYY**CCWWLLLLPPPPHHQQRRRRIIMMTTTTNNKKSSGGVVVVAAAADDEEGGGG",
                     StandardCharsets.US_ASCII),
-            /* 14 */ new ImmutableByteArray(
+            /* 14 */ new Alphabet(
                     "FFLLSSSSYYY*CCWWLLLLPPPPHHQQRRRRIIIMTTTTNNNKSSSSVVVVAAAADDEEGGGG",
                     StandardCharsets.US_ASCII),
-            /* 15 */ new ImmutableByteArray(
+            /* 15 */ new Alphabet(
                     "FFLLSSSSYY*QCC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG",
                     StandardCharsets.US_ASCII),
-            /* 16 */ new ImmutableByteArray(
+            /* 16 */ new Alphabet(
                     "FFLLSSSSYY*LCC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG",
                     StandardCharsets.US_ASCII),
             /* 17 */ NOP_CODONS,
             /* 18 */ NOP_CODONS,
             /* 19 */ NOP_CODONS,
             /* 20 */ NOP_CODONS,
-            /* 21 */ new ImmutableByteArray(
+            /* 21 */ new Alphabet(
                     "FFLLSSSSYY**CCWWLLLLPPPPHHQQRRRRIIMMTTTTNNNKSSSSVVVVAAAADDEEGGGG",
                     StandardCharsets.US_ASCII),
-            /* 22 */ new ImmutableByteArray(
+            /* 22 */ new Alphabet(
                     "FFLLSS*SYY*LCC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG",
                     StandardCharsets.US_ASCII),
-            /* 23 */ new ImmutableByteArray(
+            /* 23 */ new Alphabet(
                     "FF*LSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG",
                     StandardCharsets.US_ASCII),
-            /* 24 */ new ImmutableByteArray(
+            /* 24 */ new Alphabet(
                     "FFLLSSSSYY**CCWWLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSSKVVVVAAAADDEEGGGG",
                     StandardCharsets.US_ASCII),
-            /* 25 */ new ImmutableByteArray(
+            /* 25 */ new Alphabet(
                     "FFLLSSSSYY**CCGWLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG",
                     StandardCharsets.US_ASCII),
-            /* 26 */ new ImmutableByteArray(
+            /* 26 */ new Alphabet(
                     "FFLLSSSSYY**CC*WLLLAPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG",
                     StandardCharsets.US_ASCII),
-            /* 27 */ new ImmutableByteArray(
+            /* 27 */ new Alphabet(
                     "FFLLSSSSYYQQCCWWLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG",
                     StandardCharsets.US_ASCII),
-            /* 28 */ new ImmutableByteArray(
+            /* 28 */ new Alphabet(
                     "FFLLSSSSYYQQCCWWLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG",
                     StandardCharsets.US_ASCII),
-            /* 29 */ new ImmutableByteArray(
+            /* 29 */ new Alphabet(
                     "FFLLSSSSYYYYCC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG",
                     StandardCharsets.US_ASCII),
-            /* 30 */ new ImmutableByteArray(
+            /* 30 */ new Alphabet(
                     "FFLLSSSSYYEECC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG",
                     StandardCharsets.US_ASCII),
-            /* 31 */ new ImmutableByteArray(
+            /* 31 */ new Alphabet(
                     "FFLLSSSSYYEECCWWLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG",
                     StandardCharsets.US_ASCII),
             /* 32 */ NOP_CODONS,
-            /* 33 */ new ImmutableByteArray(
+            /* 33 */ new Alphabet(
                     "FFLLSSSSYYY*CCWWLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSSKVVVVAAAADDEEGGGG",
                     StandardCharsets.US_ASCII));
 
@@ -145,7 +145,7 @@ public final class Codons {
             /* 32 */ "Balanophoraceae Plastid Code",
             /* 33 */ "Cephalodiscidae Mitochondrial UAA-Tyr Code");
 
-    public static ImmutableByteArray getCodonTable(final int ncbiCodonIndex) {
+    public static Alphabet getCodonTable(final int ncbiCodonIndex) {
         return NCBI_CODON_TABLE.get(ncbiCodonIndex);
     }
 

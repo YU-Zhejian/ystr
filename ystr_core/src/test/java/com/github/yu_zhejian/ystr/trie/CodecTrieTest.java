@@ -2,9 +2,9 @@ package com.github.yu_zhejian.ystr.trie;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.github.yu_zhejian.ystr.utils.Alphabets;
+import com.github.yu_zhejian.ystr.alphabet.AlphabetConstants;
+import com.github.yu_zhejian.ystr.alphabet.RandomKmerGenerator;
 import com.github.yu_zhejian.ystr.utils.IterUtils;
-import com.github.yu_zhejian.ystr.utils.RandomKmerGenerator;
 
 import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 
@@ -116,7 +116,7 @@ class CodecTrieTest {
             trie.clear();
             final var set = new ObjectOpenHashSet<String>();
             final var kmers =
-                    IterUtils.head(new RandomKmerGenerator(Alphabets.DNA5_ALPHABET, k), 50);
+                    IterUtils.head(new RandomKmerGenerator(AlphabetConstants.DNA5_ALPHABET, k), 50);
             while (kmers.hasNext()) {
                 final var kmer = kmers.next();
                 trie.add(kmer);
@@ -125,8 +125,8 @@ class CodecTrieTest {
             for (var kmer : set) {
                 assertTrue(trie.contains(kmer.getBytes(StandardCharsets.US_ASCII)));
             }
-            final var kmers2 =
-                    IterUtils.head(new RandomKmerGenerator(Alphabets.DNA5_ALPHABET, k), 500);
+            final var kmers2 = IterUtils.head(
+                    new RandomKmerGenerator(AlphabetConstants.DNA5_ALPHABET, k), 500);
             while (kmers2.hasNext()) {
                 final var kmer = kmers2.next();
                 assertEquals(

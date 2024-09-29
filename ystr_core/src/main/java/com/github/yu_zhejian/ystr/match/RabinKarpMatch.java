@@ -32,9 +32,11 @@ public final class RabinKarpMatch implements StrMatchInterface {
             final byte @NotNull [] haystack,
             final byte @NotNull [] needle,
             final int start,
-            final int end) {
+            final int end,
+            final int limitTo) {
         // Create initial hash
         var haystackPos = start;
+        int numMatch = 0;
 
         final var needleLen = needle.length;
 
@@ -48,6 +50,11 @@ public final class RabinKarpMatch implements StrMatchInterface {
             final var nextHash = rollingHasher.nextLong();
             if (nextHash == needleHash && StrMatchUtils.isMatch(haystack, needle, haystackPos)) {
                 retl.add(haystackPos);
+                numMatch++;
+                if (limitTo == numMatch) {
+                    rollingHasher.detach();
+                    return retl;
+                }
             }
             haystackPos++;
         }

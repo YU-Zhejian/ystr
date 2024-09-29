@@ -1,6 +1,6 @@
-package com.github.yu_zhejian.ystr.utils;
+package com.github.yu_zhejian.ystr.alphabet;
 
-import com.github.yu_zhejian.ystr.container.ImmutableByteArray;
+import com.github.yu_zhejian.ystr.utils.StrUtils;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -13,9 +13,9 @@ import java.util.Arrays;
 public final class AlphabetCodec {
     private final int[] preComputedEncodingTable;
     private final byte[] preComputedDecodingTable;
-    private final ImmutableByteArray alphabet;
+    private final Alphabet alphabet;
 
-    public AlphabetCodec(final @NotNull ImmutableByteArray alphabet, final int defaultValue) {
+    public AlphabetCodec(final @NotNull Alphabet alphabet, final int defaultValue) {
         this.alphabet = alphabet;
         if (defaultValue < 0 || defaultValue > alphabet.length()) {
             throw new IllegalArgumentException("Default value " + defaultValue
@@ -38,9 +38,10 @@ public final class AlphabetCodec {
         return preComputedDecodingTable[i];
     }
 
-    public ImmutableByteArray getAlphabet() {
+    public Alphabet getAlphabet() {
         return alphabet;
     }
 
-    public static final AlphabetCodec DUMB_CODEC = new AlphabetCodec(Alphabets.FULL_ALPHABET, 0);
+    public static final AlphabetCodec DUMB_CODEC =
+            new AlphabetCodec(AlphabetConstants.FULL_ALPHABET, 0);
 }

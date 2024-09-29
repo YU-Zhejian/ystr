@@ -1,4 +1,4 @@
-package com.github.yu_zhejian.ystr.utils;
+package com.github.yu_zhejian.ystr.alphabet;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -8,7 +8,7 @@ class AlphabetCodecTest {
 
     @Test
     void test() {
-        var abCodec = new AlphabetCodec(Alphabets.DNA5_ALPHABET, 4);
+        var abCodec = new AlphabetCodec(AlphabetConstants.DNA5_ALPHABET, 4);
         assertEquals(0, abCodec.encode((byte) 'A'));
         assertEquals(1, abCodec.encode((byte) 'C'));
         assertEquals(3, abCodec.encode((byte) 'T'));

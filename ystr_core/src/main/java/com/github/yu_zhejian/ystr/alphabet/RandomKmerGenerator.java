@@ -1,6 +1,4 @@
-package com.github.yu_zhejian.ystr.utils;
-
-import com.github.yu_zhejian.ystr.container.ImmutableByteArray;
+package com.github.yu_zhejian.ystr.alphabet;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -16,7 +14,7 @@ import java.util.Random;
 public final class RandomKmerGenerator implements Iterator<byte[]> {
 
     /** As described. */
-    private final ImmutableByteArray alphabet;
+    private final Alphabet alphabet;
     /** As described. */
     public final int k;
 
@@ -26,10 +24,11 @@ public final class RandomKmerGenerator implements Iterator<byte[]> {
     /**
      * The default constructor
      *
-     * @param alphabet The alphabet. See {@link Alphabets} for a series of pre-defined alphabets.
+     * @param alphabet The alphabet. See {@link AlphabetConstants} for a series of pre-defined
+     *     alphabets.
      * @param k K-mer size.
      */
-    public RandomKmerGenerator(final @NotNull ImmutableByteArray alphabet, final int k) {
+    public RandomKmerGenerator(final @NotNull Alphabet alphabet, final int k) {
         if (alphabet.length() == 0) {
             throw new IllegalArgumentException("alphabet must contain at least one character");
         }

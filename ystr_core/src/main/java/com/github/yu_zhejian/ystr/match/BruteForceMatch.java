@@ -25,12 +25,18 @@ public final class BruteForceMatch implements StrMatchInterface {
             final byte @NotNull [] haystack,
             final byte @NotNull [] needle,
             final int start,
-            final int end) {
+            final int end,
+            final int limitTo) {
+        int numMatch = 0;
         var haystackPos = start;
         final var retl = new IntArrayList();
         while (haystackPos + needle.length <= end) {
             if (StrMatchUtils.isMatch(haystack, needle, haystackPos)) {
                 retl.add(haystackPos);
+                numMatch++;
+                if (limitTo == numMatch) {
+                    return retl;
+                }
             }
             haystackPos++;
         }

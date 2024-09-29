@@ -1,6 +1,4 @@
-package com.github.yu_zhejian.ystr.utils;
-
-import com.github.yu_zhejian.ystr.container.ImmutableByteArray;
+package com.github.yu_zhejian.ystr.alphabet;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -11,12 +9,12 @@ import java.util.NoSuchElementException;
 /**
  * Generating all k-mers over some alphabet.
  *
- * @see Alphabets
+ * @see AlphabetConstants
  * @see RandomKmerGenerator
  */
 public final class KmerGenerator implements Iterator<byte[]> {
     /** As described. */
-    private final ImmutableByteArray alphabet;
+    private final Alphabet alphabet;
     /** Maximum index inside {@link #alphabet}, which is {@code len(alphabet) - 1}. */
     private final int alphabetMaxIdx;
     /** As described. */
@@ -36,7 +34,7 @@ public final class KmerGenerator implements Iterator<byte[]> {
      * @param k As described.
      * @throws IllegalArgumentException If {@link #k} is negative or {@link #alphabet} is empty.
      */
-    public KmerGenerator(final @NotNull ImmutableByteArray alphabet, final int k) {
+    public KmerGenerator(final @NotNull Alphabet alphabet, final int k) {
         if (alphabet.isEmpty()) {
             throw new IllegalArgumentException("alphabet must contain at least one character");
         }

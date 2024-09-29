@@ -1,8 +1,6 @@
-package com.github.yu_zhejian.ystr.utils;
+package com.github.yu_zhejian.ystr.alphabet;
 
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
-
-import com.github.yu_zhejian.ystr.container.ImmutableByteArray;
 
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
@@ -26,15 +24,14 @@ class KmerGeneratorTest {
     void testKmers() {
         assertIterableEquals(
                 List.of("AA", "AB", "BA", "BB"),
-                convert(new KmerGenerator(new ImmutableByteArray(new byte[] {'A', 'B'}), 2)));
+                convert(new KmerGenerator(new Alphabet(new byte[] {'A', 'B'}), 2)));
         assertIterableEquals(
-                List.of("AA"),
-                convert(new KmerGenerator(new ImmutableByteArray(new byte[] {'A'}), 2)));
+                List.of("AA"), convert(new KmerGenerator(new Alphabet(new byte[] {'A'}), 2)));
         assertIterableEquals(
-                List.of("AA", "AG", "AC", "GA", "GG", "GC", "CA", "CG", "CC"),
-                convert(new KmerGenerator(new ImmutableByteArray(new byte[] {'A', 'G', 'C'}), 2)));
+                List.of("AA", "AC", "AG", "CA", "CC", "CG", "GA", "GC", "GG"),
+                convert(new KmerGenerator(new Alphabet(new byte[] {'A', 'C', 'G'}), 2)));
         assertIterableEquals(
                 List.of("AAA", "AAG", "AGA", "AGG", "GAA", "GAG", "GGA", "GGG"),
-                convert(new KmerGenerator(new ImmutableByteArray(new byte[] {'A', 'G'}), 3)));
+                convert(new KmerGenerator(new Alphabet(new byte[] {'A', 'G'}), 3)));
     }
 }

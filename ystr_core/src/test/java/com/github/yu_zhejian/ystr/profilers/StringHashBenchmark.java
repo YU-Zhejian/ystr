@@ -1,13 +1,13 @@
 package com.github.yu_zhejian.ystr.profilers;
 
 import com.github.yu_zhejian.ystr.StrHash;
+import com.github.yu_zhejian.ystr.alphabet.AlphabetConstants;
+import com.github.yu_zhejian.ystr.alphabet.KmerGenerator;
 import com.github.yu_zhejian.ystr.hash.HashConstants;
 import com.github.yu_zhejian.ystr.hash.HashInterface;
 import com.github.yu_zhejian.ystr.io.FastxIterator;
 import com.github.yu_zhejian.ystr.test_utils.CSVUtils;
 import com.github.yu_zhejian.ystr.test_utils.GitUtils;
-import com.github.yu_zhejian.ystr.utils.Alphabets;
-import com.github.yu_zhejian.ystr.utils.KmerGenerator;
 import com.github.yu_zhejian.ystr.utils.LogUtils;
 
 import it.unimi.dsi.fastutil.longs.LongArrayList;
@@ -107,7 +107,7 @@ public final class StringHashBenchmark {
                 @NotNull
                 @Override
                 public Iterator<byte[]> iterator() {
-                    return new KmerGenerator(Alphabets.DNA_ALPHABET, finalI);
+                    return new KmerGenerator(AlphabetConstants.DNA_ALPHABET, finalI);
                 }
             });
         }
@@ -117,7 +117,7 @@ public final class StringHashBenchmark {
                 @NotNull
                 @Override
                 public Iterator<byte[]> iterator() {
-                    return new KmerGenerator(Alphabets.AA_ALPHABET, finalI);
+                    return new KmerGenerator(AlphabetConstants.AA_ALPHABET, finalI);
                 }
             });
         }
