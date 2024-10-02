@@ -14,9 +14,9 @@ plugins {
 	id "com.diffplug.spotless" version "6.25.0"
 	// https://mvnrepository.com/artifact/com.github.spotbugs/spotbugs-gradle-plugin
 	// https://plugins.gradle.org/plugin/com.github.spotbugs
-	id "com.github.spotbugs" version "6.0.22"
+	id "com.github.spotbugs" version "6.0.24"
 	// https://plugins.gradle.org/plugin/com.github.node-gradle.node
-	id "com.github.node-gradle.node" version "7.0.2"
+	id "com.github.node-gradle.node" version "7.1.0"
 	// https://plugins.gradle.org/plugin/org.cthing.locc
 	id("org.cthing.locc") version "1.0.1"
 }
