@@ -17,6 +17,8 @@ plugins {
 	id "com.github.spotbugs" version "6.0.22"
 	// https://plugins.gradle.org/plugin/com.github.node-gradle.node
 	id "com.github.node-gradle.node" version "7.0.2"
+	// https://plugins.gradle.org/plugin/org.cthing.locc
+	id("org.cthing.locc") version "1.0.1"
 }
 
 
@@ -135,6 +137,18 @@ spotless {
 //	it.dependsOn('nodeSetup', 'npmSetup')
 //}
 
+// ---------------------------- Count Lines of Code ----------------------------
+
+tasks.countCodeLines {
+	reports {
+		xml.required = false
+		html.required = true
+		yaml.required = false
+		json.required = true
+		csv.required = true
+		text.required = true
+	}
+}
 
 // ---------------------------- Antora Docs Site ----------------------------
 
