@@ -50,16 +50,6 @@ public final class StrUtils {
     }
 
     /**
-     * Integer version of {@link #byteToUnsigned(byte)}.
-     *
-     * @param b As described.
-     * @return As described.
-     */
-    public static int byteToUnsigned(final int b) {
-        return b & BYTE_TO_UNSIGNED_MASK;
-    }
-
-    /**
      * Ensure start and end are valid for some open-close interval.
      *
      * @param start As described.
@@ -129,7 +119,7 @@ public final class StrUtils {
      */
     public static void ensureStartLengthValid(
             final int start, final int numBytesToRead, final int strLen) {
-        if (numBytesToRead <= 0) {
+        if (numBytesToRead < 0) {
             throw new IllegalArgumentException(
                     "numBytesToRead should be non-negative. Actual: %d".formatted(numBytesToRead));
         }
@@ -147,9 +137,9 @@ public final class StrUtils {
             return;
         }
         for (int i = 0; i < strings.size() - 1; i++) {
-            if (StrLibc.strcmp(strings.get(i), strings.get(i + 1)) > 0) {
+            if (StrLibc.memcmp(strings.get(i), strings.get(i + 1)) > 0) {
                 throw new IllegalArgumentException(
-                        "The array is not sorted between %d and %d, whish is %s and %s"
+                        "The array is not sorted between %d and %d, which is %s and %s"
                                 .formatted(
                                         i,
                                         i + 1,
@@ -170,7 +160,7 @@ public final class StrUtils {
             return;
         }
         for (int i = 0; i < string.length - 1; i++) {
-            if (StrLibc.strcmp(string[i], string[i + 1]) > 0) {
+            if (StrLibc.memcmp(string[i], string[i + 1]) > 0) {
                 throw new IllegalArgumentException(
                         "The array is not sorted between %d and %d!".formatted(i, i + 1));
             }

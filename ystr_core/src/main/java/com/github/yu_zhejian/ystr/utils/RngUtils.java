@@ -13,6 +13,7 @@ import java.security.SecureRandom;
 
 /** Utilities for generating random intervals. */
 public final class RngUtils {
+    /** Defunct Constructor **/
     private RngUtils() {}
 
     /**

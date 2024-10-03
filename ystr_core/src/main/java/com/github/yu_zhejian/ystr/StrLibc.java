@@ -2,11 +2,21 @@ package com.github.yu_zhejian.ystr;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.nio.ByteBuffer;
 import java.util.Arrays;
 
-/** LibC-like String manipulation. */
+/**
+ * LibC-like String manipulation routines.
+ * Implemented by transforming LibC-like interface to Java {@link Arrays} routines.
+ * <p>
+ * Note:
+ * <ul>
+ *     <li>None of the method performs boundary check.</li>
+ * </ul>
+ */
 public final class StrLibc {
 
+    /** Defunct Constructor **/
     private StrLibc() {}
 
     /**
@@ -24,7 +34,7 @@ public final class StrLibc {
      * @see <a
      *     href="https://pubs.opengroup.org/onlinepubs/9699919799/functions/strcmp.html">POSIX</a>
      */
-    public static int strcmp(final byte @NotNull [] array1, final byte @NotNull [] array2) {
+    public static int memcmp(final byte @NotNull [] array1, final byte @NotNull [] array2) {
         return Arrays.compareUnsigned(array1, array2);
     }
 
@@ -35,7 +45,7 @@ public final class StrLibc {
      * @param char2 As described.
      * @return As described.
      */
-    public static int strcmp(final byte char1, final byte char2) {
+    public static int memcmp(final byte char1, final byte char2) {
         return Byte.compareUnsigned(char1, char2);
     }
 
@@ -55,13 +65,13 @@ public final class StrLibc {
      * @see <a
      *     href="https://pubs.opengroup.org/onlinepubs/9699919799/functions/strncmp.html">POSIX</a>
      */
-    public static int strncmp(
+    public static int memcmp(
             final byte @NotNull [] array1, final byte @NotNull [] array2, final int n) {
-        return strncmp(array1, array2, 0, 0, n);
+        return memcmp(array1, array2, 0, 0, n);
     }
 
     /**
-     * {@link #strncmp(byte[], byte[], int)} allowing arbitrary starts.
+     * {@link #memcmp(byte[], byte[], int)} allowing arbitrary starts.
      *
      * <p>Note, the string is compared unsigned!
      *
@@ -73,7 +83,7 @@ public final class StrLibc {
      * @return As described.
      * @throws IndexOutOfBoundsException If {@code n} exceeds array boundaries.
      */
-    public static int strncmp(
+    public static int memcmp(
             final byte @NotNull [] array1,
             final byte @NotNull [] array2,
             final int start1,
@@ -81,4 +91,62 @@ public final class StrLibc {
             final int n) {
         return Arrays.compareUnsigned(array1, start1, start1 + n, array2, start2, start2 + n);
     }
+
+    /**
+     * Fill the first {@code count} bytes of an array with desired characters.
+     *
+     * @param dest As described.
+     * @param ch As described.
+     * @param n As described.
+     * @throws IndexOutOfBoundsException If {@code n} exceeds array boundaries.
+     */
+    public static void memset(final byte @NotNull [] dest, final byte ch, final int n){
+       memset(dest, ch,0, n);
+    }
+
+    /**
+     * {@link #memset(byte[], byte, int)} for the entire string.
+     *
+     * @param dest As described.
+     * @param ch As described.
+     */
+    public static void memset(final byte @NotNull [] dest, final byte ch){
+        memset(dest, ch,0, dest.length);
+    }
+
+    /**
+     * Fill the desired position of an array with arbitrary bytes.
+     *
+     * @param dest As described.
+     * @param ch As described.
+     * @param start As described.
+     * @param n As described.
+     * @see Arrays#fill
+     * @see <a href="https://en.cppreference.com/w/c/string/byte/memset">cppreference</a>
+     * @throws IndexOutOfBoundsException If {@code n} exceeds array boundaries.
+     */
+    public static void memset(final byte @NotNull [] dest, final byte ch, final int start, final int n){
+        if (n > 1024){
+            memsetBB(dest, ch, start, n);
+        }
+        else{
+            Arrays.fill(dest, start, start + n, ch);
+        }
+    }
+
+    public static void memsetBB(final byte @NotNull [] dest, final byte ch, final int start, final int n){
+        var bb = ByteBuffer.wrap(dest);
+        final var nOp = n >> 4;
+        final var nLeft = n - (nOp << 4);
+        final int chInt = ch << 24 | ch << 16 | ch << 8 | ch;
+        bb.rewind();
+        bb.position(start);
+        for(int i = 0; i < nOp; i++){
+            bb.putInt(chInt);
+        }
+        for(int i = 0; i < nLeft; i++){
+            bb.put(ch);
+        }
+    }
+
 }

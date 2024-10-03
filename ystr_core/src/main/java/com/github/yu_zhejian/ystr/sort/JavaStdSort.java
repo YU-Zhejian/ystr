@@ -8,11 +8,11 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * Sort using standard Java {@link List#sort(Comparator)} with {@link StrLibc#strcmp} as comparator.
+ * Sort using standard Java {@link List#sort(Comparator)} with {@link StrLibc#memcmp} as comparator.
  */
 public final class JavaStdSort implements SortInterface {
     @Override
     public void sort(@NotNull List<byte[]> strings) {
-        strings.sort(StrLibc::strcmp);
+        strings.sort(StrLibc::memcmp);
     }
 }

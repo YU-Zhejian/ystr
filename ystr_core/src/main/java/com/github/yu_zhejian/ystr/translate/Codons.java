@@ -1,7 +1,5 @@
 package com.github.yu_zhejian.ystr.translate;
 
-import com.github.yu_zhejian.ystr.alphabet.Alphabet;
-
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -14,98 +12,99 @@ import java.util.List;
  * @see <a href="https://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi">Data source</a>
  */
 public final class Codons {
+    /** Defunct Constructor **/
     private Codons() {}
 
-    public static final Alphabet NOP_CODONS =
-            new Alphabet("X".repeat(64), StandardCharsets.US_ASCII);
+    public static final CodonRecord NOP_CODONS =
+            new CodonRecord("X".repeat(64), StandardCharsets.US_ASCII);
     public static final String NOP_CODON_NAME = "NOP";
 
     /** The codon table. */
-    public static final List<Alphabet> NCBI_CODON_TABLE = List.of(
+    public static final List<CodonRecord> NCBI_CODON_TABLE = List.of(
             /* 0 */ NOP_CODONS,
-            /* 1 */ new Alphabet(
+            /* 1 */ new CodonRecord(
                     "FFLLSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG",
                     StandardCharsets.US_ASCII),
-            /* 2 */ new Alphabet(
+            /* 2 */ new CodonRecord(
                     "FFLLSSSSYY**CCWWLLLLPPPPHHQQRRRRIIMMTTTTNNKKSS**VVVVAAAADDEEGGGG",
                     StandardCharsets.US_ASCII),
-            /* 3 */ new Alphabet(
+            /* 3 */ new CodonRecord(
                     "FFLLSSSSYY**CCWWTTTTPPPPHHQQRRRRIIMMTTTTNNKKSSRRVVVVAAAADDEEGGGG",
                     StandardCharsets.US_ASCII),
-            /* 4 */ new Alphabet(
+            /* 4 */ new CodonRecord(
                     "FFLLSSSSYY**CCWWLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG",
                     StandardCharsets.US_ASCII),
-            /* 5 */ new Alphabet(
+            /* 5 */ new CodonRecord(
                     "FFLLSSSSYY**CCWWLLLLPPPPHHQQRRRRIIMMTTTTNNKKSSSSVVVVAAAADDEEGGGG",
                     StandardCharsets.US_ASCII),
-            /* 6 */ new Alphabet(
+            /* 6 */ new CodonRecord(
                     "FFLLSSSSYYQQCC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG",
                     StandardCharsets.US_ASCII),
             /* 7 */ NOP_CODONS,
             /* 8 */ NOP_CODONS,
-            /* 9 */ new Alphabet(
+            /* 9 */ new CodonRecord(
                     "FFLLSSSSYY**CCWWLLLLPPPPHHQQRRRRIIIMTTTTNNNKSSSSVVVVAAAADDEEGGGG",
                     StandardCharsets.US_ASCII),
-            /* 10 */ new Alphabet(
+            /* 10 */ new CodonRecord(
                     "FFLLSSSSYY**CCCWLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG",
                     StandardCharsets.US_ASCII),
-            /* 11 */ new Alphabet(
+            /* 11 */ new CodonRecord(
                     "FFLLSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG",
                     StandardCharsets.US_ASCII),
-            /* 12 */ new Alphabet(
+            /* 12 */ new CodonRecord(
                     "FFLLSSSSYY**CC*WLLLSPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG",
                     StandardCharsets.US_ASCII),
-            /* 13 */ new Alphabet(
+            /* 13 */ new CodonRecord(
                     "FFLLSSSSYY**CCWWLLLLPPPPHHQQRRRRIIMMTTTTNNKKSSGGVVVVAAAADDEEGGGG",
                     StandardCharsets.US_ASCII),
-            /* 14 */ new Alphabet(
+            /* 14 */ new CodonRecord(
                     "FFLLSSSSYYY*CCWWLLLLPPPPHHQQRRRRIIIMTTTTNNNKSSSSVVVVAAAADDEEGGGG",
                     StandardCharsets.US_ASCII),
-            /* 15 */ new Alphabet(
+            /* 15 */ new CodonRecord(
                     "FFLLSSSSYY*QCC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG",
                     StandardCharsets.US_ASCII),
-            /* 16 */ new Alphabet(
+            /* 16 */ new CodonRecord(
                     "FFLLSSSSYY*LCC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG",
                     StandardCharsets.US_ASCII),
             /* 17 */ NOP_CODONS,
             /* 18 */ NOP_CODONS,
             /* 19 */ NOP_CODONS,
             /* 20 */ NOP_CODONS,
-            /* 21 */ new Alphabet(
+            /* 21 */ new CodonRecord(
                     "FFLLSSSSYY**CCWWLLLLPPPPHHQQRRRRIIMMTTTTNNNKSSSSVVVVAAAADDEEGGGG",
                     StandardCharsets.US_ASCII),
-            /* 22 */ new Alphabet(
+            /* 22 */ new CodonRecord(
                     "FFLLSS*SYY*LCC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG",
                     StandardCharsets.US_ASCII),
-            /* 23 */ new Alphabet(
+            /* 23 */ new CodonRecord(
                     "FF*LSSSSYY**CC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG",
                     StandardCharsets.US_ASCII),
-            /* 24 */ new Alphabet(
+            /* 24 */ new CodonRecord(
                     "FFLLSSSSYY**CCWWLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSSKVVVVAAAADDEEGGGG",
                     StandardCharsets.US_ASCII),
-            /* 25 */ new Alphabet(
+            /* 25 */ new CodonRecord(
                     "FFLLSSSSYY**CCGWLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG",
                     StandardCharsets.US_ASCII),
-            /* 26 */ new Alphabet(
+            /* 26 */ new CodonRecord(
                     "FFLLSSSSYY**CC*WLLLAPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG",
                     StandardCharsets.US_ASCII),
-            /* 27 */ new Alphabet(
+            /* 27 */ new CodonRecord(
                     "FFLLSSSSYYQQCCWWLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG",
                     StandardCharsets.US_ASCII),
-            /* 28 */ new Alphabet(
+            /* 28 */ new CodonRecord(
                     "FFLLSSSSYYQQCCWWLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG",
                     StandardCharsets.US_ASCII),
-            /* 29 */ new Alphabet(
+            /* 29 */ new CodonRecord(
                     "FFLLSSSSYYYYCC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG",
                     StandardCharsets.US_ASCII),
-            /* 30 */ new Alphabet(
+            /* 30 */ new CodonRecord(
                     "FFLLSSSSYYEECC*WLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG",
                     StandardCharsets.US_ASCII),
-            /* 31 */ new Alphabet(
+            /* 31 */ new CodonRecord(
                     "FFLLSSSSYYEECCWWLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSRRVVVVAAAADDEEGGGG",
                     StandardCharsets.US_ASCII),
             /* 32 */ NOP_CODONS,
-            /* 33 */ new Alphabet(
+            /* 33 */ new CodonRecord(
                     "FFLLSSSSYYY*CCWWLLLLPPPPHHQQRRRRIIIMTTTTNNKKSSSKVVVVAAAADDEEGGGG",
                     StandardCharsets.US_ASCII));
 
@@ -145,7 +144,7 @@ public final class Codons {
             /* 32 */ "Balanophoraceae Plastid Code",
             /* 33 */ "Cephalodiscidae Mitochondrial UAA-Tyr Code");
 
-    public static Alphabet getCodonTable(final int ncbiCodonIndex) {
+    public static CodonRecord getCodonTable(final int ncbiCodonIndex) {
         return NCBI_CODON_TABLE.get(ncbiCodonIndex);
     }
 

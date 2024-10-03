@@ -7,6 +7,8 @@ import java.util.function.Supplier;
 
 /** Lazy-evaluation support for logger implementations that do not support such. */
 public final class LogUtils {
+
+    /** Defunct Constructor **/
     private LogUtils() {}
 
     /**

@@ -15,6 +15,7 @@ import java.util.Objects;
 /** Utilities mimicking Python functions. */
 public final class PyUtils {
 
+    /** Defunct Constructor **/
     private PyUtils() {}
 
     /**

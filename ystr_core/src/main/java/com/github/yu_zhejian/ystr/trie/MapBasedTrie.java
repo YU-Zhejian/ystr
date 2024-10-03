@@ -36,7 +36,7 @@ public final class MapBasedTrie extends BaseTrie {
      * Default constructor that uses {@link Byte2ObjectAVLTreeMap} for internal map implementation.
      */
     public MapBasedTrie() {
-        this(() -> new Byte2ObjectAVLTreeMap<>(StrLibc::strcmp));
+        this(() -> new Byte2ObjectAVLTreeMap<>(StrLibc::memcmp));
     }
 
     @Override

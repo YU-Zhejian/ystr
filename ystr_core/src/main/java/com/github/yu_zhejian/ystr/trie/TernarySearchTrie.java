@@ -42,7 +42,7 @@ public final class TernarySearchTrie extends BaseTrie {
             numNodes++;
             node.myByte = word[offset];
         }
-        int strcmpResult = StrLibc.strcmp(word[offset], node.myByte);
+        int strcmpResult = StrLibc.memcmp(word[offset], node.myByte);
 
         if (strcmpResult < 0) {
             node.smaller = add(node.smaller, word, offset, currentTreeHeight + 1);
@@ -149,7 +149,7 @@ public final class TernarySearchTrie extends BaseTrie {
         if (node == null) {
             return null;
         }
-        int strcmpResult = StrLibc.strcmp(word[offset], node.myByte);
+        int strcmpResult = StrLibc.memcmp(word[offset], node.myByte);
 
         if (strcmpResult < 0) {
             return getNode(node.smaller, word, offset);

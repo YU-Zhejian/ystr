@@ -176,7 +176,7 @@ public interface StrMatchInterface {
      * @param end As described.
      * @param limitTo As described.
      * @return As described.
-     * @throws IllegalArgumentException As described,
+     * @throws IllegalArgumentException As described.
      */
     static IntList convenientApply(
             final @NotNull Supplier<StrMatchInterface> supplier,
@@ -196,7 +196,7 @@ public interface StrMatchInterface {
      * @param needle As described.
      * @param limitTo As described.
      * @return As described.
-     * @throws IllegalArgumentException As described,
+     * @throws IllegalArgumentException As described.
      */
     static IntList convenientApply(
             final @NotNull Supplier<StrMatchInterface> supplier,
@@ -215,7 +215,7 @@ public interface StrMatchInterface {
      * @param start As described.
      * @param end As described.
      * @return As described.
-     * @throws IllegalArgumentException As described,
+     * @throws IllegalArgumentException As described.
      */
     static IntList convenientApply(
             final @NotNull Supplier<StrMatchInterface> supplier,
@@ -233,7 +233,7 @@ public interface StrMatchInterface {
      * @param haystack As described.
      * @param needle As described.
      * @return As described.
-     * @throws IllegalArgumentException As described,
+     * @throws IllegalArgumentException As described.
      */
     static IntList convenientApply(
             final @NotNull Supplier<StrMatchInterface> supplier,
@@ -252,7 +252,7 @@ public interface StrMatchInterface {
      * @param end As described.
      * @param limitTo As described.
      * @return As described.
-     * @throws IllegalArgumentException As described,
+     * @throws IllegalArgumentException As described.
      */
     static IntList convenientApplyUnchecked(
             final @NotNull Supplier<StrMatchInterface> supplier,
@@ -272,7 +272,7 @@ public interface StrMatchInterface {
      * @param needle As described.
      * @param limitTo As described.
      * @return As described.
-     * @throws IllegalArgumentException As described,
+     * @throws IllegalArgumentException As described.
      */
     static IntList convenientApplyUnchecked(
             final @NotNull Supplier<StrMatchInterface> supplier,
@@ -291,7 +291,7 @@ public interface StrMatchInterface {
      * @param start As described.
      * @param end As described.
      * @return As described.
-     * @throws IllegalArgumentException As described,
+     * @throws IllegalArgumentException As described.
      */
     static IntList convenientApplyUnchecked(
             final @NotNull Supplier<StrMatchInterface> supplier,
@@ -309,7 +309,7 @@ public interface StrMatchInterface {
      * @param haystack As described.
      * @param needle As described.
      * @return As described.
-     * @throws IllegalArgumentException As described,
+     * @throws IllegalArgumentException As described.
      */
     static IntList convenientApplyUnchecked(
             final @NotNull Supplier<StrMatchInterface> supplier,
