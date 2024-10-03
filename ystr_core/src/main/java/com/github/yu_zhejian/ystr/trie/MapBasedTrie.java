@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 /**
  * A simple data structure that stores a set of strings. This method requires an encoder to reduce
@@ -18,10 +19,24 @@ import java.util.List;
  */
 public final class MapBasedTrie extends BaseTrie {
     private final MapBasedTrieNode root;
+    private final Supplier<Byte2ObjectMap<MapBasedTrieNode>> mapSupplier;
 
-    public MapBasedTrie() {
-        root = new MapBasedTrieNode();
+    /**
+     * Default Constructor that supports customizable internal map implementation.
+     *
+     * @param mapSupplier The internal map implementation.
+     */
+    public MapBasedTrie(final Supplier<Byte2ObjectMap<MapBasedTrieNode>> mapSupplier) {
+        this.mapSupplier = mapSupplier;
+        root = new MapBasedTrieNode(mapSupplier);
         numNodes++;
+    }
+
+    /**
+     * Default constructor that uses {@link Byte2ObjectAVLTreeMap} for internal map implementation.
+     */
+    public MapBasedTrie() {
+        this(() -> new Byte2ObjectAVLTreeMap<>(StrLibc::strcmp));
     }
 
     @Override
@@ -37,7 +52,7 @@ public final class MapBasedTrie extends BaseTrie {
         for (byte b : s) {
             node.mapping.computeIfAbsent(b, i -> {
                 numNodes++;
-                return new MapBasedTrieNode();
+                return new MapBasedTrieNode(mapSupplier);
             });
             node = node.mapping.get(b);
         }
@@ -62,12 +77,13 @@ public final class MapBasedTrie extends BaseTrie {
     }
 
     /** A node contains mapping to child nodes. */
-    private static class MapBasedTrieNode extends BaseTrieNode {
+    public static class MapBasedTrieNode extends BaseTrieNode {
         private final Byte2ObjectMap<MapBasedTrieNode> mapping;
 
-        /** Default constructor. */
-        private MapBasedTrieNode() {
-            mapping = new Byte2ObjectAVLTreeMap<>(StrLibc::strcmp);
+        /** Default constructor that supports passing of customized maps. */
+        private MapBasedTrieNode(
+                final @NotNull Supplier<Byte2ObjectMap<MapBasedTrieNode>> mapSupplier) {
+            mapping = mapSupplier.get();
         }
 
         @Override

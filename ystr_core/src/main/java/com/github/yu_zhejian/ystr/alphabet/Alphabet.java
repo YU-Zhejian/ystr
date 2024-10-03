@@ -1,5 +1,7 @@
 package com.github.yu_zhejian.ystr.alphabet;
 
+import com.github.yu_zhejian.ystr.utils.StrUtils;
+
 import it.unimi.dsi.fastutil.bytes.ByteIterable;
 import it.unimi.dsi.fastutil.bytes.ByteIterator;
 
@@ -26,8 +28,19 @@ public final class Alphabet implements ByteIterable, Serializable {
      * Construct IBA using an existing byte array. Note that the values will be copied!
      *
      * @param value As described.
+     * @throws IllegalArgumentException If the value is empty.
      */
     public Alphabet(final byte @NotNull [] value) {
+        if (value.length == 0) {
+            throw new IllegalArgumentException("Empty alphabet is not allowed!");
+        }
+        var dupChecker = new boolean[StrUtils.ALPHABET_SIZE];
+        for (final var b : value) {
+            if (dupChecker[b & StrUtils.BYTE_TO_UNSIGNED_MASK]) {
+                throw new IllegalArgumentException("Byte %d duplicated!".formatted(b));
+            }
+            dupChecker[b & StrUtils.BYTE_TO_UNSIGNED_MASK] = true;
+        }
         this.value = new byte[value.length];
         System.arraycopy(value, 0, this.value, 0, value.length);
         hash = Arrays.hashCode(this.value);
@@ -40,8 +53,7 @@ public final class Alphabet implements ByteIterable, Serializable {
      * @param charset As described.
      */
     public Alphabet(final @NotNull String string, Charset charset) {
-        value = string.getBytes(charset);
-        hash = Arrays.hashCode(this.value);
+        this(string.getBytes(charset));
     }
 
     /**
@@ -72,15 +84,6 @@ public final class Alphabet implements ByteIterable, Serializable {
     @Override
     public int hashCode() {
         return hash;
-    }
-
-    /**
-     * Whether the current value is empty.
-     *
-     * @return As described.
-     */
-    public boolean isEmpty() {
-        return value.length == 0;
     }
 
     /**

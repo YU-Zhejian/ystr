@@ -1,7 +1,9 @@
 package com.github.yu_zhejian.ystr.utils;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import com.github.yu_zhejian.ystr.alphabet.AlphabetConstants;
 import com.github.yu_zhejian.ystr.alphabet.RandomKmerGenerator;
@@ -46,14 +48,13 @@ class StrUtilsTest {
 
     @Test
     void testKeyIndexedCountingSimple() {
-        assertEquals(0, (new int[] {}).length); // To supress warnings
         for (final byte[] bytes : List.of(
                 new byte[] {'A', 'C', 'T', 'G'},
                 new byte[] {-1, 0, 9, 2},
                 new byte[] {},
                 new byte[] {1, 1, 1})) {
             StrUtils.countingSort(bytes);
-            StrUtils.requiresSorted(bytes);
+            assertDoesNotThrow(() -> StrUtils.requiresSorted(bytes));
         }
     }
 
@@ -64,8 +65,28 @@ class StrUtilsTest {
             for (int j = 0; j < 1000; j++) {
                 var bytes = rkg.next();
                 StrUtils.countingSort(bytes);
-                StrUtils.requiresSorted(bytes);
+                assertDoesNotThrow(() -> StrUtils.requiresSorted(bytes));
             }
         }
+    }
+
+    @Test
+    void ensureStartEndValid() {
+        StrUtils.ensureStartEndValid(0, 10);
+        StrUtils.ensureStartEndValid(5, 10);
+        StrUtils.ensureStartEndValid(5, 5);
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            StrUtils.ensureStartEndValid(10, 5);
+        });
+        assertEquals("start must be less than end. Actual: 10 vs 5", exception.getMessage());
+        assertThrows(IllegalArgumentException.class, () -> {
+            StrUtils.ensureStartEndValid(-1, 10);
+        });
+        assertThrows(IllegalArgumentException.class, () -> {
+            StrUtils.ensureStartEndValid(0, -1);
+        });
+        assertThrows(IllegalArgumentException.class, () -> {
+            StrUtils.ensureStartEndValid(11, 10);
+        });
     }
 }

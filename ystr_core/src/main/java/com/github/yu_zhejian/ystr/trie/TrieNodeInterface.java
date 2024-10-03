@@ -6,10 +6,21 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+/** A node in trie. */
 public interface TrieNodeInterface {
+    /**
+     * Get the value associated with the node.
+     *
+     * @return As described.
+     */
     @Nullable
     Object getValue();
 
+    /**
+     * Set the value associated with the node.
+     *
+     * @param value As described.
+     */
     void setValue(@Nullable Object value);
 
     /**
@@ -22,5 +33,10 @@ public interface TrieNodeInterface {
      */
     void traverse(ByteArrayList prefix, List<byte[]> words, List<Object> values);
 
+    /**
+     * Indicator of whether the current node is at word end.
+     *
+     * @return As described.
+     */
     boolean isWordEnd();
 }

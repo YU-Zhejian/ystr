@@ -7,10 +7,15 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Objects;
 
+/** A basic implementation of trie. */
 public abstract class BaseTrie implements TrieInterface {
+    /** @see #treeHeight() */
     protected int treeHeight;
+    /** @see #numWords() */
     protected int numWords;
+    /** @see #numNodes() */
     protected int numNodes;
 
     @Override
@@ -27,6 +32,7 @@ public abstract class BaseTrie implements TrieInterface {
     public final int treeHeight() {
         return treeHeight;
     }
+
     /**
      * Search for one node.
      *
@@ -56,7 +62,7 @@ public abstract class BaseTrie implements TrieInterface {
         var node = getNode(s);
         if (node == null) {
             add(s);
-            node = getNode(s);
+            node = Objects.requireNonNull(getNode(s));
         }
         node.setValue(o);
     }

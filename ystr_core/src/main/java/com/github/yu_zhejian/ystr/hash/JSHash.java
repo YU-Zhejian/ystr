@@ -19,6 +19,7 @@ package com.github.yu_zhejian.ystr.hash;
  */
 public final class JSHash implements HashInterface {
     private long hash;
+
     /** Default constructor. */
     public JSHash() {
         reset();

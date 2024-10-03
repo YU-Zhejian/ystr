@@ -25,7 +25,7 @@ dependencies {
 	testAnnotationProcessor "org.openjdk.jmh:jmh-generator-annprocess:${JMH_VER}"
 }
 
-java{
+java {
 	withJavadocJar()
 	withSourcesJar()
 }

@@ -39,7 +39,7 @@ public final class ZMatch implements StrMatchInterface {
      *     Z   0 1 0 0 6 1 0 0 2 2 3 1 0
      * </pre>
      *
-     * TODO: Understand the optimized method for Z-array generation.
+     * <p>TODO: Understand the optimized method for Z-array generation.
      *
      * @param jointArr As described.
      * @return As described.

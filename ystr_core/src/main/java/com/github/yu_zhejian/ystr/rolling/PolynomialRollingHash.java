@@ -20,8 +20,8 @@ import java.util.Random;
  *   <li>{@code (a * b) % m = ((a % m) * (b % m)) % m}
  * </ul>
  *
- * This implementation mimics Robert Sedgewick's Las Vegas Implementation. It is slower but does not
- * report false-positives due to hash collision.
+ * <p>This implementation mimics Robert Sedgewick's Las Vegas Implementation. It is slower but does
+ * not report false-positives due to hash collision.
  *
  * <p><b>References</b>
  *

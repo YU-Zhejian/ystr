@@ -20,6 +20,7 @@ package com.github.yu_zhejian.ystr.hash;
  */
 public final class DJBHash implements HashInterface {
     private long hash;
+
     /** Default constructor. */
     public DJBHash() {
         reset();

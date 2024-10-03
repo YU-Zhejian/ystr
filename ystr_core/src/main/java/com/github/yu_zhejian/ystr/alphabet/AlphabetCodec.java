@@ -15,6 +15,14 @@ public final class AlphabetCodec {
     private final byte[] preComputedDecodingTable;
     private final Alphabet alphabet;
 
+    /**
+     * Default constructor.
+     *
+     * @param alphabet As described.
+     * @param defaultValue Defaults for bytes that are not presented in the alphabet.
+     * @throws IllegalArgumentException If the default value is not within the range of the
+     *     alphabet.
+     */
     public AlphabetCodec(final @NotNull Alphabet alphabet, final int defaultValue) {
         this.alphabet = alphabet;
         if (defaultValue < 0 || defaultValue > alphabet.length()) {

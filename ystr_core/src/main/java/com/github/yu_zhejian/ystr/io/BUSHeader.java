@@ -72,7 +72,7 @@ public record BUSHeader(int version, int bcLen, int umiLen, String text) {
         in.read(intBuffer);
         intBuffer.rewind();
         var umiLen = intBuffer.getInt();
-        if (umiLen > 32 | umiLen < 1) {
+        if (umiLen > 32 || umiLen < 1) {
             throw new IllegalArgumentException(
                     "Illegal UMI length; Range: [1, 32], Actual: %d".formatted(umiLen));
         }
@@ -81,7 +81,7 @@ public record BUSHeader(int version, int bcLen, int umiLen, String text) {
         in.read(intBuffer);
         intBuffer.rewind();
         var tlen = intBuffer.getInt();
-        if (tlen > 32 | tlen < 1) {
+        if (tlen > 32 || tlen < 1) {
             throw new IllegalArgumentException(
                     "Illegal Barcode length; Range: [1, 32], Actual: %d".formatted(tlen));
         }

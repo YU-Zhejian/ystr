@@ -8,10 +8,10 @@ import java.text.DecimalFormat;
 public final class FrontendUtils {
     private FrontendUtils() {}
 
-    private static final long K = 1024;
-    private static final long M = K * K;
-    private static final long G = K * M;
-    private static final long T = K * G;
+    private static final long K = 1L << 10;
+    private static final long M = 1L << 20;
+    private static final long G = 1L << 30;
+    private static final long T = 1L << 40;
     private static final DecimalFormat DF = new DecimalFormat("###.##");
 
     public static @NotNull String toHumanReadable(long n) {

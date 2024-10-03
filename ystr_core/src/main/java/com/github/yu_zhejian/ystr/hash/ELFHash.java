@@ -21,6 +21,7 @@ package com.github.yu_zhejian.ystr.hash;
 public final class ELFHash implements HashInterface {
     private long hash;
     private long x;
+
     /** Default constructor. */
     public ELFHash() {
         reset();

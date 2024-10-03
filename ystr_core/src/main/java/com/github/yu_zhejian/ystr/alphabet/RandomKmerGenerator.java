@@ -29,9 +29,6 @@ public final class RandomKmerGenerator implements Iterator<byte[]> {
      * @param k K-mer size.
      */
     public RandomKmerGenerator(final @NotNull Alphabet alphabet, final int k) {
-        if (alphabet.length() == 0) {
-            throw new IllegalArgumentException("alphabet must contain at least one character");
-        }
         if (k <= 0) {
             throw new IllegalArgumentException("k must be positive");
         }

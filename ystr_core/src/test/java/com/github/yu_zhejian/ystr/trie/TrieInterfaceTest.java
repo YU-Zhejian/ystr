@@ -1,6 +1,10 @@
 package com.github.yu_zhejian.ystr.trie;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertIterableEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import com.github.yu_zhejian.ystr.alphabet.AlphabetConstants;
 import com.github.yu_zhejian.ystr.alphabet.RandomKmerGenerator;
@@ -15,7 +19,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
-class CodecTrieTest {
+class TrieInterfaceTest {
     void testTrieHelper(@NotNull TrieInterface trie) {
         var th = new TrieMap<Integer>(trie);
         th.clear();
@@ -75,9 +79,6 @@ class CodecTrieTest {
         assertTrue(trie.contains("".getBytes(StandardCharsets.US_ASCII)));
         assertEquals(24, trie.treeHeight());
         assertEquals(10, trie.numWords());
-        //        System.out.println(trie.traverse("".getBytes(StandardCharsets.US_ASCII)).stream()
-        //                .map(i -> new String(i, StandardCharsets.US_ASCII))
-        //                .toList());
         assertIterableEquals(
                 List.of("and", "annnnnnnt", "ant"),
                 trie.traverse("an".getBytes(StandardCharsets.US_ASCII)).stream()

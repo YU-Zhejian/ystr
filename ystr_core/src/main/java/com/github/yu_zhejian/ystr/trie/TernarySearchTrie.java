@@ -10,11 +10,13 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+/** A space-efficient trie whose nodes contains 3 branches. */
 public final class TernarySearchTrie extends BaseTrie {
     private TernaryTrieNode root;
     private boolean isEmptyPresented; // Special node to store empty string
     private Object empty;
 
+    /** Default constructor. */
     public TernarySearchTrie() {
         root = null;
         empty = null;

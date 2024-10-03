@@ -10,6 +10,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Iterator;
 import java.util.List;
 
+/** Trie is a data structure that allows fast lookup of strings. */
 public interface TrieInterface {
     /**
      * Insert a new string into the trie and set the associating value to {@code null}. If the
@@ -19,19 +20,34 @@ public interface TrieInterface {
      */
     void add(byte @NotNull [] s);
 
-    default void addAll(byte @NotNull [][] words) {
+    /**
+     * Call {@link #add(byte[])} multiple times.
+     *
+     * @param words As described.
+     */
+    default void addAll(final byte @NotNull [][] words) {
         for (final var word : words) {
             add(word);
         }
     }
 
-    default void addAll(@NotNull Iterable<byte[]> words) {
+    /**
+     * Call {@link #add(byte[])} multiple times.
+     *
+     * @param words As described.
+     */
+    default void addAll(final @NotNull Iterable<byte[]> words) {
         for (final var word : words) {
             add(word);
         }
     }
 
-    default void addAll(@NotNull Iterator<byte[]> words) {
+    /**
+     * Call {@link #add(byte[])} multiple times.
+     *
+     * @param words As described.
+     */
+    default void addAll(final @NotNull Iterator<byte[]> words) {
         while (words.hasNext()) {
             add(words.next());
         }
@@ -98,7 +114,7 @@ public interface TrieInterface {
      * @return As described.
      */
     @NotNull
-    default List<byte[]> traverse(byte[] prefix) {
+    default List<byte[]> traverse(final byte[] prefix) {
         var retl = new ObjectArrayList<byte[]>();
         retl.ensureCapacity(numWords());
         traverse(prefix, retl, new NopList<>());
@@ -120,7 +136,7 @@ public interface TrieInterface {
      * @param words As described.
      * @param values As described.
      */
-    default void traverse(List<byte[]> words, List<Object> values) {
+    default void traverse(final List<byte[]> words, final List<Object> values) {
         traverse(new byte[] {}, words, values);
     }
 

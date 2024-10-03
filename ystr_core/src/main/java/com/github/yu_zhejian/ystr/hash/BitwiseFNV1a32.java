@@ -7,6 +7,7 @@ package com.github.yu_zhejian.ystr.hash;
  */
 public final class BitwiseFNV1a32 extends FNV1Base {
     private int hval;
+
     /** Default constructor. */
     public BitwiseFNV1a32() {
         reset();

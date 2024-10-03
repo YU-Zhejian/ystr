@@ -32,6 +32,7 @@ public final class BKDRHash implements HashInterface {
         this.seed = seed;
         reset();
     }
+
     /** Default constructor with 131 as seed. */
     public BKDRHash() {
         this(131);

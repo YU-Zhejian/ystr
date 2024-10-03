@@ -46,8 +46,8 @@ public final class RngUtils {
      * @param start As described.
      * @param end As described.
      * @return As described.
-     * @see #generateRandomCoordinates(int, int, int)
      * @throws IllegalArgumentException See {@link StrUtils#ensureStartEndValid(long, long)}.
+     * @see #generateRandomCoordinates(int, int, int)
      */
     public static @NotNull ObjectList<LongLongPair> generateRandomCoordinates(
             final int numCoordinates, final long start, final long end) {

@@ -1,6 +1,6 @@
 package com.github.yu_zhejian.ystr.match;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 
 import org.junit.jupiter.api.Test;
 
@@ -26,7 +26,7 @@ class BaseBoyerMooreTest {
 
         needle = "CAGAGAG";
         assertArrayEquals(
-                new int[] {1, 0, 0, 2, 0, 4, 0, 8},
+                new int[] {0, 0, 2, 0, 4, 0, 7},
                 BaseBoyerMoore.bmSuffixes(needle.getBytes(StandardCharsets.US_ASCII)));
     }
 
@@ -34,7 +34,7 @@ class BaseBoyerMooreTest {
     void bmGoodSuffixRule() {
         var needle = "CAGAGAG";
         assertArrayEquals(
-                new int[] {7, 7, 7, 2, 7, 4, 7, 1},
+                new int[] {7, 7, 2, 7, 4, 7, 1},
                 BaseBoyerMoore.bmGoodSuffixRule(needle.getBytes(StandardCharsets.US_ASCII)));
     }
 }

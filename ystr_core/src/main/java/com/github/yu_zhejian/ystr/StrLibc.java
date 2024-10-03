@@ -16,9 +16,9 @@ public final class StrLibc {
      *
      * <p>Implemented with the help of TONGYI Lingma.
      *
-     * @return As described.
      * @param array1 As described.
      * @param array2 As described.
+     * @return As described.
      * @see <a href="https://en.cppreference.com/w/c/string/byte/strcmp">cppreference</a>
      * @see <a href="https://www.man7.org/linux/man-pages/man3/strcmp.3.html">Linux Manual Pages</a>
      * @see <a
@@ -44,16 +44,16 @@ public final class StrLibc {
      *
      * <p>Note, the string is compared unsigned!
      *
-     * @return As described.
      * @param array1 As described.
      * @param array2 As described.
      * @param n As described.
+     * @return As described.
+     * @throws IndexOutOfBoundsException If {@code n} exceeds array boundaries.
      * @see <a href="https://en.cppreference.com/w/c/string/byte/strncmp">cppreference</a>
      * @see <a href="https://www.man7.org/linux/man-pages/man3/strncmp.3.html">Linux Manual
      *     Pages</a>
      * @see <a
      *     href="https://pubs.opengroup.org/onlinepubs/9699919799/functions/strncmp.html">POSIX</a>
-     * @throws IndexOutOfBoundsException If {@code n} exceeds array boundaries.
      */
     public static int strncmp(
             final byte @NotNull [] array1, final byte @NotNull [] array2, final int n) {
@@ -65,12 +65,12 @@ public final class StrLibc {
      *
      * <p>Note, the string is compared unsigned!
      *
-     * @return As described.
      * @param array1 As described.
      * @param array2 As described.
      * @param start1 As described.
      * @param start2 As described.
      * @param n As described.
+     * @return As described.
      * @throws IndexOutOfBoundsException If {@code n} exceeds array boundaries.
      */
     public static int strncmp(

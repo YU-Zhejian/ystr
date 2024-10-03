@@ -11,6 +11,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Supplier;
 
 /**
  * A string-to-whatever Map implemented using Trie.
@@ -21,8 +22,22 @@ public final class TrieMap<V> implements Map<byte[], V> {
 
     private final TrieInterface trie;
 
+    /**
+     * Default constructor that may convert an established trie to a map.
+     *
+     * @param trie The internal trie instance.
+     */
     public TrieMap(final TrieInterface trie) {
         this.trie = trie;
+    }
+
+    /**
+     * Default constructor.
+     *
+     * @param trieSupplier Supplier of the internal trie.
+     */
+    public TrieMap(final @NotNull Supplier<TrieInterface> trieSupplier) {
+        this(trieSupplier.get());
     }
 
     @Override

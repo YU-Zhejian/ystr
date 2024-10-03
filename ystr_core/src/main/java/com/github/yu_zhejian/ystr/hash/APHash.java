@@ -27,6 +27,7 @@ package com.github.yu_zhejian.ystr.hash;
 public final class APHash implements HashInterface {
     private long hash;
     private int i;
+
     /** Default constructor. */
     public APHash() {
         reset();

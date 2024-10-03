@@ -82,8 +82,8 @@ public final class SimpleTranslator {
      * @param cdna As described.
      * @param start As described.
      * @param end As described.
-     * @throws IllegalArgumentException See {@link StrUtils#ensureStartEndValid(int, int, int)}.
      * @return As described.
+     * @throws IllegalArgumentException See {@link StrUtils#ensureStartEndValid(int, int, int)}.
      */
     @Contract(value = "_, _, _ -> new", pure = true)
     public byte @NotNull [] translate(final byte @NotNull [] cdna, final int start, final int end) {
@@ -148,8 +148,8 @@ public final class SimpleTranslator {
      *
      * @param cdna As described.
      * @param start As described.
-     * @throws IllegalArgumentException See {@link StrUtils#ensureStartEndValid(int, int, int)}.
      * @return As described.
+     * @throws IllegalArgumentException See {@link StrUtils#ensureStartEndValid(int, int, int)}.
      */
     public byte get(final byte @NotNull [] cdna, final int start) {
         StrUtils.ensureStartLengthValid(start, 3, cdna.length);

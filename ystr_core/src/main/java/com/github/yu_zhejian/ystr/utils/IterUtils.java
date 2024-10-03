@@ -60,8 +60,8 @@ public final class IterUtils {
      * Remove adjacent duplications.
      *
      * @param list As described.
-     * @return As described.
      * @param <T> As described.
+     * @return As described.
      */
     public static <T> @NotNull ObjectList<T> dedup(@NotNull List<T> list) {
         final var result = new ObjectArrayList<T>();
@@ -110,8 +110,8 @@ public final class IterUtils {
      * <p>Warning, this method impairs performance.
      *
      * @param sourceIterator As described.
-     * @return As described.
      * @param <T> Type of elements inside the iterator.
+     * @return As described.
      */
     @SuppressWarnings("PMD.LooseCoupling")
     public static <T> @NotNull ObjectList<T> collect(@NotNull Iterator<T> sourceIterator) {
@@ -173,8 +173,8 @@ public final class IterUtils {
      *
      * @param sourceIterator As described.
      * @param predicate As described.
-     * @return As described.
      * @param <T> As described.
+     * @return As described.
      */
     @SuppressWarnings("PMD.LooseCoupling")
     public static <T> @NotNull IntList where(
@@ -217,8 +217,8 @@ public final class IterUtils {
      *
      * @param sourceIterator As described.
      * @param windowSize As described.
-     * @return As described.
      * @param <T> As described.
+     * @return As described.
      */
     @Contract("_, _ -> new")
     public static <T> @NotNull Iterator<List<T>> window(

@@ -28,6 +28,7 @@ public final class PJWHash implements HashInterface {
     private static final long HIGH_BITS =
             (long) (0xFFFFFFFF) << (BITS_IN_UNSIGNED_INT - ONE_EIGHTH);
     long test;
+
     /** Default constructor. */
     public PJWHash() {
         reset();

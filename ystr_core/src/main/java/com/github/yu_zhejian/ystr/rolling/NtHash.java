@@ -23,8 +23,8 @@ package com.github.yu_zhejian.ystr.rolling;
  *       official {@code ntHashIterator} would skip them.
  * </ol>
  *
- * This is the reference implementation. However, it is slow and should not be used in production.
- * Please refer to {@link PrecomputedNtHash} for faster implementation, or
+ * <p>This is the reference implementation. However, it is slow and should not be used in
+ * production. Please refer to {@link PrecomputedNtHash} for faster implementation, or
  * {@link PrecomputedBidirectionalNtHash} if you want both forward and reverse ntHash instead of the
  * combined one.
  *

@@ -22,6 +22,7 @@ public final class RSHash implements HashInterface {
     private int hashA;
     private int hashB;
     private int hash;
+
     /** Default constructor. */
     public RSHash() {
         reset();

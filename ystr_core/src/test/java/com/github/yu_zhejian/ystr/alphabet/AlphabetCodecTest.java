@@ -1,6 +1,7 @@
 package com.github.yu_zhejian.ystr.alphabet;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
 
@@ -17,5 +18,14 @@ class AlphabetCodecTest {
         assertEquals(4, abCodec.encode((byte) -1));
         assertEquals((byte) 'C', abCodec.decode(1));
         assertEquals((byte) 'N', abCodec.decode(4));
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            new AlphabetCodec(AlphabetConstants.DNA5_ALPHABET, -1);
+        });
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            new AlphabetCodec(AlphabetConstants.DNA5_ALPHABET, 120);
+        });
+        assertEquals(AlphabetConstants.DNA5_ALPHABET, abCodec.getAlphabet());
     }
 }

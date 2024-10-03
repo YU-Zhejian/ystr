@@ -147,6 +147,7 @@ public final class NibCodec implements CodecInterface {
         }
         return retl;
     }
+
     /**
      * Unchhecked {@link #decode(byte[], byte[], int, int, int)}
      *

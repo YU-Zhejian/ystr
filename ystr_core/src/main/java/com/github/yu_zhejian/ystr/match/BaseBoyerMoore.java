@@ -11,6 +11,7 @@ import java.util.Arrays;
 public abstract class BaseBoyerMoore implements StrMatchInterface {
     /** Default constructor. */
     protected BaseBoyerMoore() {}
+
     /**
      * Generate bad suffix rule for Boyer-Moore matching. Returned is the last occurrence for each
      * character in needle. The array will be of length {@link StrUtils#ALPHABET_SIZE} and

@@ -1,6 +1,7 @@
 package com.github.yu_zhejian.ystr.alphabet;
 
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
@@ -22,6 +23,12 @@ class KmerGeneratorTest {
 
     @Test
     void testKmers() {
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> new KmerGenerator(AlphabetConstants.DNA_ALPHABET, -2));
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> new KmerGenerator(AlphabetConstants.DNA_ALPHABET, 0));
         assertIterableEquals(
                 List.of("AA", "AB", "BA", "BB"),
                 convert(new KmerGenerator(new Alphabet(new byte[] {'A', 'B'}), 2)));

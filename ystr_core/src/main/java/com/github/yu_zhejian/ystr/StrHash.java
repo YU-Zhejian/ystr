@@ -16,10 +16,10 @@ public final class StrHash {
     /**
      * Pre-computed ntHash version 1 for the entire DNA string.
      *
-     * @see NtHash
-     * @see PrecomputedNtHash
      * @param string As described.
      * @return As described.
+     * @see NtHash
+     * @see PrecomputedNtHash
      */
     public static long ntHash(final byte[] string) {
         var hash = new PrecomputedNtHash();

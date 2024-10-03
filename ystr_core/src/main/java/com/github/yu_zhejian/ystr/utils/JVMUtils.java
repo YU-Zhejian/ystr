@@ -5,6 +5,7 @@ public final class JVMUtils {
 
     private JVMUtils() {}
 
+    /** Print various JVM information to stdout. */
     public static void printInfo() {
         var systemProperties = System.getProperties();
 
@@ -27,6 +28,7 @@ public final class JVMUtils {
                 systemProperties.get("java.home"));
     }
 
+    /** Print various JVM memory information to stdout. */
     public static void printMemInfo() {
         var rt = Runtime.getRuntime();
         var pp = new PyUtils.PrintParamsBuilder().setSep(new byte[0]).build();

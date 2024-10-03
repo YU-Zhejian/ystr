@@ -1,9 +1,12 @@
 package com.github.yu_zhejian.ystr.utils;
 
+import it.unimi.dsi.fastutil.bytes.Byte2ByteMap;
+
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 
 /** Utilities for nucleotides. */
 public final class NtUtils {
@@ -43,6 +46,30 @@ public final class NtUtils {
         }
         for (int i = 0; i < from.length; i++) {
             translTable[from[i] & StrUtils.BYTE_TO_UNSIGNED_MASK] = to[i];
+        }
+        return translTable;
+    }
+
+    @Contract(pure = true)
+    public static byte @NotNull [] makeTrans(final Map<Byte, Byte> fromToMap) {
+        var translTable = new byte[StrUtils.ALPHABET_SIZE];
+        for (int i = 0; i < StrUtils.ALPHABET_SIZE; i++) {
+            translTable[i] = (byte) (i);
+        }
+        for (final var entry : fromToMap.entrySet()) {
+            translTable[entry.getKey() & StrUtils.BYTE_TO_UNSIGNED_MASK] = entry.getValue();
+        }
+        return translTable;
+    }
+
+    @Contract(pure = true)
+    public static byte @NotNull [] makeTrans(final Byte2ByteMap fromToMap) {
+        var translTable = new byte[StrUtils.ALPHABET_SIZE];
+        for (int i = 0; i < StrUtils.ALPHABET_SIZE; i++) {
+            translTable[i] = (byte) (i);
+        }
+        for (final var entry : fromToMap.byte2ByteEntrySet()) {
+            translTable[entry.getByteKey() & StrUtils.BYTE_TO_UNSIGNED_MASK] = entry.getByteValue();
         }
         return translTable;
     }
@@ -103,7 +130,16 @@ public final class NtUtils {
     }
 
     public static void reverseInPlaceUnchecked(final byte[] seq, final int start, final int end) {
-        // TODO
+        int left = start;
+        int right = end - 1;
+        byte temp;
+        while (left < right) {
+            temp = seq[left];
+            seq[left] = seq[right];
+            seq[right] = temp;
+            left++;
+            right--;
+        }
     }
 
     public static void complementaryInPlace(

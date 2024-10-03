@@ -173,6 +173,7 @@ public final class TwoBitCodec implements CodecInterface {
         }
         return retl;
     }
+
     /**
      * Unchhecked {@link #decode(byte[], byte[], int, int, int)}
      *

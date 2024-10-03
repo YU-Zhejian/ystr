@@ -19,12 +19,23 @@ public final class CodecTrie extends BaseTrie {
     private final AlphabetCodec abCodec;
     private final TrieNode root;
 
+    /**
+     * Default constructor.
+     *
+     * @param abCodec As described.
+     */
     public CodecTrie(final AlphabetCodec abCodec) {
         this.abCodec = abCodec;
         root = new TrieNode();
         numNodes++;
     }
 
+    /**
+     * Constructor using dumb encoder.
+     *
+     * <p><b>WARNING</b> This trie will be of tremendous size since each node holds an array of 256
+     * elements.
+     */
     public CodecTrie() {
         this(AlphabetCodec.DUMB_CODEC);
     }
@@ -72,7 +83,7 @@ public final class CodecTrie extends BaseTrie {
      * A node contains mapping to {@link #abCodec} child nodes. Child node will be set to
      * {@code null} if not exist.
      */
-    private class TrieNode extends BaseTrieNode {
+    private final class TrieNode extends BaseTrieNode {
         private final TrieNode[] mapping;
 
         /** Default constructor. */
@@ -82,7 +93,8 @@ public final class CodecTrie extends BaseTrie {
         }
 
         @Override
-        public void traverse(ByteArrayList prefix, List<byte[]> words, List<Object> values) {
+        public void traverse(
+                final ByteArrayList prefix, final List<byte[]> words, final List<Object> values) {
             if (isWordEnd) {
                 words.add(prefix.toByteArray());
                 values.add(value);
