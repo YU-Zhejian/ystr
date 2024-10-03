@@ -33,7 +33,7 @@ import java.util.function.Predicate;
  */
 public final class IterUtils {
 
-    /** Defunct Constructor **/
+    /** Defunct Constructor * */
     private IterUtils() {}
 
     @Contract(value = "_, _ -> new", pure = true)

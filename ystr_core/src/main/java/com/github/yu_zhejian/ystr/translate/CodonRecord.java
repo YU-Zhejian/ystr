@@ -47,7 +47,6 @@ public final class CodonRecord implements Serializable {
         throw new UnsupportedOperationException();
     }
 
-
     @Override
     public int hashCode() {
         throw new UnsupportedOperationException();
@@ -63,5 +62,4 @@ public final class CodonRecord implements Serializable {
     public byte at(int index) {
         return value[index];
     }
-
 }

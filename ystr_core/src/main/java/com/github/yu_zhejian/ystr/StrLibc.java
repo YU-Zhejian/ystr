@@ -2,21 +2,21 @@ package com.github.yu_zhejian.ystr;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.nio.ByteBuffer;
 import java.util.Arrays;
 
 /**
- * LibC-like String manipulation routines.
- * Implemented by transforming LibC-like interface to Java {@link Arrays} routines.
- * <p>
- * Note:
+ * LibC-like String manipulation routines. Implemented by transforming LibC-like interface to Java
+ * {@link Arrays} routines.
+ *
+ * <p>Note:
+ *
  * <ul>
- *     <li>None of the method performs boundary check.</li>
+ *   <li>None of the method performs boundary check.
  * </ul>
  */
 public final class StrLibc {
 
-    /** Defunct Constructor **/
+    /** Defunct Constructor * */
     private StrLibc() {}
 
     /**
@@ -100,8 +100,8 @@ public final class StrLibc {
      * @param n As described.
      * @throws IndexOutOfBoundsException If {@code n} exceeds array boundaries.
      */
-    public static void memset(final byte @NotNull [] dest, final byte ch, final int n){
-       memset(dest, ch,0, n);
+    public static void memset(final byte @NotNull [] dest, final byte ch, final int n) {
+        memset(dest, ch, 0, n);
     }
 
     /**
@@ -110,8 +110,8 @@ public final class StrLibc {
      * @param dest As described.
      * @param ch As described.
      */
-    public static void memset(final byte @NotNull [] dest, final byte ch){
-        memset(dest, ch,0, dest.length);
+    public static void memset(final byte @NotNull [] dest, final byte ch) {
+        memset(dest, ch, 0, dest.length);
     }
 
     /**
@@ -125,28 +125,8 @@ public final class StrLibc {
      * @see <a href="https://en.cppreference.com/w/c/string/byte/memset">cppreference</a>
      * @throws IndexOutOfBoundsException If {@code n} exceeds array boundaries.
      */
-    public static void memset(final byte @NotNull [] dest, final byte ch, final int start, final int n){
-        if (n > 1024){
-            memsetBB(dest, ch, start, n);
-        }
-        else{
-            Arrays.fill(dest, start, start + n, ch);
-        }
+    public static void memset(
+            final byte @NotNull [] dest, final byte ch, final int start, final int n) {
+        Arrays.fill(dest, start, start + n, ch);
     }
-
-    public static void memsetBB(final byte @NotNull [] dest, final byte ch, final int start, final int n){
-        var bb = ByteBuffer.wrap(dest);
-        final var nOp = n >> 4;
-        final var nLeft = n - (nOp << 4);
-        final int chInt = ch << 24 | ch << 16 | ch << 8 | ch;
-        bb.rewind();
-        bb.position(start);
-        for(int i = 0; i < nOp; i++){
-            bb.putInt(chInt);
-        }
-        for(int i = 0; i < nLeft; i++){
-            bb.put(ch);
-        }
-    }
-
 }

@@ -14,9 +14,8 @@ public final class NtUtils {
     private static final byte[] TO_LOWER_TRANSL_TABLE;
     private static final byte[] COMPLEMENTARY_TRANSL_TABLE;
 
-    /** Defunct Constructor **/
-    private NtUtils(){
-    }
+    /** Defunct Constructor * */
+    private NtUtils() {}
 
     static {
         TO_UPPER_TRANSL_TABLE = new byte[StrUtils.ALPHABET_SIZE];

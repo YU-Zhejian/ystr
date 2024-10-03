@@ -70,9 +70,7 @@ class StrUtilsTest {
         }
     }
 
-    /**
-     * Generated with the help of TONGYI Lingma.
-     */
+    /** Generated with the help of TONGYI Lingma. */
     @Test
     void ensureStartEndValid() {
         StrUtils.ensureStartEndValid(0, 10);
@@ -87,46 +85,63 @@ class StrUtilsTest {
         StrUtils.ensureStartEndValid(5, 10, 20);
         StrUtils.ensureStartEndValid(5, 5, 20);
         assertThrows(IllegalArgumentException.class, () -> StrUtils.ensureStartEndValid(10, 5, 20));
-        assertThrows(IllegalArgumentException.class, () -> StrUtils.ensureStartEndValid(-1, 10, 20));
+        assertThrows(
+                IllegalArgumentException.class, () -> StrUtils.ensureStartEndValid(-1, 10, 20));
         assertThrows(IllegalArgumentException.class, () -> StrUtils.ensureStartEndValid(0, -1, 20));
-        assertThrows(IllegalArgumentException.class, () -> StrUtils.ensureStartEndValid(11, 10, 20));
+        assertThrows(
+                IllegalArgumentException.class, () -> StrUtils.ensureStartEndValid(11, 10, 20));
 
         assertThrows(IllegalArgumentException.class, () -> StrUtils.ensureStartEndValid(5, 10, 5));
         assertThrows(IllegalArgumentException.class, () -> StrUtils.ensureStartEndValid(5, 10, -2));
         assertThrows(IllegalArgumentException.class, () -> StrUtils.ensureStartEndValid(-5, 10, 5));
-        assertThrows(IllegalArgumentException.class, () -> StrUtils.ensureStartEndValid(5, -10, -2));
+        assertThrows(
+                IllegalArgumentException.class, () -> StrUtils.ensureStartEndValid(5, -10, -2));
         StrUtils.ensureStartEndValid(5, 5, 5);
         StrUtils.ensureStartEndValid(0, 0, 0);
     }
 
-    /**
-     * Generated with the help of TONGYI Lingma.
-     */
+    /** Generated with the help of TONGYI Lingma. */
     @Test
-    void ensureStartLengthValid(){
-        int  strLen = 100;
+    void ensureStartLengthValid() {
+        int strLen = 100;
         assertDoesNotThrow(() -> StrUtils.ensureStartLengthValid(0, 10, strLen));
         assertDoesNotThrow(() -> StrUtils.ensureStartLengthValid(5, 10, strLen));
         assertDoesNotThrow(() -> StrUtils.ensureStartLengthValid(90, 10, strLen));
         StrUtils.ensureStartLengthValid(0, 0, strLen);
         StrUtils.ensureStartLengthValid(strLen, 0, strLen);
         StrUtils.ensureStartLengthValid(strLen - 1, 1, strLen);
-        assertThrows(IllegalArgumentException.class, () -> StrUtils.ensureStartLengthValid(0, -10, strLen));
-        assertThrows(IllegalArgumentException.class, () -> StrUtils.ensureStartLengthValid(5, -5, strLen));
-        assertThrows(IllegalArgumentException.class, () -> StrUtils.ensureStartLengthValid(100, 10, strLen));
-        assertThrows(IllegalArgumentException.class, () -> StrUtils.ensureStartLengthValid(110, 10, strLen));
-        assertThrows(IllegalArgumentException.class, () -> StrUtils.ensureStartLengthValid(90, 20, strLen));
-        assertThrows(IllegalArgumentException.class, () -> StrUtils.ensureStartLengthValid(0, 101, strLen));
-        assertThrows(IllegalArgumentException.class, () -> StrUtils.ensureStartLengthValid(-10, 10, strLen));
-        assertThrows(IllegalArgumentException.class, () -> StrUtils.ensureStartLengthValid(-1, 10, strLen));
-        assertThrows(IllegalArgumentException.class, () -> StrUtils.ensureStartLengthValid(strLen, 10, strLen));
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> StrUtils.ensureStartLengthValid(0, -10, strLen));
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> StrUtils.ensureStartLengthValid(5, -5, strLen));
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> StrUtils.ensureStartLengthValid(100, 10, strLen));
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> StrUtils.ensureStartLengthValid(110, 10, strLen));
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> StrUtils.ensureStartLengthValid(90, 20, strLen));
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> StrUtils.ensureStartLengthValid(0, 101, strLen));
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> StrUtils.ensureStartLengthValid(-10, 10, strLen));
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> StrUtils.ensureStartLengthValid(-1, 10, strLen));
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> StrUtils.ensureStartLengthValid(strLen, 10, strLen));
     }
 
-    /**
-     * Generated with the help of TONGYI Lingma.
-     */
+    /** Generated with the help of TONGYI Lingma. */
     @Test
-    void requiresSorted(){
+    void requiresSorted() {
         var emptyArray = new byte[0];
         var sortedArray = new byte[] {'A', 'C', 'G', 'T'};
         var unsortedArray = new byte[] {'A', 'T', 'C', 'G'};
@@ -134,7 +149,7 @@ class StrUtilsTest {
         assertDoesNotThrow(() -> StrUtils.requiresSorted(emptyArray));
         assertDoesNotThrow(() -> StrUtils.requiresSorted(sortedArray));
         assertThrows(IllegalArgumentException.class, () -> StrUtils.requiresSorted(unsortedArray));
-        assertDoesNotThrow(() ->StrUtils.requiresSorted(new byte[]{'a'}));
+        assertDoesNotThrow(() -> StrUtils.requiresSorted(new byte[] {'a'}));
         assertDoesNotThrow(() -> StrUtils.requiresSorted(duplicateElementsArray));
     }
 }

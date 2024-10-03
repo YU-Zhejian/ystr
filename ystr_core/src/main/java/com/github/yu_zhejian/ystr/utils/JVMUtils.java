@@ -3,7 +3,7 @@ package com.github.yu_zhejian.ystr.utils;
 /** Utilities for JVM. */
 public final class JVMUtils {
 
-    /** Defunct Constructor **/
+    /** Defunct Constructor * */
     private JVMUtils() {}
 
     /** Print various JVM information to stdout. */

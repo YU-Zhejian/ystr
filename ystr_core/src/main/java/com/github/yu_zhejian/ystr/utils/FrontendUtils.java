@@ -6,7 +6,7 @@ import java.text.DecimalFormat;
 
 /** Helper functions for various text-based frontends. */
 public final class FrontendUtils {
-    /** Defunct Constructor **/
+    /** Defunct Constructor * */
     private FrontendUtils() {}
 
     private static final long K = 1L << 10;

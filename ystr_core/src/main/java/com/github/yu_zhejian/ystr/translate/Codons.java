@@ -12,7 +12,7 @@ import java.util.List;
  * @see <a href="https://www.ncbi.nlm.nih.gov/Taxonomy/Utils/wprintgc.cgi">Data source</a>
  */
 public final class Codons {
-    /** Defunct Constructor **/
+    /** Defunct Constructor * */
     private Codons() {}
 
     public static final CodonRecord NOP_CODONS =

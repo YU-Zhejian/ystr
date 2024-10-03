@@ -1,9 +1,9 @@
 package com.github.yu_zhejian.ystr;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.github.yu_zhejian.ystr.utils.RngUtils;
 import org.junit.jupiter.api.Test;
 
 import java.nio.charset.StandardCharsets;
@@ -29,15 +29,39 @@ class StrLibcTest {
     }
 
     @Test
-    void memsetBB(){
-        final int ARR_LEN = 1<<20;
-        var buff = new byte[ARR_LEN];
-        for (int i = 0; i < 100; i++) {
-            var ranges = RngUtils.generateRandomCoordinates(1000, 0, ARR_LEN);
-            for (final var range: ranges) {
-                Arrays.fill(buff, range.firstInt(), range.secondInt(), (byte)1);
-                StrLibc.memsetBB(buff, (byte)1, range.firstInt(), range.secondInt() - range.firstInt());
-            }
-        }
+    void memset() {
+        var buff = new byte[10];
+
+        Arrays.fill(buff, (byte) 0);
+        StrLibc.memset(buff, (byte) 1, 1, 0);
+        assertArrayEquals(new byte[] {0, 0, 0, 0, 0, 0, 0, 0, 0, 0}, buff);
+
+        Arrays.fill(buff, (byte) 0);
+        StrLibc.memset(buff, (byte) 1, 1, 1);
+        assertArrayEquals(new byte[] {0, 1, 0, 0, 0, 0, 0, 0, 0, 0}, buff);
+
+        Arrays.fill(buff, (byte) 0);
+        StrLibc.memset(buff, (byte) 1, 1, 2);
+        assertArrayEquals(new byte[] {0, 1, 1, 0, 0, 0, 0, 0, 0, 0}, buff);
+
+        Arrays.fill(buff, (byte) 0);
+        StrLibc.memset(buff, (byte) 1, 1, 3);
+        assertArrayEquals(new byte[] {0, 1, 1, 1, 0, 0, 0, 0, 0, 0}, buff);
+
+        Arrays.fill(buff, (byte) 0);
+        StrLibc.memset(buff, (byte) 1, 1, 4);
+        assertArrayEquals(new byte[] {0, 1, 1, 1, 1, 0, 0, 0, 0, 0}, buff);
+
+        Arrays.fill(buff, (byte) 0);
+        StrLibc.memset(buff, (byte) 1, 1, 5);
+        assertArrayEquals(new byte[] {0, 1, 1, 1, 1, 1, 0, 0, 0, 0}, buff);
+
+        Arrays.fill(buff, (byte) 0);
+        StrLibc.memset(buff, (byte) 1, 5);
+        assertArrayEquals(new byte[] {1, 1, 1, 1, 1, 0, 0, 0, 0, 0}, buff);
+
+        Arrays.fill(buff, (byte) 0);
+        StrLibc.memset(buff, (byte) 1);
+        assertArrayEquals(new byte[] {1, 1, 1, 1, 1, 1, 1, 1, 1, 1}, buff);
     }
 }
