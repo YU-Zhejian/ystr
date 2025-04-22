@@ -10,6 +10,8 @@ import com.github.yu_zhejian.ystr.utils.FrontendUtils;
 import com.github.yu_zhejian.ystr.utils.IterUtils;
 import com.github.yu_zhejian.ystr.utils.LogUtils;
 
+import com.github.yu_zhejian.ystr_demo.tinymap.ds.EncodedPositionsWithHashes;
+import com.github.yu_zhejian.ystr_demo.tinymap.ds.IndexedPositions;
 import htsjdk.samtools.reference.FastaSequenceIndex;
 import htsjdk.samtools.reference.ReferenceSequenceFileFactory;
 
@@ -35,7 +37,6 @@ import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collections;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
@@ -65,7 +66,6 @@ public final class GenomeIndexer {
     private final Lock lock = new ReentrantLock();
     /** Statistics of the index and indexing process. * */
     private final GenomeIndexStatistics gis;
-
     /** Whether detailed statistics will be recorded. **/
     private final boolean recordStatistics;
 
@@ -99,7 +99,7 @@ public final class GenomeIndexer {
             throws IOException {
         var wlen = 0L;
 
-        var hashAndLen = LongEncoder.encodeLongs(hash, encodedPositions.size()).toByteArray();
+        var hashAndLen = LongEncoder.encodeLongs(hash, encodedPositions.size()).array();
         w.write(hashAndLen);
         wlen += hashAndLen.length;
 
@@ -134,54 +134,6 @@ public final class GenomeIndexer {
     }
 
     /**
-     * The encoded positions with hashes. Used <b>WITHIN ONE CONTIG</b> only.
-     * <p>
-     *               TODO: Have it indexed somehow.
-     * 
-     * @param encodedPositions Positive positions when forward hash is smaller than reverse hash.
-     *                         Note that the positions should be related to the contig instead of the chunk.
-     * @param hashes Hashes for each k-mer.
-     */
-    record EncodedPositionsWithHashes(
-        LongList encodedPositions, LongList hashes
-    ){
-        public static byte[] MAGIC = "TM-EPH".getBytes(StandardCharsets.US_ASCII);
-
-        /**
-         * Return hash-to-position mapping.
-         *
-         * @return As described.
-         */
-        public @NotNull Long2ObjectMap<LongList> toMap(){
-            final var encodedHashOffsetDict = new Long2ObjectOpenHashMap<LongList>();
-            for (var i = 0; i < hashes().size(); i++) {
-                final long hashValue = encodedPositions().getLong(i);
-                encodedHashOffsetDict.computeIfAbsent(hashValue, k -> new LongArrayList());
-                encodedHashOffsetDict
-                    .get(hashValue)
-                    .add(encodedPositions().getLong(i));
-            }
-            return encodedHashOffsetDict;
-        }
-
-        public int serialize(final @NotNull OutputStream w) throws IOException {
-            var retv = 0;
-            w.write(MAGIC);
-            retv += MAGIC.length;
-
-            var encodedPositionsEncoded = LongEncoder.encodeLongList(encodedPositions);
-            w.write(encodedPositionsEncoded.toByteArray());
-            retv += encodedPositionsEncoded.size();
-
-            var hashesEncoded = LongEncoder.encodeLongList(hashes);
-            w.write(hashesEncoded.toByteArray());
-            retv += hashesEncoded.size();
-
-            return retv;
-        }
-    }
-
-    /**
      * Filter hashes and shannon entropies.
      *
      * @param fwdHashes Forward hashes.
@@ -192,7 +144,7 @@ public final class GenomeIndexer {
      * @return As described.
      */
     @Contract("_, _, _, _, _ -> new")
-    private static @NotNull GenomeIndexer.EncodedPositionsWithHashes filterHashesAndShannonEntropies(
+    private static @NotNull EncodedPositionsWithHashes filterHashesAndShannonEntropies(
         final @NotNull LongList fwdHashes,
         final LongList revHashes,
         final DoubleList shannonEntropies,
@@ -227,7 +179,7 @@ public final class GenomeIndexer {
          * @return As described.
          */
     @Contract("_, _ -> new")
-    private static @NotNull GenomeIndexer.EncodedPositionsWithHashes calcMinimizers(
+    private static @NotNull EncodedPositionsWithHashes calcMinimizers(
         @NotNull EncodedPositionsWithHashes eph,
         final @NotNull GenomeIndexerConfig config) {
 
@@ -245,33 +197,24 @@ public final class GenomeIndexer {
         return new EncodedPositionsWithHashes(encodedPositions, minimizers);
     }
 
-    private @NotNull Long2ObjectOpenHashMap<ByteArrayList> constructMinimizerMap(
+    private @NotNull Long2ObjectMap<IndexedPositions> constructMinimizerMap(
             final byte @NotNull [] string,
             final long contigID,
             final long offsetOfFirst,
             final @NotNull GenomeIndexerConfig config) {
         final var thisShannonEntropies = calcShannonEntropy(string, config);
+        final var hashes = NtHashBase.hashOnBothDirections(
+                new PrecomputedBidirectionalNtHash(), string.length, string, config.kmerSize(), 0);
+        final var entropyFilteredEph = filterHashesAndShannonEntropies(hashes._1(), hashes._2(), thisShannonEntropies, offsetOfFirst, config);
+
+        final var minimizerEph = calcMinimizers(entropyFilteredEph, config);
 
         if (recordStatistics){
             for (double entropy: thisShannonEntropies) {
                 gis.shannonEntropy().addValue(entropy);
             }
             gis.numAllKmers().addAndGet(thisShannonEntropies.size());
-        }
-        
-        final var hashes = NtHashBase.hashOnBothDirections(
-                new PrecomputedBidirectionalNtHash(), string.length, string, config.kmerSize(), 0);
-        final var entropyFilteredEph = filterHashesAndShannonEntropies(hashes._1(), hashes._2(), thisShannonEntropies, offsetOfFirst, config);
-
-        if (recordStatistics){
             gis.numProcessedKmers().addAndGet(entropyFilteredEph.encodedPositions().size());
-        }
-
-        final var minimizerEph = calcMinimizers(entropyFilteredEph, config);
-
-        var encodedHashOffsetDict = new Long2ObjectOpenHashMap<ByteArrayList>();
-
-        if (recordStatistics){
             var lastPos = offsetOfFirst;
             for (var i = 0; i < minimizerEph.hashes().size(); i++) {
                 final long encodedPos = minimizerEph.encodedPositions().getLong(i);
@@ -282,7 +225,7 @@ public final class GenomeIndexer {
                 }
         }
 
-        return encodedHashOffsetDict;
+        return minimizerEph.toIndexedPositionsMap(contigID);
     }
 
     /**
@@ -326,7 +269,7 @@ public final class GenomeIndexer {
             throws IOException {
         fmtLogChrSplit(string.length, contigID, offsetOfFirst, nthPart, "Calculating minimizers");
         var encodedHOffsetDict =
-                constructMinimizerMap(string, contigID, offsetOfFirst, config, gis);
+                constructMinimizerMap(string, contigID, offsetOfFirst, config);
         gis.numMinimizers().addAndGet(encodedHOffsetDict.size());
 
         fmtLogChrSplit(string.length, contigID, offsetOfFirst, nthPart, "Writing minimizers");

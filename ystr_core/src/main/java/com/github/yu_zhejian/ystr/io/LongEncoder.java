@@ -11,28 +11,29 @@ import java.nio.ByteBuffer;
 
 public final class LongEncoder {
 
-    public static @NotNull ByteList encodeLongList(@NotNull LongList l){
+    public static @NotNull ByteBuffer encodeLongList(@NotNull LongList l){
         final var bb = ByteBuffer.allocate(Long.BYTES * l.size());
         bb.clear();
         for (final var i : l) {
             bb.putLong(i);
         }
         bb.rewind();
-        return new ByteArrayList(bb.array());
+        return bb;
     }
 
-    public static @NotNull ByteList encodeLongArray(long @NotNull [] l){
+    public static @NotNull ByteBuffer encodeLongArray(long @NotNull [] l){
         final var bb = ByteBuffer.allocate(Long.BYTES * l.length);
         bb.clear();
         for (final var i : l) {
             bb.putLong(i);
         }
         bb.rewind();
-        return new ByteArrayList(bb.array());
+        return bb;
     }
 
     @SuppressWarnings("PMD.LooseCoupling")
-    public static @NotNull ByteList encodeLongs(long @NotNull ... l) {
+    public static @NotNull ByteBuffer encodeLongs(long @NotNull ... l) {
         return encodeLongArray(l);
     }
+
 }
