@@ -125,5 +125,4 @@ public final class NtHash extends NtHashBase {
         hash.detach();
         return retv;
     }
-
 }

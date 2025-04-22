@@ -13,9 +13,8 @@ import java.util.zip.Checksum;
  * Hash constants.
  *
  * @apiNote All constants defined in this class are thread safe.
- * <p>
- * However, you need to initialize a new instance for every thread.
- * */
+ *     <p>However, you need to initialize a new instance for every thread.
+ */
 public final class HashConstants {
     /** Instance of {@link APHash}. */
     public final HashInterface AP_HASH = new APHash();
@@ -52,9 +51,7 @@ public final class HashConstants {
     /** Instance of {@link Adler32}. */
     public final HashInterface JUL_ALDER32_CHECKSUM = cast(new Adler32());
 
-    /**
-     * Default initializer.
-     */
+    /** Default initializer. */
     public HashConstants() {}
 
     /**

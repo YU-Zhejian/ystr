@@ -13,19 +13,17 @@ import com.github.yu_zhejian.ystr.utils.LogUtils;
 import htsjdk.samtools.reference.FastaSequenceIndex;
 import htsjdk.samtools.reference.ReferenceSequenceFileFactory;
 
-import io.vavr.Tuple;
-import io.vavr.Tuple2;
-
 import it.unimi.dsi.fastutil.BigList;
 import it.unimi.dsi.fastutil.bytes.ByteArrayList;
 import it.unimi.dsi.fastutil.doubles.DoubleList;
-import it.unimi.dsi.fastutil.ints.IntList;
+import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.longs.LongArrayList;
 import it.unimi.dsi.fastutil.longs.LongBigArrayBigList;
 import it.unimi.dsi.fastutil.longs.LongList;
 import it.unimi.dsi.fastutil.objects.ObjectBigArrayBigList;
 
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,12 +32,15 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Collections;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public final class GenomeIndexer {
+    /** Logger. */
     private static final Logger LH = LoggerFactory.getLogger(GenomeIndexer.class.getSimpleName());
 
     /** 512 Mbp per segment for large contigs. */
@@ -65,6 +66,18 @@ public final class GenomeIndexer {
     /** Statistics of the index and indexing process. * */
     private final GenomeIndexStatistics gis;
 
+    /** Whether detailed statistics will be recorded. **/
+    private final boolean recordStatistics;
+
+    /**
+     * Create a new genome indexer.
+     *
+     * @param fnaPath Path to input FASTA
+     * @param outDirectory Output directory.
+     * @param config The indexer configuration.
+     * @param recordStatistics Whether detailed statistics will be recorded.
+     *                         Will slow down the process.
+     */
     public GenomeIndexer(
             final Path fnaPath,
             final Path outDirectory,
@@ -73,7 +86,8 @@ public final class GenomeIndexer {
         this.outDirectory = outDirectory;
         this.fnaPath = fnaPath;
         this.config = config;
-        gis = recordStatistics
+        this.recordStatistics = recordStatistics;
+        gis = this.recordStatistics
                 ? GenomeIndexStatistics.create()
                 : GenomeIndexStatistics.createDumb();
     }
@@ -84,20 +98,32 @@ public final class GenomeIndexer {
             final @NotNull ByteArrayList encodedPositions)
             throws IOException {
         var wlen = 0L;
-        var numPositions = encodedPositions.size() / ENCODED_POSITION_SIZE;
-        gis.numPositionsPerMinimizer().addValue(numPositions);
-        if (numPositions == 1) {
-            gis.minimizerSingletonNumber().getAndIncrement();
-        }
-        var hashAndLen = LongEncoder.encodeLong(hash, encodedPositions.size()).toByteArray();
+
+        var hashAndLen = LongEncoder.encodeLongs(hash, encodedPositions.size()).toByteArray();
         w.write(hashAndLen);
         wlen += hashAndLen.length;
-        var arr = encodedPositions.toByteArray();
+
+        final var arr = encodedPositions.toByteArray();
         w.write(arr);
         wlen += arr.length;
+
+        if(recordStatistics) {
+            final var numPositions = encodedPositions.size() / ENCODED_POSITION_SIZE;
+            gis.numPositionsPerMinimizer().addValue(numPositions);
+            if (numPositions == 1) {
+                gis.minimizerSingletonNumber().getAndIncrement();
+            }
+        }
         return wlen;
     }
 
+    /**
+     * Calculate Shannon entropy for all k-mers inside the entire chunk.
+     *
+     * @param string As described.
+     * @param config As described.
+     * @return As described.
+     */
     private static @NotNull DoubleList calcShannonEntropy(
             final byte @NotNull [] string, final @NotNull GenomeIndexerConfig config) {
         var nts = new NtShannonEntropy();
@@ -107,91 +133,168 @@ public final class GenomeIndexer {
         return retv;
     }
 
-    private static @NotNull Tuple2<LongArrayList, LongArrayList> calcMinimizers(
-            final @NotNull Tuple2<LongList, LongList> hashes,
-            final @NotNull IntList passingIdx,
-            final long offsetOfFirst,
-            final GenomeIndexerConfig config) {
-        var fwdHashes = hashes._1();
-        var revHashes = hashes._2();
-        var passedNtHashes = new LongArrayList(passingIdx.size());
-        var encodedPositionsOfPassedNtHashes = new LongArrayList(passingIdx.size());
+    /**
+     * The encoded positions with hashes. Used <b>WITHIN ONE CONTIG</b> only.
+     * <p>
+     *               TODO: Have it indexed somehow.
+     * 
+     * @param encodedPositions Positive positions when forward hash is smaller than reverse hash.
+     *                         Note that the positions should be related to the contig instead of the chunk.
+     * @param hashes Hashes for each k-mer.
+     */
+    record EncodedPositionsWithHashes(
+        LongList encodedPositions, LongList hashes
+    ){
+        public static byte[] MAGIC = "TM-EPH".getBytes(StandardCharsets.US_ASCII);
 
+        /**
+         * Return hash-to-position mapping.
+         *
+         * @return As described.
+         */
+        public @NotNull Long2ObjectMap<LongList> toMap(){
+            final var encodedHashOffsetDict = new Long2ObjectOpenHashMap<LongList>();
+            for (var i = 0; i < hashes().size(); i++) {
+                final long hashValue = encodedPositions().getLong(i);
+                encodedHashOffsetDict.computeIfAbsent(hashValue, k -> new LongArrayList());
+                encodedHashOffsetDict
+                    .get(hashValue)
+                    .add(encodedPositions().getLong(i));
+            }
+            return encodedHashOffsetDict;
+        }
+
+        public int serialize(final @NotNull OutputStream w) throws IOException {
+            var retv = 0;
+            w.write(MAGIC);
+            retv += MAGIC.length;
+
+            var encodedPositionsEncoded = LongEncoder.encodeLongList(encodedPositions);
+            w.write(encodedPositionsEncoded.toByteArray());
+            retv += encodedPositionsEncoded.size();
+
+            var hashesEncoded = LongEncoder.encodeLongList(hashes);
+            w.write(hashesEncoded.toByteArray());
+            retv += hashesEncoded.size();
+
+            return retv;
+        }
+    }
+
+    /**
+     * Filter hashes and shannon entropies.
+     *
+     * @param fwdHashes Forward hashes.
+     * @param revHashes Reverse hashes.
+     * @param shannonEntropies Shannon entropies.
+     * @param offsetOfFirst As described.
+     * @param config As described.
+     * @return As described.
+     */
+    @Contract("_, _, _, _, _ -> new")
+    private static @NotNull GenomeIndexer.EncodedPositionsWithHashes filterHashesAndShannonEntropies(
+        final @NotNull LongList fwdHashes,
+        final LongList revHashes,
+        final DoubleList shannonEntropies,
+        final long offsetOfFirst,
+        final GenomeIndexerConfig config) {
+        var encodedPositions = new LongArrayList ();
+        var hashes = new LongArrayList ();
+        
         // Filtering and encoding of positions.
-        for (int i = 0; i < passingIdx.size(); i++) {
-            final int pos = passingIdx.getInt(i);
-            long fwdHash = fwdHashes.getLong(pos);
-            long revHash = revHashes.getLong(pos);
-            if (fwdHash == revHash) {
+        for (int posOnChunk = 0; posOnChunk < fwdHashes.size(); posOnChunk++) {
+            final long fwdHash = fwdHashes.getLong(posOnChunk);
+            final long revHash = revHashes.getLong(posOnChunk);
+            if (fwdHash == revHash || shannonEntropies.getDouble(posOnChunk) < config.ntShannonEntropyCutoff()) {
                 continue;
             }
             if (fwdHash + Long.MIN_VALUE < revHash + Long.MIN_VALUE) {
-                passedNtHashes.add(fwdHash);
-                encodedPositionsOfPassedNtHashes.add(i + offsetOfFirst);
+                hashes.add(fwdHash);
+                encodedPositions.add(posOnChunk + offsetOfFirst);
             } else {
-                passedNtHashes.add(revHash);
-                encodedPositionsOfPassedNtHashes.add(-i - offsetOfFirst);
+                hashes.add(revHash);
+                encodedPositions.add(-posOnChunk - offsetOfFirst);
             }
         }
+        return new EncodedPositionsWithHashes(encodedPositions, hashes);
+    }
+
+        /**
+         * Filter the EPH using minimizer algorithm.
+         *
+         * @param eph As described.
+         * @param config As described.
+         * @return As described.
+         */
+    @Contract("_, _ -> new")
+    private static @NotNull GenomeIndexer.EncodedPositionsWithHashes calcMinimizers(
+        @NotNull EncodedPositionsWithHashes eph,
+        final @NotNull GenomeIndexerConfig config) {
 
         // Calculating minimizers
         var minimizerIndices = MinimizerCalculator.getMinimizerPositions(
-                passedNtHashes, config.numKmerPerMinimizer(), false);
+            eph.hashes(), config.numKmerPerMinimizer(), false);
 
         // Adding minimizers
-        var minimizers = new LongArrayList(minimizerIndices.size());
-        var encodedPositionsOfMinimizers = new LongArrayList(minimizerIndices.size());
-        for (int i : IterUtils.dedup(minimizerIndices)) {
-            minimizers.add(passedNtHashes.getLong(i));
-            encodedPositionsOfMinimizers.add(encodedPositionsOfPassedNtHashes.getLong(i));
+        final var minimizers = new LongArrayList(minimizerIndices.size());
+        final var encodedPositions = new LongArrayList(minimizerIndices.size());
+        for (final int i : IterUtils.dedup(minimizerIndices)) {
+            minimizers.add(eph.hashes().getLong(i));
+            encodedPositions.add(eph.encodedPositions().getLong(i));
         }
-        return Tuple.of(encodedPositionsOfMinimizers, minimizers);
+        return new EncodedPositionsWithHashes(encodedPositions, minimizers);
     }
 
-    public static @NotNull Long2ObjectOpenHashMap<ByteArrayList> constructMinimizerMap(
+    private @NotNull Long2ObjectOpenHashMap<ByteArrayList> constructMinimizerMap(
             final byte @NotNull [] string,
             final long contigID,
             final long offsetOfFirst,
-            final @NotNull GenomeIndexerConfig config,
-            final GenomeIndexStatistics gis) {
-        var thisShannonEntropy = calcShannonEntropy(string, config);
-        for (int i = 0; i < thisShannonEntropy.size(); i++) {
-            gis.shannonEntropy().addValue(thisShannonEntropy.getDouble(i));
+            final @NotNull GenomeIndexerConfig config) {
+        final var thisShannonEntropies = calcShannonEntropy(string, config);
+
+        if (recordStatistics){
+            for (double entropy: thisShannonEntropies) {
+                gis.shannonEntropy().addValue(entropy);
+            }
+            gis.numAllKmers().addAndGet(thisShannonEntropies.size());
         }
-        gis.numAllKmers().addAndGet(thisShannonEntropy.size());
-
-        var passingIdx =
-                IterUtils.where(thisShannonEntropy, i -> i > config.ntShannonEntropyCutoff());
-        gis.numProcessedKmers().addAndGet(passingIdx.size());
-
-        var hashes = NtHashBase.hashOnBothDirections(
+        
+        final var hashes = NtHashBase.hashOnBothDirections(
                 new PrecomputedBidirectionalNtHash(), string.length, string, config.kmerSize(), 0);
+        final var entropyFilteredEph = filterHashesAndShannonEntropies(hashes._1(), hashes._2(), thisShannonEntropies, offsetOfFirst, config);
 
-        var minimizerSpec = calcMinimizers(hashes, passingIdx, offsetOfFirst, config);
+        if (recordStatistics){
+            gis.numProcessedKmers().addAndGet(entropyFilteredEph.encodedPositions().size());
+        }
 
-        var positions = minimizerSpec._1();
-        var minimizers = minimizerSpec._2();
+        final var minimizerEph = calcMinimizers(entropyFilteredEph, config);
 
         var encodedHashOffsetDict = new Long2ObjectOpenHashMap<ByteArrayList>();
 
-        var lastPos = offsetOfFirst;
-        for (var i = 0; i < minimizers.size(); i++) {
-            final long encodedPos = positions.getLong(i);
-            final long realPos = Math.abs(encodedPos);
-            gis.minimizerDistances().addValue(realPos - lastPos);
-            lastPos = realPos;
+        if (recordStatistics){
+            var lastPos = offsetOfFirst;
+            for (var i = 0; i < minimizerEph.hashes().size(); i++) {
+                final long encodedPos = minimizerEph.encodedPositions().getLong(i);
 
-            final long hashValue = minimizers.getLong(i);
-            encodedHashOffsetDict.computeIfAbsent(hashValue, k -> new ByteArrayList());
-            encodedHashOffsetDict
-                    .get(hashValue)
-                    .addAll(LongEncoder.encodeLong(contigID, encodedPos));
+                    final long realPos = Math.abs(encodedPos);
+                    gis.minimizerDistances().addValue(realPos - lastPos);
+                    lastPos = realPos;
+                }
         }
 
         return encodedHashOffsetDict;
     }
 
-    public void fmtLogChrSplit(
+    /**
+     * Prints out the progress of processing a chromosome.
+     *
+     * @param strLen The length of the chunk being processed.
+     * @param contigID As described.
+     * @param offsetOfFirst As described.
+     * @param nthPart The index of the chunk being processed.
+     * @param trailing Other information to print.
+     */
+    private void fmtLogChrSplit(
             final int strLen,
             final long contigID,
             final long offsetOfFirst,
@@ -206,77 +309,99 @@ public final class GenomeIndexer {
                 trailing);
     }
 
+    /**
+     * Generates hashes for a chromosome chunk.
+     *
+     * @param string The chromosome chunk to process.
+     * @param contigID As described.
+     * @param offsetOfFirst 0-based inclusive offset of the first base of the chunk on the chromosome.
+     * @param nthPart As described.
+     * @throws IOException As described.
+     */
     public void generateHashesChrSplit(
             final byte @NotNull [] string,
             final long contigID,
             final long offsetOfFirst,
             final int nthPart)
             throws IOException {
-        var contigName = contigNames.get(contigID);
         fmtLogChrSplit(string.length, contigID, offsetOfFirst, nthPart, "Calculating minimizers");
         var encodedHOffsetDict =
                 constructMinimizerMap(string, contigID, offsetOfFirst, config, gis);
+        gis.numMinimizers().addAndGet(encodedHOffsetDict.size());
 
         fmtLogChrSplit(string.length, contigID, offsetOfFirst, nthPart, "Writing minimizers");
 
-        var out = Path.of(outDirectory.toString(), "%s.%d.idx.bin".formatted(contigName, nthPart))
+        final var outFileName = "%d.%d.idx.bin".formatted(contigID, nthPart);
+        final var outFile = Path.of(outDirectory.toString(), outFileName)
                 .toFile();
         lock.lock();
-        contigIndexPaths.get(contigID).add(out.getAbsolutePath());
+        contigIndexPaths.get(contigID).add(outFileName);
         lock.unlock();
 
-        try (var w = new FileOutputStream(out)) {
-            gis.numMinimizers().addAndGet(encodedHOffsetDict.size());
-
+        var chunkIndexSize = 0L;
+        try (final var w = new FileOutputStream(outFile)) {
             for (var entry : encodedHOffsetDict.long2ObjectEntrySet()) {
-                gis.fimalIndexSize()
-                        .addAndGet(appendToOutput(w, entry.getLongKey(), entry.getValue()));
+                chunkIndexSize += appendToOutput(w, entry.getLongKey(), entry.getValue());
             }
         }
+        gis.finalIndexSize().addAndGet(chunkIndexSize);
         fmtLogChrSplit(string.length, contigID, offsetOfFirst, nthPart, "Finished");
     }
 
     private void indexChrSplit() {
-        var refi = new FastaSequenceIndex(new File(fnaPath + ".fai"));
-        for (var refSpec : refi) {
+        final var refi = new FastaSequenceIndex(new File(fnaPath + ".fai"));
+
+        for (final var refSpec : refi) {
             contigLens.add(refSpec.getSize());
             contigNames.add(refSpec.getContig());
             contigIndexPaths.add(new ObjectBigArrayBigList<>());
             gis.contigLens().addValue(refSpec.getSize());
         }
         try (var ref = ReferenceSequenceFileFactory.getReferenceSequenceFile(fnaPath.toFile())) {
-            for (var i = 0L; i < contigNames.size64(); i++) {
-                var fromfwd = 1L;
-                var tofwd = fromfwd + CHR_SPLIT_SEG_LEN + config.kmerSize();
+            for (var contigID = 0L; contigID < contigNames.size64(); contigID++) {
+                var offsetOfFirst = 0L;
+                var offsetOfLast = 0L;
                 var nthPart = 0;
+                final var contigLen = contigLens.getLong(contigID);
+
                 do {
+                    offsetOfLast = Long.min(
+                        offsetOfFirst + CHR_SPLIT_SEG_LEN + config.kmerSize() + 1,
+                        contigLen
+                    );
                     final byte[] finalSeq = ref.getSubsequenceAt(
-                                    contigNames.get(i),
-                                    fromfwd - 1, // Due to 1-based indexing
-                                    Long.min(tofwd, contigLens.getLong(i)))
+                                    contigNames.get(contigID),
+                            offsetOfFirst,
+                            offsetOfLast)
                             .getBases();
-                    generateHashesChrSplit(finalSeq, i, tofwd, nthPart);
-                    fromfwd += CHR_SPLIT_SEG_LEN;
-                    tofwd += CHR_SPLIT_SEG_LEN;
+                    generateHashesChrSplit(finalSeq, contigID, offsetOfFirst, nthPart);
+                    offsetOfFirst += CHR_SPLIT_SEG_LEN;
                     nthPart++;
-                } while (tofwd <= contigLens.getLong(i));
+                } while (offsetOfFirst < contigLen);
             }
         } catch (IOException e) {
             throw new RuntimeIOException("", e);
         }
     }
 
-    public void index() throws IOException {
+    /**
+     * Construct the index and write the index to disk.
+     *
+     * @throws IOException As described.
+     * @return The index.
+     */
+    public @NotNull GenomeIndex index() throws IOException {
         Files.createDirectories(outDirectory);
         indexChrSplit();
         gis.printStatistics();
-        (new GenomeIndex(
-                        config,
-                        fnaPath.toAbsolutePath().toString(),
-                        contigLens,
-                        contigNames,
-                        contigIndexPaths))
-                .toDisk(Path.of(outDirectory.toString(), "index.json"));
+        final var gi = new GenomeIndex(
+            config,
+            fnaPath.toAbsolutePath().toString(),
+            contigLens,
+            contigNames,
+            contigIndexPaths);
+        gi.toDisk(Path.of(outDirectory.toString(), "index.json"));
+        return gi;
     }
 
     /**
@@ -286,7 +411,7 @@ public final class GenomeIndexer {
      */
     @Deprecated(forRemoval = true)
     public static void main(String[] args) throws IOException {
-        var basePath = "D:\\Work\\ystr\\test\\ref";
+        var basePath = "F:\\home\\Documents\\ystr\\test\\ref";
         var fnaPath = Path.of(basePath, "ce11.genomic.fna");
         var conf = GenomeIndexerConfig.minimap2();
         var gi = new GenomeIndexer(fnaPath, Path.of(fnaPath + ".d"), conf, false);

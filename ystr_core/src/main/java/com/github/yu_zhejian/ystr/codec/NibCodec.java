@@ -56,7 +56,7 @@ public final class NibCodec implements CodecInterface {
                 case 'C' -> 0x0001;
                 case 'A' -> 0x0010;
                 case 'G' -> 0x0011;
-                    // N becomes default
+                // N becomes default
                 case 't' -> 0x1000;
                 case 'c' -> 0x1001;
                 case 'a' -> 0x1010;

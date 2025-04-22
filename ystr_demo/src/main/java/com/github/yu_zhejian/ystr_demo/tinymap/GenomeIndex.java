@@ -19,6 +19,17 @@ import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
 
+/**
+ * Data structure for genome index.
+ * <p>
+ * The current implementation loads everything in memory.
+ *
+ * @param config The configuration of the indexer.
+ * @param fnaPath Path to the original FASTA file.
+ * @param contigLens The length of each contig.
+ * @param contigNames The names of each contig.
+ * @param contigIndexPaths The paths to the index files. A contig may have multiple indices.
+ */
 public record GenomeIndex(
         GenomeIndexerConfig config,
         String fnaPath,
@@ -26,6 +37,11 @@ public record GenomeIndex(
         BigList<String> contigNames,
         BigList<BigList<String>> contigIndexPaths) {
 
+    /**
+     * Number of contigs.
+     *
+     * @return As described.
+     */
     public long numContigs() {
         return contigNames.size64();
     }
@@ -37,13 +53,11 @@ public record GenomeIndex(
         for (long i = 0; i < numContigs(); i++) {
             oConfig.setProperty("contig.%d.contigLen".formatted(i), contigLens.getLong(i));
             oConfig.setProperty("contig.%d.contigName".formatted(i), contigNames.get(i));
-            // FIXME: Errors here: List not saved as lists due to Apache Commons.
-            // May change to
-            // https://mvnrepository.com/artifact/com.electronwill.night-config/toml
-            // or
-            // https://mvnrepository.com/artifact/org.ini4j/ini4j/0.5.4
-            // instead
-            oConfig.setProperty("contig.%d.contigIndexPaths".formatted(i), contigIndexPaths.get(i));
+            long numContigIndexPaths = contigIndexPaths.get(i).size64();
+            oConfig.setProperty("contig.%d.numContigIndexPaths".formatted(i), numContigIndexPaths);
+            for (long j = 0; j < numContigIndexPaths; j++) {
+                oConfig.setProperty("contig.%d.contigIndexPaths.%d".formatted(i, j), contigIndexPaths.get(i).get(j));
+            }
         }
         oConfig.setProperty("config.kmerSize", config.kmerSize());
         oConfig.setProperty("config.numKmerPerMinimizer", config.numKmerPerMinimizer());
@@ -81,8 +95,12 @@ public record GenomeIndex(
             for (long i = 0; i < numContigs; i++) {
                 contigLens.add(iConfig.getLong("contig.%d.contigLen".formatted(i)));
                 contigNames.add(iConfig.getString("contig.%d.contigName".formatted(i)));
-                contigIndexPaths.add(new ObjectBigArrayBigList<>(
-                        iConfig.getList(String.class, "contig.%d.contigIndexPaths")));
+                long numContigIndexPaths = iConfig.getLong("contig.%d.numContigIndexPaths".formatted(i));
+                var thisContigIndexPaths = new ObjectBigArrayBigList<String>();
+                for (long j = 0; j < numContigIndexPaths; j++) {
+                    thisContigIndexPaths.add(iConfig.getString("contig.%d.contigIndexPaths.%d".formatted(i, j)));
+                }
+                contigIndexPaths.add(thisContigIndexPaths);
             }
             return new GenomeIndex(
                     new GenomeIndexerConfig(

@@ -1,6 +1,7 @@
 package com.github.yu_zhejian.ystr.rolling;
 
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 
 import com.github.yu_zhejian.ystr.utils.IterUtils;
@@ -12,13 +13,27 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 class NtHashBaseTest {
-
     void testPrecomputedNtHash(List<Long> expected, @NotNull String bases) {
         for (var hasher : List.of(new PrecomputedNtHash(), new NtHash())) {
             hasher.attach(bases.getBytes(StandardCharsets.UTF_8), 5);
             assertIterableEquals(expected, IterUtils.collect(hasher));
             hasher.detach();
         }
+    }
+
+    @Test
+    void convenient() {
+        assertEquals(
+                0x0baf_a672_8fc6_dabfL,
+                PrecomputedNtHash.convenient("TGCAG".getBytes(StandardCharsets.US_ASCII)));
+        assertEquals(
+                0x4802_02d5_4e8e_becdL,
+                PrecomputedNtHash.convenient("ACGTC".getBytes(StandardCharsets.US_ASCII)));
+        assertEquals(
+                0x1cdc_f223_eb42_cf5bL,
+                PrecomputedNtHash.convenient(
+                        "TGACAGATGATAGATAGATCGCTCGCTAGCTAGTCAACTCGTAGTGCTGATGCTGTAGTGCAAGTCGGCTCTGCTCGCTCGC"
+                                .getBytes(StandardCharsets.US_ASCII)));
     }
 
     @Test

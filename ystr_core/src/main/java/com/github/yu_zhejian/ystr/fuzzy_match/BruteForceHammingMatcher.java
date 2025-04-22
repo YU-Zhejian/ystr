@@ -1,6 +1,6 @@
 package com.github.yu_zhejian.ystr.fuzzy_match;
 
-import com.github.yu_zhejian.ystr.StrDistance;
+import com.github.yu_zhejian.ystr.distance.HammingDistance;
 import com.github.yu_zhejian.ystr.match.StrMatchInterface;
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;
@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 
 public final class BruteForceHammingMatcher implements StrMatchInterface {
     private final int maxDistance;
+    private final HammingDistance hammingDistance = new HammingDistance();
 
     public BruteForceHammingMatcher(final int maxDistance) {
         if (maxDistance <= 0) {
@@ -26,7 +27,7 @@ public final class BruteForceHammingMatcher implements StrMatchInterface {
         int numMatch = 0;
         final var retl = new IntArrayList();
         while (haystackPos + needle.length < end) {
-            if (StrDistance.hammingDistance(
+            if (hammingDistance.applyUnchecked(
                             haystack,
                             needle,
                             haystackPos,

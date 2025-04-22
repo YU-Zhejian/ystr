@@ -26,15 +26,15 @@ class CRC32HashTest {
         assertEquals(
                 0x00000000,
                 HashInterface.convenientHash(
-                    hashConstants.CRC32_HASH, "".getBytes(StandardCharsets.US_ASCII)));
+                        hashConstants.CRC32_HASH, "".getBytes(StandardCharsets.US_ASCII)));
         assertEquals(
                 0x66a031a7,
                 HashInterface.convenientHash(
-                    hashConstants.CRC32_HASH, "AAA".getBytes(StandardCharsets.US_ASCII)));
+                        hashConstants.CRC32_HASH, "AAA".getBytes(StandardCharsets.US_ASCII)));
         assertEquals(
                 0x5AB5AEDD,
                 HashInterface.convenientHash(
-                    hashConstants.CRC32_HASH, "ATCG".getBytes(StandardCharsets.US_ASCII)));
+                        hashConstants.CRC32_HASH, "ATCG".getBytes(StandardCharsets.US_ASCII)));
         assertEquals(
                 0x41D912FF,
                 HashInterface.convenientHash(hashConstants.CRC32_HASH, new byte[] {0, 0}));

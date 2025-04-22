@@ -11,41 +11,6 @@ public final class StrDistance {
     private StrDistance() {}
 
     /**
-     * Calculate Hamming distance, which is the number of different characters in two strings of
-     * equal length.
-     *
-     * @param array1 As described.
-     * @param array2 As described.
-     * @param start1 As described.
-     * @param end1 As described.
-     * @param start2 As described.
-     * @param end2 As described.
-     * @return As described.
-     */
-    public static int hammingDistance(
-            final byte @NotNull [] array1,
-            final byte @NotNull [] array2,
-            final int start1,
-            final int end1,
-            final int start2,
-            final int end2) {
-        StrUtils.ensureStartEndValid(start1, end1, array1.length);
-        StrUtils.ensureStartEndValid(start2, end2, array2.length);
-        if (end2 - start2 != end1 - start1) {
-            throw new IllegalArgumentException(
-                    "Compared region length difference! Actual: [%d, %d) (%d) vs. [%d, %d) (%d)"
-                            .formatted(start1, end1, end1 - start1, start2, end2, end2 - start2));
-        }
-        var reti = 0;
-        for (int i = 0; i < end1 - start1; i++) {
-            if (array1[start1 + i] != array2[start2 + i]) {
-                reti++;
-            }
-        }
-        return reti;
-    }
-
-    /**
      * Simple Levenshtein distance calculator without accelerations.
      *
      * <p>Generated with the help of TONGYI Lingma.
@@ -97,7 +62,7 @@ public final class StrDistance {
      * Full-length distance calculator.
      *
      * @param calculator Functions like {@link #simpleLevenshteinDistance(byte[], byte[], int, int,
-     *     int, int)} or {@link #hammingDistance(byte[], byte[], int, int, int, int)}.
+     *     int, int)}.
      * @param array1 As described.
      * @param array2 As described.
      * @return As described.

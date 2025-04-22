@@ -1,5 +1,7 @@
 plugins {
-	id 'java'
+	id "java"
+	id "jacoco"
+	id "jacoco-report-aggregation"
 }
 
 group = proj_group
@@ -11,10 +13,10 @@ dependencies {
 	implementation "it.unimi.dsi:fastutil:${FASTUTIL_VER}"
 	implementation "org.roaringbitmap:RoaringBitmap:${ROARING_BITMAP_VER}"
 
-    // See https://blog.jetbrains.com/idea/2016/08/using-junit-5-in-intellij-idea/
-    // See https://junit.org/junit5/docs/current/user-guide/#writing-tests
+	// See https://blog.jetbrains.com/idea/2016/08/using-junit-5-in-intellij-idea/
+	// See https://junit.org/junit5/docs/current/user-guide/#writing-tests
 	testImplementation platform("org.junit:junit-bom:${JUNIT_VER}")
-    testImplementation "org.junit.jupiter:junit-jupiter:${JUNIT_VER}"
+	testImplementation "org.junit.jupiter:junit-jupiter:${JUNIT_VER}"
 	testRuntimeOnly "org.junit.platform:junit-platform-launcher"
 	testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
 	testRuntimeOnly "org.junit.vintage:junit-vintage-engine"
@@ -36,9 +38,18 @@ java {
 	withSourcesJar()
 }
 
+// ---------------------------- Testings ----------------------------
 test {
 	useJUnitPlatform()
+	finalizedBy jacocoTestReport // report is always generated after tests run
 }
+
+jacocoTestReport {
+	reports {
+		xml.required = true
+	}
+}
+
 
 //configurations {
 //	asciidoclet

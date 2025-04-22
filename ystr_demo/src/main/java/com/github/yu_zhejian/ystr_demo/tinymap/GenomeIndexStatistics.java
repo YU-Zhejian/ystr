@@ -17,7 +17,7 @@ public record GenomeIndexStatistics(
         AtomicLong numMinimizers,
         AtomicLong numAllKmers,
         AtomicLong numProcessedKmers,
-        AtomicLong fimalIndexSize,
+        AtomicLong finalIndexSize,
         AtomicLong minimizerSingletonNumber,
         SummaryStatistics numPositionsPerMinimizer,
         SummaryStatistics minimizerDistances,
@@ -66,7 +66,7 @@ public record GenomeIndexStatistics(
                 LogUtils.lazy(LogUtils.calcPctLazy(numProcessedKmers, numAllKmers)));
         lh.info(
                 "FINAL index size: {}",
-                LogUtils.lazy(() -> FrontendUtils.toHumanReadable(fimalIndexSize, "B")));
+                LogUtils.lazy(() -> FrontendUtils.toHumanReadable(finalIndexSize, "B")));
         lh.info(
                 "FINAL NT entropy: {}",
                 LogUtils.lazy(SummaryStatisticsUtils.summarizeStatisticsWithFormatStr(

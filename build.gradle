@@ -6,8 +6,6 @@ import java.nio.charset.StandardCharsets
 plugins {
 	id "java"
 	id "distribution"
-	id "jacoco"
-	id "jacoco-report-aggregation"
 	id "pmd"
 	// https://mvnrepository.com/artifact/com.diffplug.spotless/spotless-plugin-gradle
 	// https://plugins.gradle.org/plugin/com.diffplug.spotless
@@ -54,16 +52,6 @@ allprojects {
 			exclude group: "com.google.code.findbugs", module: "jsr305"
 			exclude group: "org.apache.groovy", module: "groovy-console"
 		}
-	}
-}
-
-// ---------------------------- Testings ----------------------------
-test {
-	finalizedBy jacocoTestReport // report is always generated after tests run
-}
-jacocoTestReport {
-	reports {
-		xml.required = true
 	}
 }
 
