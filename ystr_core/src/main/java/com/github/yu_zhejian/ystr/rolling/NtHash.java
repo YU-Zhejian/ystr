@@ -110,4 +110,20 @@ public final class NtHash extends NtHashBase {
             default -> SEED_N;
         };
     }
+
+    /**
+     * ntHash version 1 for the entire DNA string.
+     *
+     * @param string As described.
+     * @return As described.
+     * @see NtHash
+     */
+    public static long convenient(final byte[] string) {
+        var hash = new NtHash();
+        hash.attach(string, string.length);
+        var retv = hash.nextLong();
+        hash.detach();
+        return retv;
+    }
+
 }

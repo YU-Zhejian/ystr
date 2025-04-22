@@ -9,44 +9,53 @@ import java.util.zip.CRC32;
 import java.util.zip.CRC32C;
 import java.util.zip.Checksum;
 
-/** Hash constants. */
+/**
+ * Hash constants.
+ *
+ * @apiNote All constants defined in this class are thread safe.
+ * <p>
+ * However, you need to initialize a new instance for every thread.
+ * */
 public final class HashConstants {
-    /** Static non-thread-safe instance of {@link APHash}. */
-    public static final HashInterface AP_HASH = new APHash();
-    /** Static non-thread-safe instance of {@link BitwiseFNV1a32}. */
-    public static final HashInterface BITWISE_FNV1A_32 = new BitwiseFNV1a32();
-    /** Static non-thread-safe instance of {@link BitwiseFNV1a64}. */
-    public static final HashInterface BITWISE_FNV1A_64 = new BitwiseFNV1a64();
-    /** Static non-thread-safe instance of {@link BKDRHash}. */
-    public static final HashInterface BKDR_HASH = new BKDRHash();
-    /** Static non-thread-safe instance of {@link BPHash}. */
-    public static final HashInterface BPH_HASH = new BPHash();
-    /** Static non-thread-safe instance of {@link DJBHash}. */
-    public static final HashInterface DJB_HASH = new DJBHash();
-    /** Static non-thread-safe instance of {@link ELFHash}. */
-    public static final HashInterface ELF_HASH = new ELFHash();
-    /** Static non-thread-safe instance of {@link JSHash}. */
-    public static final HashInterface JS_HASH = new JSHash();
-    /** Static non-thread-safe instance of {@link MultiplyFNV1a32}. */
-    public static final HashInterface MULTIPLY_FNV1A_32 = new MultiplyFNV1a32();
-    /** Static non-thread-safe instance of {@link MultiplyFNV1a64}. */
-    public static final HashInterface MULTIPLY_FNV1A_64 = new MultiplyFNV1a64();
-    /** Static non-thread-safe instance of {@link PJWHash}. */
-    public static final HashInterface PJW_HASH = new PJWHash();
-    /** Static non-thread-safe instance of {@link RSHash}. */
-    public static final HashInterface RS_HASH = new RSHash();
-    /** Static non-thread-safe instance of {@link SDBMHash}. */
-    public static final HashInterface SDBM_HASH = new SDBMHash();
-    /** Static non-thread-safe instance of {@link SDBMHash}. */
-    public static final HashInterface CRC32_HASH = new CRC32Hash();
-    /** Static non-thread-safe instance of {@link CRC32}. */
-    public static final HashInterface JUL_CRC32_CHECKSUM = cast(new CRC32());
-    /** Static non-thread-safe instance of {@link CRC32C}. */
-    public static final HashInterface JUL_CRC32C_CHECKSUM = cast(new CRC32C());
-    /** Static non-thread-safe instance of {@link Adler32}. */
-    public static final HashInterface JUL_ALDER32_CHECKSUM = cast(new Adler32());
+    /** Instance of {@link APHash}. */
+    public final HashInterface AP_HASH = new APHash();
+    /** Instance of {@link BitwiseFNV1a32}. */
+    public final HashInterface BITWISE_FNV1A_32 = new BitwiseFNV1a32();
+    /** Instance of {@link BitwiseFNV1a64}. */
+    public final HashInterface BITWISE_FNV1A_64 = new BitwiseFNV1a64();
+    /** Instance of {@link BKDRHash}. */
+    public final HashInterface BKDR_HASH = new BKDRHash();
+    /** Instance of {@link BPHash}. */
+    public final HashInterface BPH_HASH = new BPHash();
+    /** Instance of {@link DJBHash}. */
+    public final HashInterface DJB_HASH = new DJBHash();
+    /** Instance of {@link ELFHash}. */
+    public final HashInterface ELF_HASH = new ELFHash();
+    /** Instance of {@link JSHash}. */
+    public final HashInterface JS_HASH = new JSHash();
+    /** Instance of {@link MultiplyFNV1a32}. */
+    public final HashInterface MULTIPLY_FNV1A_32 = new MultiplyFNV1a32();
+    /** Instance of {@link MultiplyFNV1a64}. */
+    public final HashInterface MULTIPLY_FNV1A_64 = new MultiplyFNV1a64();
+    /** Instance of {@link PJWHash}. */
+    public final HashInterface PJW_HASH = new PJWHash();
+    /** Instance of {@link RSHash}. */
+    public final HashInterface RS_HASH = new RSHash();
+    /** Instance of {@link SDBMHash}. */
+    public final HashInterface SDBM_HASH = new SDBMHash();
+    /** Instance of {@link SDBMHash}. */
+    public final HashInterface CRC32_HASH = new CRC32Hash();
+    /** Instance of {@link CRC32}. */
+    public final HashInterface JUL_CRC32_CHECKSUM = cast(new CRC32());
+    /** Instance of {@link CRC32C}. */
+    public final HashInterface JUL_CRC32C_CHECKSUM = cast(new CRC32C());
+    /** Instance of {@link Adler32}. */
+    public final HashInterface JUL_ALDER32_CHECKSUM = cast(new Adler32());
 
-    private HashConstants() {}
+    /**
+     * Default initializer.
+     */
+    public HashConstants() {}
 
     /**
      * Cast implementations of other hashes to this interface.

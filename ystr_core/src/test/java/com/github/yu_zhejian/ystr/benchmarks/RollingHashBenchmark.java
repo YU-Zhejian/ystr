@@ -98,6 +98,7 @@ public class RollingHashBenchmark {
 
     @Benchmark
     public void benchRollingHashAdaptor(@NotNull Blackhole blackhole) {
-        bench(blackhole, new RollingHashAdaptor(HashConstants.JUL_CRC32_CHECKSUM));
+        final var hashConstants = new HashConstants();
+        bench(blackhole, new RollingHashAdaptor(hashConstants.JUL_CRC32_CHECKSUM));
     }
 }

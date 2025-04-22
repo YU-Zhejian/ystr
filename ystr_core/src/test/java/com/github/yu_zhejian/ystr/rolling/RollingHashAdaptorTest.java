@@ -35,8 +35,9 @@ class RollingHashAdaptorTest {
                 0xbc9f62f1L,
                 0xa718978bL,
                 0x337e424fL);
+        final var hashConstants = new HashConstants();
         assertIterableEquals(
-                ans, hash(new RollingHashAdaptor(HashConstants.CRC32_HASH), string, 3));
+                ans, hash(new RollingHashAdaptor(hashConstants.CRC32_HASH), string, 3));
         assertIterableEquals(ans, hash(new RollingHashAdaptor(CRC32Hash::new), string, 3));
     }
 }

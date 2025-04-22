@@ -11,8 +11,14 @@ dependencies {
 	implementation "it.unimi.dsi:fastutil:${FASTUTIL_VER}"
 	implementation "org.roaringbitmap:RoaringBitmap:${ROARING_BITMAP_VER}"
 
+    // See https://blog.jetbrains.com/idea/2016/08/using-junit-5-in-intellij-idea/
+    // See https://junit.org/junit5/docs/current/user-guide/#writing-tests
 	testImplementation platform("org.junit:junit-bom:${JUNIT_VER}")
-	testImplementation "org.junit.jupiter:junit-jupiter:${JUNIT_VER}"
+    testImplementation "org.junit.jupiter:junit-jupiter:${JUNIT_VER}"
+	testRuntimeOnly "org.junit.platform:junit-platform-launcher"
+	testRuntimeOnly "org.junit.jupiter:junit-jupiter-engine"
+	testRuntimeOnly "org.junit.vintage:junit-vintage-engine"
+
 	testImplementation "com.github.samtools:htsjdk:${HTSJDK_VER}"
 	testImplementation "org.openjdk.jmh:jmh-core:${JMH_VER}"
 	testImplementation "org.eclipse.jgit:org.eclipse.jgit:${JGIT_VER}"

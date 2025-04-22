@@ -3,6 +3,13 @@ package com.github.yu_zhejian.ystr_demo.tinymap;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * The index configuration.
+ *
+ * @param kmerSize Length of each k-mer.
+ * @param numKmerPerMinimizer Number of k-mers to consider when calculating minimizers.
+ * @param ntShannonEntropyCutoff k-mer with Shannon entropy lower than this value will be ignored.
+ */
 public record GenomeIndexerConfig(
         int kmerSize, int numKmerPerMinimizer, double ntShannonEntropyCutoff) {
     @Contract(" -> new")

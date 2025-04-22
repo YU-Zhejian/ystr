@@ -37,13 +37,14 @@ public class RollingHashBaseTest {
     void testEqualHashAtDifferentPosition() {
         var str1 = "NNNAGCTNNN".getBytes(StandardCharsets.UTF_8);
         var str2 = "AGCTNN".getBytes(StandardCharsets.UTF_8);
+        final var hashConstants = new HashConstants();
         for (var hasher : List.of(
                 new PrecomputedNtHash(),
                 new NtHash(),
                 new PolynomialRollingHash(),
                 new PolynomialRollingHash(
                         PolynomialRollingHash.longRandomPrime(), StrUtils.ALPHABET_SIZE),
-                new RollingHashAdaptor(HashConstants.CRC32_HASH))) {
+                new RollingHashAdaptor(hashConstants.CRC32_HASH))) {
             System.out.println(hasher);
             assertEquals(
                     RollingHashBaseTest.at(hasher, str1, 4, 3),

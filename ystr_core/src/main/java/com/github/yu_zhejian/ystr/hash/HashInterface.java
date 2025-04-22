@@ -34,7 +34,7 @@ public interface HashInterface extends UpdatableInterface {
      * @return As described.
      */
     static long convenientHash(
-            final @NotNull HashInterface instance, final byte[] string, int start, int end) {
+            final @NotNull HashInterface instance, final byte[] string, final int start, final int end) {
         instance.reset();
         instance.update(string, start, end);
         return instance.getValue();
@@ -51,7 +51,7 @@ public interface HashInterface extends UpdatableInterface {
      * @see #convenientHash(HashInterface, byte[], int, int)
      */
     static long convenientHashUnchecked(
-            final @NotNull HashInterface instance, final byte[] string, int start, int end) {
+            final @NotNull HashInterface instance, final byte[] string, final int start, final int end) {
         instance.reset();
         instance.updateUnchecked(string, start, end);
         return instance.getValue();

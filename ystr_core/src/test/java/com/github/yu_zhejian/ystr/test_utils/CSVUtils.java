@@ -17,11 +17,10 @@ import java.nio.charset.StandardCharsets;
 /** Some Apache CSV wrapper. */
 public final class CSVUtils {
     public static final CSVFormat CSV_FMT = CSVFormat.Builder.create()
-            .setDelimiter('\t')
-            .setQuote('\'')
-            .setRecordSeparator('\n')
-            .setDuplicateHeaderMode(DuplicateHeaderMode.DISALLOW)
-            .build();
+        .setDelimiter('\t')
+        .setQuote('\'')
+        .setRecordSeparator('\n')
+        .setDuplicateHeaderMode(DuplicateHeaderMode.DISALLOW).get();
 
     private CSVUtils() {}
 
