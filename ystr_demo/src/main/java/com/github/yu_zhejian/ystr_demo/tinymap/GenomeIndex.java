@@ -21,8 +21,8 @@ import java.nio.file.Path;
 
 /**
  * Data structure for genome index.
- * <p>
- * The current implementation loads everything in memory.
+ *
+ * <p>The current implementation loads everything in memory.
  *
  * @param config The configuration of the indexer.
  * @param fnaPath Path to the original FASTA file.
@@ -56,7 +56,9 @@ public record GenomeIndex(
             long numContigIndexPaths = contigIndexPaths.get(i).size64();
             oConfig.setProperty("contig.%d.numContigIndexPaths".formatted(i), numContigIndexPaths);
             for (long j = 0; j < numContigIndexPaths; j++) {
-                oConfig.setProperty("contig.%d.contigIndexPaths.%d".formatted(i, j), contigIndexPaths.get(i).get(j));
+                oConfig.setProperty(
+                        "contig.%d.contigIndexPaths.%d".formatted(i, j),
+                        contigIndexPaths.get(i).get(j));
             }
         }
         oConfig.setProperty("config.kmerSize", config.kmerSize());
@@ -95,10 +97,12 @@ public record GenomeIndex(
             for (long i = 0; i < numContigs; i++) {
                 contigLens.add(iConfig.getLong("contig.%d.contigLen".formatted(i)));
                 contigNames.add(iConfig.getString("contig.%d.contigName".formatted(i)));
-                long numContigIndexPaths = iConfig.getLong("contig.%d.numContigIndexPaths".formatted(i));
+                long numContigIndexPaths =
+                        iConfig.getLong("contig.%d.numContigIndexPaths".formatted(i));
                 var thisContigIndexPaths = new ObjectBigArrayBigList<String>();
                 for (long j = 0; j < numContigIndexPaths; j++) {
-                    thisContigIndexPaths.add(iConfig.getString("contig.%d.contigIndexPaths.%d".formatted(i, j)));
+                    thisContigIndexPaths.add(
+                            iConfig.getString("contig.%d.contigIndexPaths.%d".formatted(i, j)));
                 }
                 contigIndexPaths.add(thisContigIndexPaths);
             }

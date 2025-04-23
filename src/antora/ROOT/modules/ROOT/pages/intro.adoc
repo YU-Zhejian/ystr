@@ -21,7 +21,7 @@ yStr is designed to be fast, memory-efficient, with the support of the latest fe
 
 - Pure-Java. This library does not carry JNI extensions so should be portable to all platforms supported by the JVM.
 - Fast. This library uses https://fastutil.di.unimi.it/[`fastutil`], which is faster than the Java standard library.
-- FP-ready. This library encourages the use of Functional Programming (FP) with the help of https://github.com/vavr-io/vavr[`vavr`] and https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/package-summary.html[Java Functional Interfaces].
+- FP-ready. This library encourages the use of Functional Programming (FP) with the ideas from https://github.com/vavr-io/vavr[`vavr`] and https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/package-summary.html[Java Functional Interfaces].
 
 == Programming with yStr
 

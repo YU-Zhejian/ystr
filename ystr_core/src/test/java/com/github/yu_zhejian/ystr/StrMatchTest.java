@@ -3,6 +3,7 @@ package com.github.yu_zhejian.ystr;
 import static org.junit.jupiter.api.Assertions.assertIterableEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+import com.github.yu_zhejian.ystr.container.Tuple;
 import com.github.yu_zhejian.ystr.match.BoyerMooreBCMatch;
 import com.github.yu_zhejian.ystr.match.BruteForceMatch;
 import com.github.yu_zhejian.ystr.match.KnuthMorrisPrattMatch;
@@ -16,8 +17,6 @@ import com.github.yu_zhejian.ystr.rolling.PolynomialRollingHash;
 import com.github.yu_zhejian.ystr.rolling.PrecomputedNtHash;
 import com.github.yu_zhejian.ystr.utils.StrUtils;
 
-import io.vavr.Tuple2;
-
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 
@@ -30,7 +29,7 @@ class StrMatchTest {
 
     public void testSS(
             @NotNull StrMatchInterface function,
-            @NotNull Map<Tuple2<String, String>, List<Integer>> testCases) {
+            @NotNull Map<Tuple.Tuple2<String, String>, List<Integer>> testCases) {
         // Test edge cases and illegal inputs
         assertThrows(
                 IllegalArgumentException.class,
@@ -58,12 +57,12 @@ class StrMatchTest {
         for (var entry : testCases.entrySet()) {
             var key = entry.getKey();
             var value = entry.getValue();
-            hayStack = key._1().getBytes(StandardCharsets.UTF_8);
-            needle = key._2().getBytes(StandardCharsets.UTF_8);
+            hayStack = key.e1().getBytes(StandardCharsets.UTF_8);
+            needle = key.e2().getBytes(StandardCharsets.UTF_8);
             assertIterableEquals(
                     value,
                     function.applyUnchecked(hayStack, needle, 0, hayStack.length),
-                    "Error at case %s in %s".formatted(key._2(), key._1()));
+                    "Error at case %s in %s".formatted(key.e2(), key.e1()));
         }
     }
 

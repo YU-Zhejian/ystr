@@ -3,3 +3,4 @@
 * Migrate the aaHash algorithm.
 * Support ntHash 2.2 and 2.3.
 * Refactor test resources.
+* Remove VAVR dependency.

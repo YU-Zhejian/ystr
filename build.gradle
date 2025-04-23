@@ -68,8 +68,8 @@ def npmExec = System.getProperty('os.name').toLowerCase().contains('windows') ? 
 def nodeExec = System.getProperty('os.name').toLowerCase().contains('windows') ? '/node.exe' : '/bin/node'
 
 spotless {
-	encoding StandardCharsets.UTF_8
-	lineEndings LineEnding.UNIX
+	encoding = StandardCharsets.UTF_8
+	lineEndings = LineEnding.UNIX
 	format 'misc', {
 		target '**/*.md', '**/.gitignore', '**/.adoc', '*.md', '*.adoc', '.gitignore'
 		trimTrailingWhitespace()

@@ -8,7 +8,7 @@ class HammingDistanceTest {
 
     @Test
     void apply() {
-        var hammingDistance = new HammingDistance();
+        final var hammingDistance = new HammingDistance();
         assertEquals(0, hammingDistance.apply(new byte[0], new byte[0]));
         assertEquals(0, hammingDistance.apply(new byte[] {1, 2, 3}, new byte[] {1, 2, 3}));
         assertEquals(1, hammingDistance.apply(new byte[] {1, 2, 4}, new byte[] {1, 2, 3}));

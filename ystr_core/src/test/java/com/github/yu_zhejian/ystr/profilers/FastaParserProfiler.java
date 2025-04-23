@@ -3,10 +3,10 @@ package com.github.yu_zhejian.ystr.profilers;
 import com.github.yu_zhejian.ystr.io.TwoBitParser;
 import com.github.yu_zhejian.ystr.test_utils.GitUtils;
 
-import io.vavr.Tuple;
-import io.vavr.Tuple3;
-
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+
+import org.labw.libinterval.GenomicSimpleInterval;
+import org.labw.libinterval.StrandUtils;
 
 import java.io.IOException;
 import java.nio.file.Path;
@@ -17,7 +17,7 @@ import java.util.Random;
 
 public final class FastaParserProfiler {
     private TwoBitParser twoBitParser;
-    private List<Tuple3<String, Integer, Integer>> coordinates;
+    private List<GenomicSimpleInterval> coordinates;
     private Map<String, Integer> seqNameIDMap;
     private static final int NUM_RDN_INTERVALS = 200;
     private static final int NUM_BENCH_ROUNDS = 100;
@@ -53,17 +53,21 @@ public final class FastaParserProfiler {
             var selectedChrom = seqNames.get(seqID);
             var selectedTerm1 = rng.nextInt(0, seqLengths.getInt(seqID));
             var selectedTerm2 = rng.nextInt(0, seqLengths.getInt(seqID));
-            coordinates.add(Tuple.of(
+            coordinates.add(new GenomicSimpleInterval(
                     selectedChrom,
                     Math.min(selectedTerm1, selectedTerm2),
-                    Math.max(selectedTerm1, selectedTerm2)));
+                    Math.max(selectedTerm1, selectedTerm2),
+                    StrandUtils.STRAND_UNKNOWN));
         }
     }
 
     public void benchTwoBit() throws IOException {
         for (var coordinate : coordinates) {
             var seq = twoBitParser.getSequence(
-                    seqNameIDMap.get(coordinate._1()), coordinate._2(), coordinate._3(), true);
+                    seqNameIDMap.get(coordinate.getContigName()),
+                    (int) coordinate.getStart(),
+                    (int) coordinate.getEnd(),
+                    true);
             assert seq.length > 0;
         }
     }

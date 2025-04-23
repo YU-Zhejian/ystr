@@ -6,12 +6,11 @@ import com.github.yu_zhejian.ystr.test_utils.GitUtils;
 import htsjdk.samtools.reference.ReferenceSequenceFile;
 import htsjdk.samtools.reference.ReferenceSequenceFileFactory;
 
-import io.vavr.Tuple;
-import io.vavr.Tuple3;
-
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 
 import org.jetbrains.annotations.NotNull;
+import org.labw.libinterval.GenomicSimpleInterval;
+import org.labw.libinterval.StrandUtils;
 import org.openjdk.jmh.annotations.Benchmark;
 import org.openjdk.jmh.annotations.BenchmarkMode;
 import org.openjdk.jmh.annotations.Fork;
@@ -51,7 +50,7 @@ public class FastaParserBenchmark {
     private ReferenceSequenceFile htsJdkRef;
     private ReferenceSequenceFile compressedHtsJdkRef;
     private TwoBitParser twoBitParser;
-    private List<Tuple3<String, Integer, Integer>> coordinates;
+    private List<GenomicSimpleInterval> coordinates;
     private Map<String, Integer> seqNameIDMap;
     private static final int NUM_RDN_INTERVALS = 20;
 
@@ -98,10 +97,11 @@ public class FastaParserBenchmark {
             var selectedChrom = seqNames.get(seqID);
             var selectedTerm1 = rng.nextInt(0, seqLengths.getInt(seqID));
             var selectedTerm2 = rng.nextInt(0, seqLengths.getInt(seqID));
-            coordinates.add(Tuple.of(
+            coordinates.add(new GenomicSimpleInterval(
                     selectedChrom,
                     Math.min(selectedTerm1, selectedTerm2),
-                    Math.max(selectedTerm1, selectedTerm2)));
+                    Math.max(selectedTerm1, selectedTerm2),
+                    StrandUtils.STRAND_UNKNOWN));
         }
     }
 
@@ -109,7 +109,10 @@ public class FastaParserBenchmark {
     public void benchTwoBit(@NotNull Blackhole blackhole) throws IOException {
         for (var coordinate : coordinates) {
             blackhole.consume(twoBitParser.getSequence(
-                    seqNameIDMap.get(coordinate._1()), coordinate._2(), coordinate._3(), true));
+                    seqNameIDMap.get(coordinate.getContigName()),
+                    (int) coordinate.getStart(),
+                    (int) coordinate.getEnd(),
+                    true));
         }
     }
 
@@ -117,7 +120,10 @@ public class FastaParserBenchmark {
     public void benchTwoBitUnmasked(@NotNull Blackhole blackhole) throws IOException {
         for (var coordinate : coordinates) {
             blackhole.consume(twoBitParser.getSequence(
-                    seqNameIDMap.get(coordinate._1()), coordinate._2(), coordinate._3(), false));
+                    seqNameIDMap.get(coordinate.getContigName()),
+                    (int) coordinate.getStart(),
+                    (int) coordinate.getEnd(),
+                    false));
         }
     }
 
@@ -125,7 +131,7 @@ public class FastaParserBenchmark {
     public void benchHtsJdk(@NotNull Blackhole blackhole) {
         for (var coordinate : coordinates) {
             blackhole.consume(htsJdkRef.getSubsequenceAt(
-                    coordinate._1(), 1 + coordinate._2(), coordinate._3()));
+                    coordinate.getContigName(), 1 + coordinate.getStart(), coordinate.getEnd()));
         }
     }
 
@@ -133,7 +139,7 @@ public class FastaParserBenchmark {
     public void benchCompressedHtsJdk(@NotNull Blackhole blackhole) {
         for (var coordinate : coordinates) {
             blackhole.consume(compressedHtsJdkRef.getSubsequenceAt(
-                    coordinate._1(), 1 + coordinate._2(), coordinate._3()));
+                    coordinate.getContigName(), 1 + coordinate.getStart(), coordinate.getEnd()));
         }
     }
 }

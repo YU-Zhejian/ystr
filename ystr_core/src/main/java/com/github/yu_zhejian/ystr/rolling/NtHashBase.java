@@ -1,8 +1,5 @@
 package com.github.yu_zhejian.ystr.rolling;
 
-import io.vavr.Tuple;
-import io.vavr.Tuple2;
-
 import it.unimi.dsi.fastutil.longs.LongArrayList;
 import it.unimi.dsi.fastutil.longs.LongList;
 
@@ -11,6 +8,14 @@ import org.jetbrains.annotations.NotNull;
 
 /** Constants for {@link NtHash} and {@link PrecomputedNtHash}. */
 public abstract class NtHashBase extends RollingHashBase {
+    /**
+     * Collection of forward and reverse hashes for a string.
+     *
+     * @param fwdHashes As described.
+     * @param revHashes As described.
+     */
+    public record BiDirectionalHashes(LongList fwdHashes, LongList revHashes) {}
+
     protected static final long SEED_A = 0x3c8bfbb395c60474L;
     protected static final long SEED_C = 0x3193c18562a02b4cL;
     protected static final long SEED_G = 0x20323ed082572324L;
@@ -152,18 +157,18 @@ public abstract class NtHashBase extends RollingHashBase {
     }
 
     @SuppressWarnings("PMD.LooseCoupling")
-    public static @NotNull Tuple2<LongList, LongList> hashOnBothDirections(
+    public static @NotNull BiDirectionalHashes hashOnBothDirections(
             @NotNull NtHashBase ntHash, int estimatedLength, byte[] string, int k, int skipFirst) {
-        final var rett = Tuple.of((LongList) new LongArrayList(estimatedLength), (LongList)
-                new LongArrayList(estimatedLength));
+        final var fwdHashes = new LongArrayList(estimatedLength);
+        final var refHashes = new LongArrayList(estimatedLength);
         ntHash.attach(string, k, skipFirst);
         while (ntHash.hasNext()) {
             ntHash.nextLong();
-            rett._1().add(ntHash.getFwdHash());
-            rett._2().add(ntHash.getRevHash());
+            fwdHashes.add(ntHash.getFwdHash());
+            refHashes.add(ntHash.getRevHash());
         }
         ntHash.detach();
-        return rett;
+        return new BiDirectionalHashes(fwdHashes, refHashes);
     }
 
     /**

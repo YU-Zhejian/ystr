@@ -6,14 +6,13 @@ import com.github.yu_zhejian.ystr.hash.CRC32Hash;
 import com.github.yu_zhejian.ystr.hash.HashConstants;
 import com.github.yu_zhejian.ystr.utils.IterUtils;
 
-import io.vavr.collection.List;
-
 import it.unimi.dsi.fastutil.longs.LongList;
 
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
 
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 class RollingHashAdaptorTest {
 
